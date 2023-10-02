@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'modulepage.dart';
 
 class Moduleoperations extends StatefulWidget {
   const Moduleoperations({Key? key});
@@ -142,13 +143,6 @@ class MywidgetState extends State<Moduleoperations> {
                       final String description = _descriptionController.text;
                       final String ratings = _ratingsController.text;
 
-                      // await _modules.({
-                      //   'moduleName': moduleName,
-                      //   'subjectCode': subjectCode,
-                      //   'description': description,
-                      //   'Ratings': ratings,
-                      // });
-
                       await _modules.doc(documentSnapshot!.id).update({
                         'moduleName': moduleName,
                         'subjectCode': subjectCode,
@@ -216,53 +210,69 @@ class MywidgetState extends State<Moduleoperations> {
             builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
               if (streamSnapshot.hasData) {
                 return ListView.builder(
-                    itemCount: streamSnapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      final DocumentSnapshot documentSnapshot =
-                          streamSnapshot.data!.docs[index];
-                      return Card(
-                        color: const Color.fromARGB(255, 174, 204, 248),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        margin: const EdgeInsets.all(10),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 17,
-                            backgroundColor:
-                                const Color.fromARGB(255, 255, 106, 7),
-                            child: Text(
-                              documentSnapshot['moduleName'].toString(),
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 2, 3, 8)),
-                            ),
-                          ),
-                          title: Text(
-                            documentSnapshot['subjectCode'].toString(),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(
-                            "Rating: ${documentSnapshot['Ratings'].toString()}                             ${documentSnapshot['description']}",
+                  itemCount: streamSnapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    final DocumentSnapshot documentSnapshot =
+                        streamSnapshot.data!.docs[index];
+                    return Card(
+                      color: const Color.fromARGB(255, 174, 204, 248),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      margin: const EdgeInsets.all(10),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          radius: 17,
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 106, 7),
+                          child: Text(
+                            documentSnapshot['moduleName'].toString(),
                             style: const TextStyle(
-                              color: Color.fromARGB(255, 2, 3, 8),
-                            ),
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () => _delete(documentSnapshot),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () => _update(documentSnapshot),
-                              ),
-                            ],
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 2, 3, 8)),
                           ),
                         ),
-                      );
-                    });
+                        title: Text(
+                          documentSnapshot['subjectCode'].toString(),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          "Rating: ${documentSnapshot['Ratings'].toString()}                             ${documentSnapshot['description']}",
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 2, 3, 8),
+                          ),
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () => _delete(documentSnapshot),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () => _update(documentSnapshot),
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ModuleDetailPage(
+                                moduleName:
+                                    documentSnapshot['moduleName'].toString(),
+                                subjectCode:
+                                    documentSnapshot['subjectCode'].toString(),
+                                description:
+                                    documentSnapshot['description'].toString(),
+                                ratings: documentSnapshot['Ratings'].toString(),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                );
               }
               return const Center(
                 child: CircularProgressIndicator(),
