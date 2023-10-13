@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shades/features/resource_mgt/reportResource.dart';
+import 'package:shades/features/resource_mgt/upload.dart';
 
 class Resourceoperations extends StatefulWidget {
-  const Resourceoperations({Key? key});
+  const Resourceoperations({super.key});
 
   @override
   State<Resourceoperations> createState() => MywidgetState();
@@ -21,7 +23,7 @@ class MywidgetState extends State<Resourceoperations> {
 
   String searchText = '';
   //Create
-  Future<void> _create([DocumentSnapshot? documentSnapshot]) async {
+  Future<void> _create() async {
     await showModalBottomSheet(
         isScrollControlled: true,
         context: context,
@@ -37,14 +39,14 @@ class MywidgetState extends State<Resourceoperations> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
+                const Center(
                   child: Text("Insert Resource Details",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ),
                 TextField(
                   controller: _resourceNameController,
-                  decoration: const InputDecoration(labelText: "Resource Name"),
+                  decoration: const InputDecoration(labelText: "Module Name"),
                 ),
                 TextField(
                   controller: _subjectCodeController,
@@ -56,7 +58,7 @@ class MywidgetState extends State<Resourceoperations> {
                 ),
                 TextField(
                   controller: _ratingsController,
-                  decoration: const InputDecoration(labelText: "Ratings"),
+                  decoration: const InputDecoration(labelText: "File Name"),
                 ),
                 const SizedBox(
                   height: 20,
@@ -79,9 +81,14 @@ class MywidgetState extends State<Resourceoperations> {
                       _descriptionController.text = "";
                       _ratingsController.text = "";
 
-                      Navigator.of(context).pop();
+                      // Navigator.of(context).pop();
+                      // ignore: use_build_context_synchronously
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Upload()));
                     },
-                    child: Text("Create"))
+                    child: const Text("Create")),
               ],
             ),
           );
@@ -112,7 +119,7 @@ class MywidgetState extends State<Resourceoperations> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
+                const Center(
                   child: Text("Update Resource Details",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
@@ -163,7 +170,7 @@ class MywidgetState extends State<Resourceoperations> {
 
                       Navigator.of(context).pop();
                     },
-                    child: Text("Update"))
+                    child: const Text("Update"))
               ],
             ),
           );
@@ -202,15 +209,19 @@ class MywidgetState extends State<Resourceoperations> {
                   ),
                 )
               : const Text(
-                  "CRUD Operations",
+                  "search here",
                   style: TextStyle(
+                    fontStyle: FontStyle.italic,
                     color: Color.fromARGB(
-                        255, 253, 253, 253), // Set text color to white
+                        115, 253, 253, 253), // Set text color to white
                   ),
                 ),
+
           backgroundColor: const Color.fromARGB(
-              255, 40, 10, 94), // Set AppBar background color
-          actions: [IconButton(onPressed: () {}, icon: Icon(Icons.search))],
+              255, 39, 10, 94), // Set AppBar background color
+          actions: [
+            IconButton(onPressed: () {}, icon: const Icon(Icons.search_sharp))
+          ],
         ),
         body: StreamBuilder(
             stream: _resources.snapshots(),
@@ -222,10 +233,12 @@ class MywidgetState extends State<Resourceoperations> {
                       final DocumentSnapshot documentSnapshot =
                           streamSnapshot.data!.docs[index];
                       return Card(
-                        color: const Color.fromARGB(255, 174, 204, 248),
+                        shadowColor: Colors.black,
+                        color: const Color.fromARGB(246, 241, 241, 240),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15)),
                         margin: const EdgeInsets.all(10),
+                        elevation: 8,
                         child: ListTile(
                           leading: CircleAvatar(
                             radius: 17,
@@ -240,10 +253,12 @@ class MywidgetState extends State<Resourceoperations> {
                           ),
                           title: Text(
                             documentSnapshot['subjectCode'].toString(),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 15, 91, 156)),
                           ),
                           subtitle: Text(
-                            "Rating: ${documentSnapshot['Ratings'].toString()}                             ${documentSnapshot['description']}",
+                            "${documentSnapshot['Ratings'].toString()}                             ${documentSnapshot['description']}",
                             style: const TextStyle(
                               color: Color.fromARGB(255, 2, 3, 8),
                             ),
@@ -252,12 +267,25 @@ class MywidgetState extends State<Resourceoperations> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () => _update(documentSnapshot),
+                              ),
+                              IconButton(
                                 icon: const Icon(Icons.delete),
                                 onPressed: () => _delete(documentSnapshot),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () => _update(documentSnapshot),
+                                icon: const Icon(Icons.report),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const Scaffold(
+                                        body: ResourceReportForm(),
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ],
                           ),

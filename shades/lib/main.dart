@@ -12,7 +12,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const BottomTabBar(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -42,7 +43,12 @@ class _BottomTabBarState extends State<BottomTabBar> {
     const Resourceoperations(),
     const Communityoperations(),
   ];
-  List<String> _tabTitles = ['Query', 'Modules', 'Resources', 'Community'];
+  final List<String> _tabTitles = [
+    'Query',
+    'Modules',
+    'Resources',
+    'Community'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +74,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
             _currentIndex = index;
           });
         },
-        items: [
+        items: const [
           BottomNavigationBarItem(
             backgroundColor: Colors.pink,
             icon: Icon(Icons.question_answer), // Customize the icon for Query
