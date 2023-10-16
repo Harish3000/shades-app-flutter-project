@@ -54,7 +54,8 @@ class _BottomTabBarState extends State<BottomTabBar> {
           style: const TextStyle(
               fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: Colors.teal, // Customize the app bar color
+        backgroundColor:
+            Color.fromARGB(255, 4, 39, 116), // Customize the app bar color
         elevation: 0,
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -75,7 +76,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
             label: 'Query',
           ),
           BottomNavigationBarItem(
-            backgroundColor: Colors.teal,
+            backgroundColor: Color.fromRGBO(3, 148, 252, 1),
             icon: Icon(Icons.apps), // Customize the icon for Modules
             label: 'Modules',
           ),
