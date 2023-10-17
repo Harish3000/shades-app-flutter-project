@@ -126,12 +126,15 @@ class MywidgetState extends State<Moduleoperations> {
   }
 
   Future<void> _update([DocumentSnapshot? documentSnapshot]) async {
+    double selectedRating = 0; // Added for rating selection
+
     if (documentSnapshot != null) {
       _moduleNameController.text = documentSnapshot['moduleName'].toString();
       _subjectCodeController.text = documentSnapshot['subjectCode'].toString();
       _descriptionController.text = documentSnapshot['description'].toString();
-      _ratingsController.text = documentSnapshot['Ratings'].toString();
+      selectedRating = double.parse(documentSnapshot['Ratings'].toString());
     }
+
     await showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -139,8 +142,8 @@ class MywidgetState extends State<Moduleoperations> {
         return Padding(
           padding: EdgeInsets.only(
             top: 10,
-            left: 10,
-            right: 10,
+            left: 20,
+            right: 20,
             bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
           ),
           child: Column(
@@ -148,35 +151,69 @@ class MywidgetState extends State<Moduleoperations> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: Text("Update Module Details",
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                child: Text(
+                  "Update Module Details",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-              TextField(
+              SizedBox(height: 20),
+              TextFormField(
                 controller: _moduleNameController,
-                decoration: const InputDecoration(labelText: "Module Name"),
+                decoration: InputDecoration(
+                  labelText: "Module Name",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.school),
+                ),
               ),
-              TextField(
+              SizedBox(height: 12),
+              TextFormField(
                 controller: _subjectCodeController,
-                decoration: const InputDecoration(labelText: "Subject Code"),
+                decoration: InputDecoration(
+                  labelText: "Subject Code",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.code),
+                ),
               ),
-              TextField(
+              SizedBox(height: 12),
+              TextFormField(
                 controller: _descriptionController,
-                decoration: const InputDecoration(labelText: "Description"),
+                decoration: InputDecoration(
+                  labelText: "Description",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.description),
+                ),
               ),
-              TextField(
-                controller: _ratingsController,
-                decoration: const InputDecoration(labelText: "Ratings"),
+              SizedBox(height: 12),
+              Text("Ratings:"),
+              RatingBar.builder(
+                initialRating: selectedRating,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: false,
+                itemCount: 5,
+                itemSize: 30.0,
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: Color.fromARGB(255, 228, 152, 12),
+                ),
+                onRatingUpdate: (rating) {
+                  selectedRating = rating;
+                },
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
                   final String moduleName = _moduleNameController.text;
                   final String subjectCode = _subjectCodeController.text;
                   final String description = _descriptionController.text;
-                  final String ratings = _ratingsController.text;
+                  final String ratings =
+                      selectedRating.toString(); // Use the selected rating
 
                   await _modules.doc(documentSnapshot!.id).update({
                     'moduleName': moduleName,
@@ -184,14 +221,14 @@ class MywidgetState extends State<Moduleoperations> {
                     'description': description,
                     'Ratings': ratings,
                   });
-                  _moduleNameController.text = "";
-                  _subjectCodeController.text = "";
-                  _descriptionController.text = "";
-                  _ratingsController.text = "";
+
+                  _moduleNameController.clear();
+                  _subjectCodeController.clear();
+                  _descriptionController.clear();
 
                   Navigator.of(context).pop();
                 },
-                child: Text("Update"),
+                child: Text("Update", style: TextStyle(fontSize: 18)),
               )
             ],
           ),
