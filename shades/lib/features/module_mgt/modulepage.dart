@@ -34,7 +34,6 @@ class ModuleDetailPage extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-
         backgroundColor:
             Color.fromARGB(255, 2, 4, 10), // Choose your app's primary color
       ),
@@ -107,26 +106,62 @@ class ModuleDetailPage extends StatelessWidget {
                 }
                 return Column(
                   children: snapshot.data!.docs.map((reviewData) {
+                    final reviewId = reviewData.id;
                     final userName = reviewData['userName'];
                     final rating = reviewData['rating'];
                     final comment = reviewData['reviews'];
+                    final likes = reviewData['likes'] ?? 0;
+                    final dislikes = reviewData['dislikes'] ?? 0;
+
                     return Card(
                       elevation: 2,
                       margin: EdgeInsets.symmetric(vertical: 8),
-                      child: ListTile(
-                        title: Text('Review by $userName'),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: Text('Review by $userName'),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(Icons.star, color: Colors.orange),
-                                Text('Rating: $rating'),
+                                Row(
+                                  children: [
+                                    Icon(Icons.star, color: Colors.orange),
+                                    Text('Rating: $rating'),
+                                  ],
+                                ),
+                                Text('Reviews: $comment'),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.thumb_up),
+                                      onPressed: () {
+                                        FirebaseFirestore.instance
+                                            .collection('module_reviews')
+                                            .doc(reviewId)
+                                            .update({
+                                          'likes': likes + 1,
+                                        });
+                                      },
+                                    ),
+                                    Text('Likes: $likes'),
+                                    IconButton(
+                                      icon: Icon(Icons.thumb_down),
+                                      onPressed: () {
+                                        FirebaseFirestore.instance
+                                            .collection('module_reviews')
+                                            .doc(reviewId)
+                                            .update({
+                                          'dislikes': dislikes + 1,
+                                        });
+                                      },
+                                    ),
+                                    Text('Dislikes: $dislikes'),
+                                  ],
+                                ),
                               ],
                             ),
-                            Text('Reviews: $comment'),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     );
                   }).toList(),
@@ -176,6 +211,8 @@ class ModuleDetailPage extends StatelessWidget {
                                 'User', // Replace with the actual user's name
                             'rating': rating,
                             'reviews': review,
+                            'likes': 0, // Initialize likes count
+                            'dislikes': 0, // Initialize dislikes count
                           });
 
                           reviewController.clear();
