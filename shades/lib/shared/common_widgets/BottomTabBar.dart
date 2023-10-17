@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:shades/features/community_mgt/community.dart';
-import 'package:shades/features/module_mgt/module.dart';
+import 'package:shades/features/module_mgt/module_operations.dart';
 import 'package:shades/features/query_mgt/query.dart';
 import 'package:shades/features/resource_mgt/resource.dart';
 
@@ -17,9 +17,9 @@ class _BottomTabBarState extends State<BottomTabBar> {
   int _currentIndex = 0;
   final List<Widget> _tabs = [
     Queryoperations(),
-    const Moduleoperations(),
-    const Communityoperations(),
+    const ModuleOperations(),
     const Resourceoperations(),
+    const Communityoperations(),
   ];
   List<String> _tabTitles = [
     'Query',
