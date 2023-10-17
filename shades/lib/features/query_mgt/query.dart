@@ -12,8 +12,8 @@ class QueryOperations extends StatefulWidget {
 
 class MyWidgetState extends State<QueryOperations> {
   final TextEditingController _queryNameController = TextEditingController();
-  final TextEditingController _subjectCodeController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _tagsController = TextEditingController();
 
   final CollectionReference _queries =
       FirebaseFirestore.instance.collection('query');
@@ -55,16 +55,6 @@ class MyWidgetState extends State<QueryOperations> {
               ),
               SizedBox(height: 12),
               TextFormField(
-                controller: _subjectCodeController,
-                decoration: InputDecoration(
-                  labelText: "Subject Code",
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  prefixIcon: Icon(Icons.code),
-                ),
-              ),
-              SizedBox(height: 12),
-              TextFormField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
                   labelText: "Description",
@@ -73,22 +63,37 @@ class MyWidgetState extends State<QueryOperations> {
                   prefixIcon: Icon(Icons.description),
                 ),
               ),
+              SizedBox(height: 12),
+              TextFormField(
+                controller: _tagsController,
+                decoration: InputDecoration(
+                  labelText: "Tags",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.local_offer),
+                ),
+              ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
                   final String queryName = _queryNameController.text;
-                  final String subjectCode = _subjectCodeController.text;
                   final String description = _descriptionController.text;
+                  final String tags = _tagsController.text;
+
+                  final DateTime dateTimeNow = DateTime.now();
+                  final String timeStamp =
+                      "${dateTimeNow.year}-${_formatNumber(dateTimeNow.month)}-${_formatNumber(dateTimeNow.day)} ${_formatNumber(dateTimeNow.hour)}:${_formatNumber(dateTimeNow.minute)}:${_formatNumber(dateTimeNow.second)}";
 
                   await _queries.add({
                     'queryName': queryName,
-                    'subjectCode': subjectCode,
+                    'queryCode': timeStamp,
                     'description': description,
+                    'tags': tags,
                   });
 
                   _queryNameController.clear();
-                  _subjectCodeController.clear();
                   _descriptionController.clear();
+                  _tagsController.clear();
 
                   Navigator.of(context).pop();
                 },
@@ -104,8 +109,8 @@ class MyWidgetState extends State<QueryOperations> {
   Future<void> _update([DocumentSnapshot? documentSnapshot]) async {
     if (documentSnapshot != null) {
       _queryNameController.text = documentSnapshot['queryName'].toString();
-      _subjectCodeController.text = documentSnapshot['subjectCode'].toString();
       _descriptionController.text = documentSnapshot['description'].toString();
+      _tagsController.text = documentSnapshot['tags'].toString();
     }
 
     await showModalBottomSheet(
@@ -144,16 +149,6 @@ class MyWidgetState extends State<QueryOperations> {
               ),
               SizedBox(height: 12),
               TextFormField(
-                controller: _subjectCodeController,
-                decoration: InputDecoration(
-                  labelText: "Subject Code",
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  prefixIcon: Icon(Icons.code),
-                ),
-              ),
-              SizedBox(height: 12),
-              TextFormField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
                   labelText: "Description",
@@ -162,22 +157,32 @@ class MyWidgetState extends State<QueryOperations> {
                   prefixIcon: Icon(Icons.description),
                 ),
               ),
+              SizedBox(height: 12),
+              TextFormField(
+                controller: _tagsController,
+                decoration: InputDecoration(
+                  labelText: "Tags",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.local_offer),
+                ),
+              ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
                   final String queryName = _queryNameController.text;
-                  final String subjectCode = _subjectCodeController.text;
                   final String description = _descriptionController.text;
+                  final String tags = _tagsController.text;
 
                   await _queries.doc(documentSnapshot!.id).update({
                     'queryName': queryName,
-                    'subjectCode': subjectCode,
                     'description': description,
+                    'tags': tags,
                   });
 
                   _queryNameController.clear();
-                  _subjectCodeController.clear();
                   _descriptionController.clear();
+                  _tagsController.clear();
 
                   Navigator.of(context).pop();
                 },
@@ -256,6 +261,10 @@ class MyWidgetState extends State<QueryOperations> {
     );
   }
 
+  String _formatNumber(int number) {
+    return number < 10 ? '0$number' : '$number';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -306,7 +315,7 @@ class MyWidgetState extends State<QueryOperations> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Subject Code: ${documentSnapshot['subjectCode'].toString()}",
+                              "time stamp: ${_formatDate(documentSnapshot['queryCode'].toString())}",
                               style: TextStyle(
                                 color: Color.fromARGB(255, 2, 3, 8),
                                 fontSize: 14,
@@ -314,6 +323,13 @@ class MyWidgetState extends State<QueryOperations> {
                             ),
                             Text(
                               documentSnapshot['description'],
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 2, 3, 8),
+                                fontSize: 14,
+                              ),
+                            ),
+                            Text(
+                              "Tags: ${documentSnapshot['tags'].toString()}",
                               style: TextStyle(
                                 color: Color.fromARGB(255, 2, 3, 8),
                                 fontSize: 14,
@@ -340,10 +356,11 @@ class MyWidgetState extends State<QueryOperations> {
                               builder: (context) => ModuleDetailPage(
                                 queryName:
                                     documentSnapshot['queryName'].toString(),
-                                subjectCode:
-                                    documentSnapshot['subjectCode'].toString(),
+                                queryCode:
+                                    documentSnapshot['queryCode'].toString(),
                                 description:
                                     documentSnapshot['description'].toString(),
+                                tags: documentSnapshot['tags'].toString(),
                               ),
                             ),
                           );
@@ -366,5 +383,10 @@ class MyWidgetState extends State<QueryOperations> {
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  String _formatDate(String date) {
+    DateTime parsedDate = DateTime.parse(date);
+    return "${parsedDate.year}-${_formatNumber(parsedDate.month)}-${_formatNumber(parsedDate.day)} ${_formatNumber(parsedDate.hour)}:${_formatNumber(parsedDate.minute)}:${_formatNumber(parsedDate.second)}";
   }
 }

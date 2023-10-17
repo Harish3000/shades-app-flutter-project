@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 
 class ModuleDetailPage extends StatelessWidget {
   final String queryName;
-  final String subjectCode;
+  final String queryCode;
   final String description;
+  final String tags;
 
   ModuleDetailPage({
     required this.queryName,
-    required this.subjectCode,
+    required this.queryCode,
     required this.description,
+    required this.tags,
   });
 
   @override
@@ -64,11 +66,15 @@ class ModuleDetailPage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Subject Code: $subjectCode',
+                          'time stamp: $queryCode',
                           style: TextStyle(fontSize: 16),
                         ),
                         Text(
                           'Description: $description',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Text(
+                          'Tags: $tags',
                           style: TextStyle(fontSize: 16),
                         ),
                       ],
@@ -85,7 +91,7 @@ class ModuleDetailPage extends StatelessWidget {
             StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('query_answers')
-                  .where('subjectCode', isEqualTo: subjectCode)
+                  .where('queryCode', isEqualTo: queryCode)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -188,7 +194,7 @@ class ModuleDetailPage extends StatelessWidget {
                               .collection('query_answers')
                               .add({
                             'queryName': queryName,
-                            'subjectCode': subjectCode,
+                            'queryCode': queryCode,
                             'userName': 'Anonymous',
                             'answer': answer,
                             'likes': 0,
