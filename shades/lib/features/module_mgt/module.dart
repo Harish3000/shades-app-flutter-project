@@ -307,7 +307,7 @@ class MywidgetState extends State<Moduleoperations> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Module Management'),
+        title: Text('Modules gallery'),
       ),
       body: StreamBuilder(
         stream: _modules.snapshots(),
@@ -335,7 +335,7 @@ class MywidgetState extends State<Moduleoperations> {
                   child: Card(
                     elevation: 5,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(15),
                     ),
                     child: Card(
                       elevation: 5,
@@ -357,22 +357,63 @@ class MywidgetState extends State<Moduleoperations> {
                             fontSize: 18,
                           ),
                         ),
-                        subtitle: Text(
-                          "Subject Code: ${documentSnapshot['subjectCode'].toString()}\nRating: ${documentSnapshot['Ratings'].toString()}\n${documentSnapshot['description']}",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 2, 3, 8),
-                            fontSize: 14,
-                          ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Subject Code: ${documentSnapshot['subjectCode'].toString()}",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 2, 3, 8),
+                                fontSize: 14,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "Rating: ",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 2, 3, 8),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                RatingBar.builder(
+                                  itemSize: 15,
+                                  initialRating: double.parse(
+                                      documentSnapshot['Ratings'].toString()),
+                                  minRating: 1,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  itemPadding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  itemBuilder: (context, _) => Icon(
+                                    Icons.circle,
+                                    color: Color.fromARGB(255, 240, 93, 8),
+                                  ),
+                                  onRatingUpdate: (rating) {
+                                    // Handle rating update here
+                                  },
+                                ),
+                              ],
+                            ),
+                            Text(
+                              documentSnapshot['description'],
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 2, 3, 8),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.delete),
+                              icon: Icon(Icons.close),
                               onPressed: () => _delete(documentSnapshot),
                             ),
                             IconButton(
-                              icon: Icon(Icons.edit),
+                              icon: Icon(Icons.tune),
                               onPressed: () => _update(documentSnapshot),
                             ),
                           ],
