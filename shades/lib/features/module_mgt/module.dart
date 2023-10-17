@@ -1,5 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
+import 'modulepage.dart';
 
 class Moduleoperations extends StatefulWidget {
   const Moduleoperations({Key? key});
@@ -9,269 +12,444 @@ class Moduleoperations extends StatefulWidget {
 }
 
 class MywidgetState extends State<Moduleoperations> {
-  //tetx field conrtoller
   final TextEditingController _moduleNameController = TextEditingController();
   final TextEditingController _subjectCodeController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _ratingsController = TextEditingController();
-  final TextEditingController _searchController = TextEditingController();
 
   final CollectionReference _modules =
       FirebaseFirestore.instance.collection('modules');
 
-  String searchText = '';
-  //Create
   Future<void> _create([DocumentSnapshot? documentSnapshot]) async {
+    double selectedRating = 0;
+
     await showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext ctx) {
-          return Padding(
-            padding: EdgeInsets.only(
-              top: 10,
-              left: 10,
-              right: 10,
-              bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Text("Insert Module Details",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext ctx) {
+        return Padding(
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 20,
+            right: 20,
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  "Insert Module Details",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                TextField(
-                  controller: _moduleNameController,
-                  decoration: const InputDecoration(labelText: "Module Name"),
+              ),
+              SizedBox(height: 20),
+              TextFormField(
+                controller: _moduleNameController,
+                decoration: InputDecoration(
+                  labelText: "Module Name",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.school),
                 ),
-                TextField(
-                  controller: _subjectCodeController,
-                  decoration: const InputDecoration(labelText: "Subject Code"),
+              ),
+              SizedBox(height: 12),
+              TextFormField(
+                controller: _subjectCodeController,
+                decoration: InputDecoration(
+                  labelText: "Subject Code",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.code),
                 ),
-                TextField(
-                  controller: _descriptionController,
-                  decoration: const InputDecoration(labelText: "Description"),
+              ),
+              SizedBox(height: 12),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: InputDecoration(
+                  labelText: "Description",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.description),
                 ),
-                TextField(
-                  controller: _ratingsController,
-                  decoration: const InputDecoration(labelText: "Ratings"),
+              ),
+              SizedBox(height: 12),
+              Text("Ratings:"),
+              RatingBar.builder(
+                initialRating: selectedRating,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: false,
+                itemCount: 5,
+                itemSize: 30.0,
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: Color.fromARGB(255, 228, 152, 12),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                    onPressed: () async {
-                      final String moduleName = _moduleNameController.text;
-                      final String subjectCode = _subjectCodeController.text;
-                      final String description = _descriptionController.text;
-                      final String ratings = _ratingsController.text;
+                onRatingUpdate: (rating) {
+                  selectedRating = rating;
+                },
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  final String moduleName = _moduleNameController.text;
+                  final String subjectCode = _subjectCodeController.text;
+                  final String description = _descriptionController.text;
+                  final String ratings =
+                      selectedRating.toString(); // Use the selected rating
 
-                      await _modules.add({
-                        'moduleName': moduleName,
-                        'subjectCode': subjectCode,
-                        'description': description,
-                        'Ratings': ratings,
-                      });
-                      _moduleNameController.text = "";
-                      _subjectCodeController.text = "";
-                      _descriptionController.text = "";
-                      _ratingsController.text = "";
+                  await _modules.add({
+                    'moduleName': moduleName,
+                    'subjectCode': subjectCode,
+                    'description': description,
+                    'Ratings': ratings,
+                  });
 
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("Create"))
-              ],
-            ),
-          );
-        });
+                  _moduleNameController.clear();
+                  _subjectCodeController.clear();
+                  _descriptionController.clear();
+
+                  Navigator.of(context).pop();
+                },
+                child: Text("Create", style: TextStyle(fontSize: 18)),
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
-//update operation
   Future<void> _update([DocumentSnapshot? documentSnapshot]) async {
+    double selectedRating = 0; // Added for rating selection
+
     if (documentSnapshot != null) {
       _moduleNameController.text = documentSnapshot['moduleName'].toString();
       _subjectCodeController.text = documentSnapshot['subjectCode'].toString();
       _descriptionController.text = documentSnapshot['description'].toString();
-      _ratingsController.text = documentSnapshot['Ratings'].toString();
+      selectedRating = double.parse(documentSnapshot['Ratings'].toString());
     }
+
     await showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext ctx) {
-          return Padding(
-            padding: EdgeInsets.only(
-              top: 10,
-              left: 10,
-              right: 10,
-              bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Text("Update Module Details",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext ctx) {
+        return Padding(
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 20,
+            right: 20,
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  "Update Module Details",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                TextField(
-                  controller: _moduleNameController,
-                  decoration: const InputDecoration(labelText: "Module Name"),
+              ),
+              SizedBox(height: 20),
+              TextFormField(
+                controller: _moduleNameController,
+                decoration: InputDecoration(
+                  labelText: "Module Name",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.school),
                 ),
-                TextField(
-                  controller: _subjectCodeController,
-                  decoration: const InputDecoration(labelText: "Subject Code"),
+              ),
+              SizedBox(height: 12),
+              TextFormField(
+                controller: _subjectCodeController,
+                decoration: InputDecoration(
+                  labelText: "Subject Code",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.code),
                 ),
-                TextField(
-                  controller: _descriptionController,
-                  decoration: const InputDecoration(labelText: "Description"),
+              ),
+              SizedBox(height: 12),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: InputDecoration(
+                  labelText: "Description",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.description),
                 ),
-                TextField(
-                  controller: _ratingsController,
-                  decoration: const InputDecoration(labelText: "Ratings"),
+              ),
+              SizedBox(height: 12),
+              Text("Ratings:"),
+              RatingBar.builder(
+                initialRating: selectedRating,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: false,
+                itemCount: 5,
+                itemSize: 30.0,
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: Color.fromARGB(255, 228, 152, 12),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                    onPressed: () async {
-                      final String moduleName = _moduleNameController.text;
-                      final String subjectCode = _subjectCodeController.text;
-                      final String description = _descriptionController.text;
-                      final String ratings = _ratingsController.text;
+                onRatingUpdate: (rating) {
+                  selectedRating = rating;
+                },
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  final String moduleName = _moduleNameController.text;
+                  final String subjectCode = _subjectCodeController.text;
+                  final String description = _descriptionController.text;
+                  final String ratings =
+                      selectedRating.toString(); // Use the selected rating
 
-                      // await _modules.({
-                      //   'moduleName': moduleName,
-                      //   'subjectCode': subjectCode,
-                      //   'description': description,
-                      //   'Ratings': ratings,
-                      // });
+                  await _modules.doc(documentSnapshot!.id).update({
+                    'moduleName': moduleName,
+                    'subjectCode': subjectCode,
+                    'description': description,
+                    'Ratings': ratings,
+                  });
 
-                      await _modules.doc(documentSnapshot!.id).update({
-                        'moduleName': moduleName,
-                        'subjectCode': subjectCode,
-                        'description': description,
-                        'Ratings': ratings,
-                      });
-                      _moduleNameController.text = "";
-                      _subjectCodeController.text = "";
-                      _descriptionController.text = "";
-                      _ratingsController.text = "";
+                  _moduleNameController.clear();
+                  _subjectCodeController.clear();
+                  _descriptionController.clear();
 
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("Update"))
-              ],
-            ),
-          );
-        });
+                  Navigator.of(context).pop();
+                },
+                child: Text("Update", style: TextStyle(fontSize: 18)),
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
-  //delete operation
   Future<void> _delete([DocumentSnapshot? documentSnapshot]) async {
-    await _modules.doc(documentSnapshot!.id).delete();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Icon(
+                Icons.warning,
+                size: 64,
+                color: Colors.red,
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Confirm Deletion',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Are you sure you want to delete this module?',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                await _modules.doc(documentSnapshot!.id).delete();
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text(
+                'Delete',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
-  void _onSearchChanged(String value) {
-    setState(() {
-      searchText = value;
-    });
-  }
-
-  bool isSearchClicked = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: isSearchClicked
-              ? Container(
-                  height: 40,
+      appBar: AppBar(
+        title: Text('Modules gallery'),
+      ),
+      body: StreamBuilder(
+        stream: _modules.snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+          if (streamSnapshot.hasData) {
+            return ListView.builder(
+              itemCount: streamSnapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                final DocumentSnapshot documentSnapshot =
+                    streamSnapshot.data!.docs[index];
+                return Container(
+                  margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 253, 255, 255),
-                      borderRadius: BorderRadius.circular(30)),
-                  child: TextField(
-                    controller: _searchController,
-                    onChanged: _onSearchChanged,
-                    decoration: const InputDecoration(
-                      hintText: "Search",
+                    color: const Color.fromARGB(255, 174, 204, 248),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                  ),
-                )
-              : const Text(
-                  "CRUD Operations",
-                  style: TextStyle(
-                    color: Color.fromARGB(
-                        255, 253, 253, 253), // Set text color to white
-                  ),
-                ),
-          backgroundColor: const Color.fromARGB(
-              255, 40, 10, 94), // Set AppBar background color
-          actions: [IconButton(onPressed: () {}, icon: Icon(Icons.search))],
-        ),
-        body: StreamBuilder(
-            stream: _modules.snapshots(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-              if (streamSnapshot.hasData) {
-                return ListView.builder(
-                    itemCount: streamSnapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      final DocumentSnapshot documentSnapshot =
-                          streamSnapshot.data!.docs[index];
-                      return Card(
-                        color: const Color.fromARGB(255, 174, 204, 248),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        margin: const EdgeInsets.all(10),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 17,
-                            backgroundColor:
-                                const Color.fromARGB(255, 255, 106, 7),
-                            child: Text(
-                              documentSnapshot['moduleName'].toString(),
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 2, 3, 8)),
-                            ),
-                          ),
-                          title: Text(
-                            documentSnapshot['subjectCode'].toString(),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(
-                            "Rating: ${documentSnapshot['Ratings'].toString()}                             ${documentSnapshot['description']}",
-                            style: const TextStyle(
-                              color: Color.fromARGB(255, 2, 3, 8),
-                            ),
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () => _delete(documentSnapshot),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () => _update(documentSnapshot),
-                              ),
-                            ],
+                    child: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.all(16),
+                        leading: Image.asset(
+                          'assets/module/module.jpg',
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                        ),
+                        title: Text(
+                          documentSnapshot['moduleName'].toString(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
                           ),
                         ),
-                      );
-                    });
-              }
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => _create(),
-          backgroundColor: const Color.fromARGB(255, 88, 168, 243),
-          child: const Icon(Icons.add),
-        ));
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Subject Code: ${documentSnapshot['subjectCode'].toString()}",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 2, 3, 8),
+                                fontSize: 14,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "Rating: ",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 2, 3, 8),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                RatingBar.builder(
+                                  itemSize: 15,
+                                  initialRating: double.parse(
+                                      documentSnapshot['Ratings'].toString()),
+                                  minRating: 1,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  itemPadding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  itemBuilder: (context, _) => Icon(
+                                    Icons.circle,
+                                    color: Color.fromARGB(255, 240, 93, 8),
+                                  ),
+                                  onRatingUpdate: (rating) {
+                                    // Handle rating update here
+                                  },
+                                ),
+                              ],
+                            ),
+                            Text(
+                              documentSnapshot['description'],
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 2, 3, 8),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.close),
+                              onPressed: () => _delete(documentSnapshot),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.tune),
+                              onPressed: () => _update(documentSnapshot),
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ModuleDetailPage(
+                                moduleName:
+                                    documentSnapshot['moduleName'].toString(),
+                                subjectCode:
+                                    documentSnapshot['subjectCode'].toString(),
+                                description:
+                                    documentSnapshot['description'].toString(),
+                                ratings: documentSnapshot['Ratings'].toString(),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _create(),
+        backgroundColor: const Color.fromARGB(255, 88, 168, 243),
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 }
