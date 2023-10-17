@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import 'dart:ui';
+import 'package:shades/features/resource_mgt/resource.dart';
 // import 'package:google_fonts/google_fonts.dart';
 // import 'package:shades/utils.dart';
 
@@ -103,14 +103,12 @@ class _ResourceReportFormState extends State<ResourceReportForm> {
                 ),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
-                    
                     border: OutlineInputBorder(),
                     hintText: 'Select Level',
                   ),
                   value: _selectedLevel,
                   items: _levels.map((String level) {
                     return DropdownMenuItem<String>(
-                      
                       value: level,
                       child: Text(level),
                     );
@@ -157,6 +155,14 @@ class _ResourceReportFormState extends State<ResourceReportForm> {
                         ),
                         onPressed: () {
                           // Add cancel logic here.
+                          Navigator.pop(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Scaffold(
+                                body: Resourceoperations(),
+                              ),
+                            ),
+                          ); // This line will navigate back to the previous screen.
                         },
                         child: const Text(
                           'Cancel',
