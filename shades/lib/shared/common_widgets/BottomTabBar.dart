@@ -16,12 +16,12 @@ class BottomTabBar extends StatefulWidget {
 class _BottomTabBarState extends State<BottomTabBar> {
   int _currentIndex = 0;
   final List<Widget> _tabs = [
-    Queryoperations(),
+    const Queryoperations(),
     const Moduleoperations(),
-    const Communityoperations(),
     const Resourceoperations(),
+    const Communityoperations(),
   ];
-  List<String> _tabTitles = [
+  final List<String> _tabTitles = [
     'Query',
     'Module',
     'Resource',
@@ -46,7 +46,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: Icon(Icons.exit_to_app),
+            icon: const Icon(Icons.exit_to_app),
             onPressed: () async {
               // Firebase sign-out code
               await FirebaseAuth.instance.signOut();
@@ -66,7 +66,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
             _currentIndex = index;
           });
         },
-        items: [
+        items: const [
           BottomNavigationBarItem(
             backgroundColor: Colors.pink,
             icon: Icon(Icons.question_answer), // Customize the icon for Query

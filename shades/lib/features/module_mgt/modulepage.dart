@@ -7,7 +7,8 @@ class ModuleDetailPage extends StatelessWidget {
   final String description;
   final String ratings;
 
-  ModuleDetailPage({
+  const ModuleDetailPage({
+    super.key,
     required this.moduleName,
     required this.subjectCode,
     required this.description,
@@ -25,7 +26,7 @@ class ModuleDetailPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Module Detail',
           style: TextStyle(
             fontSize: 24,
@@ -34,8 +35,8 @@ class ModuleDetailPage extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        backgroundColor:
-            Color.fromARGB(255, 2, 4, 10), // Choose your app's primary color
+        backgroundColor: const Color.fromARGB(255, 2, 4, 10),
+        // Choose your app's primary color
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -44,7 +45,7 @@ class ModuleDetailPage extends StatelessWidget {
           children: [
             Card(
               elevation: 4,
-              margin: EdgeInsets.all(16),
+              margin: const EdgeInsets.all(16),
               color: Colors.white,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,20 +66,20 @@ class ModuleDetailPage extends StatelessWidget {
                       children: [
                         Text(
                           'Module Name: $moduleName',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
                           'Subject Code: $subjectCode',
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                         Text(
                           'Description: $description',
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
-                        Text(
+                        const Text(
                           'Ratings:',
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
@@ -86,17 +87,17 @@ class ModuleDetailPage extends StatelessWidget {
                         Row(
                           children: [
                             for (int i = 0; i < filledStars; i++)
-                              Icon(Icons.star,
+                              const Icon(Icons.star,
                                   color: Color.fromARGB(255, 248, 158, 40),
                                   size: 30),
                             for (int i = 0; i < emptyStars; i++)
-                              Icon(Icons.star_border,
+                              const Icon(Icons.star_border,
                                   color: Colors.orange, size: 30),
                           ],
                         ),
                         Text(
                           'Average Rating: $ratingValue',
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
@@ -104,8 +105,8 @@ class ModuleDetailPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               'Reviews:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
@@ -116,10 +117,10 @@ class ModuleDetailPage extends StatelessWidget {
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Text('No reviews available.');
+                  return const Text('No reviews available.');
                 }
                 return Column(
                   children: snapshot.data!.docs.map((reviewData) {
@@ -133,7 +134,7 @@ class ModuleDetailPage extends StatelessWidget {
                     return Card(
                       elevation: 2,
                       color: Colors.white,
-                      margin: EdgeInsets.symmetric(vertical: 8),
+                      margin: const EdgeInsets.symmetric(vertical: 8),
                       child: Column(
                         children: [
                           ListTile(
@@ -143,7 +144,8 @@ class ModuleDetailPage extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    Icon(Icons.star, color: Colors.orange),
+                                    const Icon(Icons.star,
+                                        color: Colors.orange),
                                     Text('Rating: $rating'),
                                   ],
                                 ),
@@ -151,7 +153,7 @@ class ModuleDetailPage extends StatelessWidget {
                                 Row(
                                   children: [
                                     IconButton(
-                                      icon: Icon(Icons.favorite,
+                                      icon: const Icon(Icons.favorite,
                                           color: Color.fromARGB(
                                               255, 124, 117, 117)),
                                       onPressed: () {
@@ -165,7 +167,7 @@ class ModuleDetailPage extends StatelessWidget {
                                     ),
                                     Text('Likes: $likes'),
                                     IconButton(
-                                      icon: Icon(Icons.heart_broken,
+                                      icon: const Icon(Icons.heart_broken,
                                           color: Color.fromARGB(
                                               255, 124, 117, 117)),
                                       onPressed: () {
@@ -190,32 +192,32 @@ class ModuleDetailPage extends StatelessWidget {
                 );
               },
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               'Add a Review:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Card(
               elevation: 4,
               color: Colors.white,
-              margin: EdgeInsets.all(16),
+              margin: const EdgeInsets.all(16),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: <Widget>[
                     TextFormField(
                       controller: reviewController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Review',
                         prefixIcon:
                             Icon(Icons.comment), // Icon for the Review field
                         border: OutlineInputBorder(),
                       ),
                     ),
-                    SizedBox(height: 10.0),
+                    const SizedBox(height: 10.0),
                     TextFormField(
                       controller: ratingController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Rating (1-5)',
                         prefixIcon: Icon(Icons.star),
                         border: OutlineInputBorder(),
@@ -244,23 +246,23 @@ class ModuleDetailPage extends StatelessWidget {
                           ratingController.clear();
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content: Text(
                                   'Please enter a valid review and rating.'),
                             ),
                           );
                         }
                       },
-                      child: Text(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            const Color.fromARGB(255, 12, 13, 14)),
+                      ),
+                      child: const Text(
                         'Submit Review',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.white,
                         ),
-                      ),
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            const Color.fromARGB(255, 12, 13, 14)),
                       ),
                     ),
                   ],

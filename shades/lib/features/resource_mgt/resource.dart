@@ -283,8 +283,8 @@ class MywidgetState extends State<Resourceoperations> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => const Scaffold(
-                                        body: ResourceReportForm(),
-                                        // body: ViewPdf(),
+                                        // body: ResourceReportForm(),
+                                        body: ViewPdf(),
                                       ),
                                     ),
                                   );
