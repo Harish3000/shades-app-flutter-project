@@ -45,46 +45,63 @@ class ModuleDetailPage extends StatelessWidget {
             Card(
               elevation: 4,
               margin: EdgeInsets.all(16),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Module Name: $moduleName',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      'assets/module/module.jpg',
+                      width: 500,
+                      height: 200,
+                      fit: BoxFit.cover,
                     ),
-                    Text(
-                      'Subject Code: $subjectCode',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      'Description: $description',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      'Ratings:',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Row(
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        for (int i = 0; i < filledStars; i++)
-                          Icon(Icons.star, color: Colors.orange, size: 30),
-                        for (int i = 0; i < emptyStars; i++)
-                          Icon(Icons.star_border,
-                              color: Colors.orange, size: 30),
+                        Text(
+                          'Module Name: $moduleName',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Subject Code: $subjectCode',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Text(
+                          'Description: $description',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Text(
+                          'Ratings:',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        Row(
+                          children: [
+                            for (int i = 0; i < filledStars; i++)
+                              Icon(Icons.star,
+                                  color: Color.fromARGB(255, 248, 158, 40),
+                                  size: 30),
+                            for (int i = 0; i < emptyStars; i++)
+                              Icon(Icons.star_border,
+                                  color: Colors.orange, size: 30),
+                          ],
+                        ),
+                        Text(
+                          'Average Rating: $ratingValue',
+                          style: TextStyle(fontSize: 16),
+                        ),
                       ],
                     ),
-                    Text(
-                      'Average Rating: $ratingValue',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 16),
@@ -115,6 +132,7 @@ class ModuleDetailPage extends StatelessWidget {
 
                     return Card(
                       elevation: 2,
+                      color: Colors.white,
                       margin: EdgeInsets.symmetric(vertical: 8),
                       child: Column(
                         children: [
@@ -133,7 +151,9 @@ class ModuleDetailPage extends StatelessWidget {
                                 Row(
                                   children: [
                                     IconButton(
-                                      icon: Icon(Icons.thumb_up),
+                                      icon: Icon(Icons.favorite,
+                                          color: Color.fromARGB(
+                                              255, 124, 117, 117)),
                                       onPressed: () {
                                         FirebaseFirestore.instance
                                             .collection('module_reviews')
@@ -145,7 +165,9 @@ class ModuleDetailPage extends StatelessWidget {
                                     ),
                                     Text('Likes: $likes'),
                                     IconButton(
-                                      icon: Icon(Icons.thumb_down),
+                                      icon: Icon(Icons.heart_broken,
+                                          color: Color.fromARGB(
+                                              255, 124, 117, 117)),
                                       onPressed: () {
                                         FirebaseFirestore.instance
                                             .collection('module_reviews')
@@ -175,6 +197,7 @@ class ModuleDetailPage extends StatelessWidget {
             ),
             Card(
               elevation: 4,
+              color: Colors.white,
               margin: EdgeInsets.all(16),
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -184,6 +207,8 @@ class ModuleDetailPage extends StatelessWidget {
                       controller: reviewController,
                       decoration: InputDecoration(
                         labelText: 'Review',
+                        prefixIcon:
+                            Icon(Icons.comment), // Icon for the Review field
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -192,6 +217,7 @@ class ModuleDetailPage extends StatelessWidget {
                       controller: ratingController,
                       decoration: InputDecoration(
                         labelText: 'Rating (1-5)',
+                        prefixIcon: Icon(Icons.star),
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -207,12 +233,11 @@ class ModuleDetailPage extends StatelessWidget {
                               .add({
                             'moduleName': moduleName,
                             'subjectCode': subjectCode,
-                            'userName':
-                                'User', // Replace with the actual user's name
+                            'userName': 'Anonymous',
                             'rating': rating,
                             'reviews': review,
-                            'likes': 0, // Initialize likes count
-                            'dislikes': 0, // Initialize dislikes count
+                            'likes': 0,
+                            'dislikes': 0,
                           });
 
                           reviewController.clear();
@@ -230,11 +255,12 @@ class ModuleDetailPage extends StatelessWidget {
                         'Submit Review',
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                       ),
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.blue),
+                        backgroundColor: MaterialStateProperty.all(
+                            const Color.fromARGB(255, 12, 13, 14)),
                       ),
                     ),
                   ],
