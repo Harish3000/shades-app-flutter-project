@@ -1,44 +1,22 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
-class Queryoperations extends StatefulWidget {
-  const Queryoperations({Key? key});
+import 'querypage.dart';
+
+class QueryOperations extends StatefulWidget {
+  const QueryOperations({Key? key});
 
   @override
-  State<Queryoperations> createState() => MywidgetState();
+  State<QueryOperations> createState() => MyWidgetState();
 }
 
-class MywidgetState extends State<Queryoperations> {
+class MyWidgetState extends State<QueryOperations> {
   final TextEditingController _queryNameController = TextEditingController();
   final TextEditingController _subjectCodeController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _ratingsController = TextEditingController();
-  final TextEditingController _searchController = TextEditingController();
 
-  final CollectionReference _query =
+  final CollectionReference _queries =
       FirebaseFirestore.instance.collection('query');
-
-  String searchText = '';
-  bool isSearchClicked = false;
-
-  String getCurrentUserId() {
-    final User? user = FirebaseAuth.instance.currentUser;
-    return user?.uid ?? '';
-  }
-
-  Future<String> getUserRole(String userId) async {
-    final DocumentSnapshot userSnapshot =
-        await FirebaseFirestore.instance.collection('users').doc(userId).get();
-
-    if (userSnapshot.exists && userSnapshot.data() != null) {
-      final Map<String, dynamic> userData =
-          userSnapshot.data() as Map<String, dynamic>;
-      return userData['role'] ?? '';
-    } else {
-      return '';
-    }
-  }
 
   Future<void> _create([DocumentSnapshot? documentSnapshot]) async {
     await showModalBottomSheet(
@@ -48,8 +26,8 @@ class MywidgetState extends State<Queryoperations> {
         return Padding(
           padding: EdgeInsets.only(
             top: 10,
-            left: 10,
-            right: 10,
+            left: 20,
+            right: 20,
             bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
           ),
           child: Column(
@@ -59,50 +37,63 @@ class MywidgetState extends State<Queryoperations> {
               Center(
                 child: Text(
                   "Insert Query Details",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              TextField(
+              SizedBox(height: 20),
+              TextFormField(
                 controller: _queryNameController,
-                decoration: const InputDecoration(labelText: "Query Name"),
+                decoration: InputDecoration(
+                  labelText: "Query Name",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.search),
+                ),
               ),
-              TextField(
+              SizedBox(height: 12),
+              TextFormField(
                 controller: _subjectCodeController,
-                decoration: const InputDecoration(labelText: "Subject Code"),
+                decoration: InputDecoration(
+                  labelText: "Subject Code",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.code),
+                ),
               ),
-              TextField(
+              SizedBox(height: 12),
+              TextFormField(
                 controller: _descriptionController,
-                decoration: const InputDecoration(labelText: "Description"),
+                decoration: InputDecoration(
+                  labelText: "Description",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.description),
+                ),
               ),
-              TextField(
-                controller: _ratingsController,
-                decoration: const InputDecoration(labelText: "Ratings"),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
                   final String queryName = _queryNameController.text;
                   final String subjectCode = _subjectCodeController.text;
                   final String description = _descriptionController.text;
-                  final String ratings = _ratingsController.text;
 
-                  await _query.add({
+                  await _queries.add({
                     'queryName': queryName,
                     'subjectCode': subjectCode,
                     'description': description,
-                    'Ratings': ratings,
                   });
-                  _queryNameController.text = "";
-                  _subjectCodeController.text = "";
-                  _descriptionController.text = "";
-                  _ratingsController.text = "";
+
+                  _queryNameController.clear();
+                  _subjectCodeController.clear();
+                  _descriptionController.clear();
 
                   Navigator.of(context).pop();
                 },
-                child: Text("Create"),
-              ),
+                child: Text("Create", style: TextStyle(fontSize: 18)),
+              )
             ],
           ),
         );
@@ -115,7 +106,6 @@ class MywidgetState extends State<Queryoperations> {
       _queryNameController.text = documentSnapshot['queryName'].toString();
       _subjectCodeController.text = documentSnapshot['subjectCode'].toString();
       _descriptionController.text = documentSnapshot['description'].toString();
-      _ratingsController.text = documentSnapshot['Ratings'].toString();
     }
 
     await showModalBottomSheet(
@@ -125,8 +115,8 @@ class MywidgetState extends State<Queryoperations> {
         return Padding(
           padding: EdgeInsets.only(
             top: 10,
-            left: 10,
-            right: 10,
+            left: 20,
+            right: 20,
             bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
           ),
           child: Column(
@@ -136,50 +126,63 @@ class MywidgetState extends State<Queryoperations> {
               Center(
                 child: Text(
                   "Update Query Details",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              TextField(
+              SizedBox(height: 20),
+              TextFormField(
                 controller: _queryNameController,
-                decoration: const InputDecoration(labelText: "Query Name"),
+                decoration: InputDecoration(
+                  labelText: "Query Name",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.search),
+                ),
               ),
-              TextField(
+              SizedBox(height: 12),
+              TextFormField(
                 controller: _subjectCodeController,
-                decoration: const InputDecoration(labelText: "Subject Code"),
+                decoration: InputDecoration(
+                  labelText: "Subject Code",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.code),
+                ),
               ),
-              TextField(
+              SizedBox(height: 12),
+              TextFormField(
                 controller: _descriptionController,
-                decoration: const InputDecoration(labelText: "Description"),
+                decoration: InputDecoration(
+                  labelText: "Description",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.description),
+                ),
               ),
-              TextField(
-                controller: _ratingsController,
-                decoration: const InputDecoration(labelText: "Ratings"),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
                   final String queryName = _queryNameController.text;
                   final String subjectCode = _subjectCodeController.text;
                   final String description = _descriptionController.text;
-                  final String ratings = _ratingsController.text;
 
-                  await _query.doc(documentSnapshot!.id).update({
+                  await _queries.doc(documentSnapshot!.id).update({
                     'queryName': queryName,
                     'subjectCode': subjectCode,
                     'description': description,
-                    'Ratings': ratings,
                   });
-                  _queryNameController.text = "";
-                  _subjectCodeController.text = "";
-                  _descriptionController.text = "";
-                  _ratingsController.text = "";
+
+                  _queryNameController.clear();
+                  _subjectCodeController.clear();
+                  _descriptionController.clear();
 
                   Navigator.of(context).pop();
                 },
-                child: Text("Update"),
-              ),
+                child: Text("Update", style: TextStyle(fontSize: 18)),
+              )
             ],
           ),
         );
@@ -188,56 +191,76 @@ class MywidgetState extends State<Queryoperations> {
   }
 
   Future<void> _delete([DocumentSnapshot? documentSnapshot]) async {
-    await _query.doc(documentSnapshot!.id).delete();
-  }
-
-  void _onSearchChanged(String value) {
-    setState(() {
-      searchText = value;
-    });
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Icon(
+                Icons.warning,
+                size: 64,
+                color: Colors.red,
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Confirm Deletion',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Are you sure you want to delete this query?',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                await _queries.doc(documentSnapshot!.id).delete();
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text(
+                'Delete',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: isSearchClicked
-            ? Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 253, 255, 255),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: TextField(
-                  controller: _searchController,
-                  onChanged: _onSearchChanged,
-                  decoration: const InputDecoration(
-                    hintText: "Search",
-                  ),
-                ),
-              )
-            : const Text(
-                "CRUD Operations",
-                style: TextStyle(
-                  color: Color.fromARGB(
-                    255,
-                    253,
-                    253,
-                    253,
-                  ),
-                ),
-              ),
-        backgroundColor: const Color.fromARGB(255, 40, 10, 94),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.search),
-          ),
-        ],
-      ),
       body: StreamBuilder(
-        stream: _query.snapshots(),
+        stream: _queries.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
           if (streamSnapshot.hasData) {
             return ListView.builder(
@@ -245,67 +268,89 @@ class MywidgetState extends State<Queryoperations> {
               itemBuilder: (context, index) {
                 final DocumentSnapshot documentSnapshot =
                     streamSnapshot.data!.docs[index];
-
-                return FutureBuilder(
-                  future: getUserRole(getCurrentUserId()),
-                  builder: (context, AsyncSnapshot<String> roleSnapshot) {
-                    if (roleSnapshot.connectionState == ConnectionState.done) {
-                      final String userRole = roleSnapshot.data ?? '';
-
-                      return Card(
-                        color: const Color.fromARGB(255, 174, 204, 248),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
+                return Container(
+                  margin: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 174, 204, 248),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.all(16),
+                        leading: Icon(Icons.search, size: 40),
+                        title: Text(
+                          documentSnapshot['queryName'].toString(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
-                        margin: const EdgeInsets.all(10),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 17,
-                            backgroundColor:
-                                const Color.fromARGB(255, 255, 106, 7),
-                            child: Text(
-                              documentSnapshot['queryName'].toString(),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Subject Code: ${documentSnapshot['subjectCode'].toString()}",
+                              style: TextStyle(
                                 color: Color.fromARGB(255, 2, 3, 8),
+                                fontSize: 14,
                               ),
                             ),
-                          ),
-                          title: Text(
-                            documentSnapshot['subjectCode'].toString(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
+                            Text(
+                              documentSnapshot['description'],
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 2, 3, 8),
+                                fontSize: 14,
+                              ),
                             ),
-                          ),
-                          subtitle: Text(
-                            "Rating: ${documentSnapshot['Ratings'].toString()}                             ${documentSnapshot['description']}",
-                            style: const TextStyle(
-                              color: Color.fromARGB(255, 2, 3, 8),
-                            ),
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (userRole == 'leader')
-                                IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () => _delete(documentSnapshot),
-                                ),
-                              if (userRole == 'leader')
-                                IconButton(
-                                  icon: const Icon(Icons.edit),
-                                  onPressed: () => _update(documentSnapshot),
-                                ),
-                            ],
-                          ),
+                          ],
                         ),
-                      );
-                    } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  },
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.close),
+                              onPressed: () => _delete(documentSnapshot),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.tune),
+                              onPressed: () => _update(documentSnapshot),
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ModuleDetailPage(
+                                queryName:
+                                    documentSnapshot['queryName'].toString(),
+                                subjectCode:
+                                    documentSnapshot['subjectCode'].toString(),
+                                description:
+                                    documentSnapshot['description'].toString(),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                 );
               },
             );
