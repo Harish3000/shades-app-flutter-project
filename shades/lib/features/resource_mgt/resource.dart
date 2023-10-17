@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shades/features/resource_mgt/reportResource.dart';
 import 'package:shades/features/resource_mgt/upload.dart';
 
+import 'package:shades/features/resource_mgt/ViewPdf.dart';
+
 class Resourceoperations extends StatefulWidget {
   const Resourceoperations({super.key});
 
@@ -282,6 +284,7 @@ class MywidgetState extends State<Resourceoperations> {
                                     MaterialPageRoute(
                                       builder: (context) => const Scaffold(
                                         body: ResourceReportForm(),
+                                        // body: ViewPdf(),
                                       ),
                                     ),
                                   );
