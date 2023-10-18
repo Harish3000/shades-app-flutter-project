@@ -330,6 +330,37 @@ class MywidgetState extends State<Moduleoperations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 247, 247, 247),
+        title: Text(
+          "Search",
+          style: TextStyle(color: Colors.black),
+        ),
+        iconTheme: IconThemeData(color: const Color.fromARGB(255, 0, 0, 0)),
+        actions: <Widget>[
+          Container(
+            margin: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 0, 0, 0),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: IconButton(
+              icon:
+                  Icon(Icons.search, color: Color.fromARGB(255, 255, 254, 254)),
+              onPressed: () {
+                // Handle search icon click here
+              },
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.filter_list,
+                color: Color.fromARGB(255, 0, 0, 0)), // Add a Filters button
+            onPressed: () {
+              // Handle Filters button click here
+            },
+          ),
+        ],
+      ),
       body: StreamBuilder(
         stream: _modules.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
@@ -391,7 +422,7 @@ class MywidgetState extends State<Moduleoperations> {
                               itemPadding:
                                   EdgeInsets.symmetric(horizontal: 4.0),
                               itemBuilder: (context, _) => Icon(
-                                Icons.circle,
+                                Icons.star,
                                 color: Color.fromARGB(255, 240, 93, 8),
                               ),
                               onRatingUpdate: (rating) {
@@ -422,12 +453,12 @@ class MywidgetState extends State<Moduleoperations> {
                             children: [
                               if (userRole == 'leader') // Check user role
                                 IconButton(
-                                  icon: Icon(Icons.delete),
+                                  icon: Icon(Icons.close),
                                   onPressed: () => _delete(documentSnapshot),
                                 ),
                               if (userRole == 'leader') // Check user role
                                 IconButton(
-                                  icon: Icon(Icons.edit),
+                                  icon: Icon(Icons.change_circle),
                                   onPressed: () => _update(documentSnapshot),
                                 ),
                             ],
@@ -465,8 +496,7 @@ class MywidgetState extends State<Moduleoperations> {
         },
       ),
       floatingActionButton: FutureBuilder(
-        future: getUserRole(
-            getCurrentUserId()), // Replace with actual user role retrieval
+        future: getUserRole(getCurrentUserId()),
         builder: (context, AsyncSnapshot<String> roleSnapshot) {
           if (roleSnapshot.connectionState == ConnectionState.done) {
             final String userRole = roleSnapshot.data ?? '';
@@ -474,7 +504,7 @@ class MywidgetState extends State<Moduleoperations> {
             if (userRole == 'leader') {
               return FloatingActionButton(
                 onPressed: () => _create(),
-                backgroundColor: Color.fromRGBO(20, 108, 148, 1),
+                backgroundColor: Color.fromRGBO(91, 163, 194, 1),
                 child: Icon(Icons.add),
               );
             }
