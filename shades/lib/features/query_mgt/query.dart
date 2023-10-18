@@ -280,7 +280,6 @@ class MyWidgetState extends State<QueryOperations> {
                 return Container(
                   margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 174, 204, 248),
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
@@ -303,7 +302,7 @@ class MyWidgetState extends State<QueryOperations> {
                       ),
                       child: ListTile(
                         contentPadding: EdgeInsets.all(16),
-                        leading: Icon(Icons.search, size: 40),
+                        leading: Icon(Icons.my_library_books_rounded, size: 40),
                         title: Text(
                           documentSnapshot['queryName'].toString(),
                           style: TextStyle(
@@ -315,24 +314,24 @@ class MyWidgetState extends State<QueryOperations> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "time stamp: ${_formatDate(documentSnapshot['queryCode'].toString())}",
+                              "@${_formatDate(documentSnapshot['queryCode'].toString())}",
                               style: TextStyle(
-                                color: Color.fromARGB(255, 2, 3, 8),
-                                fontSize: 14,
+                                color: Color.fromARGB(202, 178, 178, 178),
+                                fontSize: 10,
                               ),
                             ),
                             Text(
                               documentSnapshot['description'],
                               style: TextStyle(
                                 color: Color.fromARGB(255, 2, 3, 8),
-                                fontSize: 14,
+                                fontSize: 16,
                               ),
                             ),
                             Text(
-                              "Tags: ${documentSnapshot['tags'].toString()}",
+                              "# ${documentSnapshot['tags'].toString()}",
                               style: TextStyle(
-                                color: Color.fromARGB(255, 2, 3, 8),
-                                fontSize: 14,
+                                color: Color.fromARGB(255, 79, 108, 251),
+                                fontSize: 12,
                               ),
                             ),
                           ],
@@ -341,11 +340,11 @@ class MyWidgetState extends State<QueryOperations> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.close),
+                              icon: Icon(Icons.delete_forever_rounded),
                               onPressed: () => _delete(documentSnapshot),
                             ),
                             IconButton(
-                              icon: Icon(Icons.tune),
+                              icon: Icon(Icons.edit_square),
                               onPressed: () => _update(documentSnapshot),
                             ),
                           ],
