@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-
-import 'dart:ui';
 import 'package:shades/features/resource_mgt/resource.dart';
-// import 'package:google_fonts/google_fonts.dart';
-// import 'package:shades/utils.dart';
+import 'package:shades/features/resource_mgt/ViewPdf.dart';
+import 'package:shades/features/resource_mgt/upload.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+final CollectionReference resourceReports =
+    FirebaseFirestore.instance.collection('resourceReports');
 
 class ResourceReportForm extends StatefulWidget {
   const ResourceReportForm({super.key});
@@ -69,7 +72,13 @@ class _ResourceReportFormState extends State<ResourceReportForm> {
                     hintText: 'Title',
                   ),
                   onSaved: (value) {
-                    _resourceTitle = value!;
+                    _resourceTitle = value ?? '';
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a title';
+                    }
+                    return null;
                   },
                 ),
                 const SizedBox(height: 16),
@@ -92,7 +101,13 @@ class _ResourceReportFormState extends State<ResourceReportForm> {
                   ),
                   maxLines: 4,
                   onSaved: (value) {
-                    _reason = value!;
+                    _reason = value ?? '';
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a reason';
+                    }
+                    return null;
                   },
                 ),
                 const SizedBox(height: 16),
@@ -117,8 +132,14 @@ class _ResourceReportFormState extends State<ResourceReportForm> {
                   }).toList(),
                   onChanged: (value) {
                     setState(() {
-                      _selectedLevel = value!;
+                      _selectedLevel = value ?? 'Low';
                     });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select a level';
+                    }
+                    return null;
                   },
                 ),
                 const SizedBox(height: 16),
@@ -126,34 +147,66 @@ class _ResourceReportFormState extends State<ResourceReportForm> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromRGBO(25, 167, 206, 1),
-                          minimumSize: const Size(120, 50),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromRGBO(25, 167, 206, 1),
+                        minimumSize: const Size(120, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40),
                         ),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-                            // You can save the data or perform any action here.
-                            // For example, print the data.
-                            // print('Resource Title: $_resourceTitle');
-                            // print('Reason: $_reason');
-                            // print('Selected Level: $_selectedLevel');
+                      ),
+                      // onPressed: () {
+                      //   if (_formKey.currentState!.validate()) {
+                      //     _formKey.currentState!.save();
+                      // You can save the data or perform any action here.
+                      // For example, print the data.
+                      // print('Resource Title: $_resourceTitle');
+                      // print('Reason: $_reason');
+                      // print('Selected Level: $_selectedLevel');
+                      //   }
+                      // },
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+
+                          try {
+                            // Save the data to Firebase
+                            resourceReports.add({
+                              'resourceTitle': _resourceTitle,
+                              'reason': _reason,
+                              'level': _selectedLevel,
+                            });
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Scaffold(
+                                  body: ViewPdfForm(),
+                                ),
+                              ),
+                            ); // This line will navigate back to the previous screen.
+                          } catch (e) {
+                            // Handle errors here (e.g., show an error message)
+                            print('Error: $e');
                           }
-                        },
-                        child: const Text(
-                          'Submit',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        )),
+                        }
+                      },
+                      child: const Text(
+                        'Submit',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                    ),
                     const SizedBox(width: 16),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               const Color.fromRGBO(175, 211, 226, 1),
                           minimumSize: const Size(120, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40),
+                          ),
                         ),
                         onPressed: () {
                           // Add cancel logic here.

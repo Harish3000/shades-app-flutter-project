@@ -23,10 +23,18 @@ class Upload extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 15, 91, 156))),
               ),
-              const SizedBox(height: 70),
-              Image.asset("assets/tick.jpg", height: 100, width: 50),
-              const SizedBox(height: 70),
+              const SizedBox(height: 10),
+              Image.asset('assets/resource/correct.png',
+                  height: 300, width: 300),
+              const SizedBox(height: 10),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 77, 163, 200),
+                  minimumSize: const Size(120, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -36,7 +44,13 @@ class Upload extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Text('OK'),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 255, 255, 255)),
+                ),
               ),
             ],
           ),

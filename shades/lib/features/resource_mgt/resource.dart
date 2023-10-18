@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shades/features/resource_mgt/reportResource.dart';
 import 'package:shades/features/resource_mgt/upload.dart';
-
 import 'package:shades/features/resource_mgt/ViewPdf.dart';
 
 class Resourceoperations extends StatefulWidget {
@@ -24,7 +23,9 @@ class MywidgetState extends State<Resourceoperations> {
       FirebaseFirestore.instance.collection('resources');
 
   String searchText = '';
-  //Create
+  bool isSearchClicked = false;
+
+  // Create operation
   Future<void> _create() async {
     await showModalBottomSheet(
         isScrollControlled: true,
@@ -190,7 +191,6 @@ class MywidgetState extends State<Resourceoperations> {
     });
   }
 
-  bool isSearchClicked = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -218,92 +218,133 @@ class MywidgetState extends State<Resourceoperations> {
                         115, 253, 253, 253), // Set text color to white
                   ),
                 ),
-
-          backgroundColor: const Color.fromARGB(
-              255, 39, 10, 94), // Set AppBar background color
+          backgroundColor: const Color.fromARGB(255, 39, 10, 94),
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.search_sharp))
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  isSearchClicked = !isSearchClicked;
+                });
+              },
+              icon: const Icon(Icons.search_sharp),
+            )
           ],
         ),
         body: StreamBuilder(
             stream: _resources.snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
               if (streamSnapshot.hasData) {
-                return ListView.builder(
-                    itemCount: streamSnapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      final DocumentSnapshot documentSnapshot =
-                          streamSnapshot.data!.docs[index];
-                      return Card(
-                        shadowColor: Colors.black,
-                        color: const Color.fromARGB(246, 241, 241, 240),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        margin: const EdgeInsets.all(10),
-                        elevation: 8,
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 17,
-                            backgroundColor:
-                                const Color.fromARGB(255, 255, 106, 7),
-                            child: Text(
-                              documentSnapshot['resourceName'].toString(),
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 2, 3, 8)),
-                            ),
-                          ),
-                          title: Text(
-                            documentSnapshot['subjectCode'].toString(),
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 15, 91, 156)),
-                          ),
-                          subtitle: Text(
-                            "${documentSnapshot['Ratings'].toString()}                             ${documentSnapshot['description']}",
-                            style: const TextStyle(
-                              color: Color.fromARGB(255, 2, 3, 8),
-                            ),
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () => _update(documentSnapshot),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () => _delete(documentSnapshot),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.report),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const Scaffold(
-                                        // body: ResourceReportForm(),
-                                        body: ViewPdf(),
+                return Column(
+                  children: [
+                    // Add your text widget here
+                    const Center(
+                      child: Text(
+                        'Resource List',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 2, 3, 8),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+
+                    Expanded(
+                      child: ListView.builder(
+                          itemCount: streamSnapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            final DocumentSnapshot documentSnapshot =
+                                streamSnapshot.data!.docs[index];
+
+                            return SizedBox(
+                              height: 110,
+                              child: Card(
+                                shadowColor: Colors.black,
+                                color: const Color.fromARGB(246, 241, 241, 240),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15)),
+                                margin: const EdgeInsets.all(10),
+                                elevation: 8,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 10, bottom: 10, left: 10, right: 10),
+                                  child: ListTile(
+                                    leading: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Image.asset(
+                                          'assets/resource/PDF.jpg',
+                                          width: 50,
+                                          height: 50,
+                                        ),
+                                        // CircleAvatar(
+                                        //   radius: 17,
+                                        //   backgroundColor:
+                                        //       const Color.fromARGB(255, 255, 106, 7),
+
+                                        // ),
+                                      ],
+                                    ),
+                                    title: Text(
+                                      documentSnapshot['resourceName']
+                                          .toString(),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Color.fromARGB(255, 2, 3, 8),
                                       ),
                                     ),
-                                  );
-                                },
+                                    subtitle: Text(
+                                      "${documentSnapshot['subjectCode'].toString()} \n ${documentSnapshot['Ratings'].toString()} \n ${documentSnapshot['description']}",
+                                      style: const TextStyle(
+                                        color: Color.fromARGB(255, 2, 3, 8),
+                                      ),
+                                    ),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.edit),
+                                          onPressed: () =>
+                                              _update(documentSnapshot),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete),
+                                          onPressed: () =>
+                                              _delete(documentSnapshot),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.report),
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const Scaffold(
+                                                  body: ResourceReportForm(),
+                                                  // body: ViewPdf(),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
-                      );
-                    });
+                            );
+                          }),
+                    ),
+                  ],
+                );
+              } else {
+                return const CircularProgressIndicator();
               }
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
             }),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => _create(),
-          backgroundColor: const Color.fromARGB(255, 88, 168, 243),
-          child: const Icon(Icons.add),
-        ));
+        onPressed: () => _create(),
+        backgroundColor: const Color.fromARGB(255, 88, 168, 243),
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 }
