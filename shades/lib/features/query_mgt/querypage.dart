@@ -94,17 +94,17 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                         Text(
                           '🎯${widget.queryName}',
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 25,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          'time: ${widget.queryCode}',
+                          '             time: ${widget.queryCode}\n',
                           style: TextStyle(fontSize: 10, color: Colors.grey),
                         ),
                         Text(
-                          'Description: ${widget.description}',
-                          style: TextStyle(fontSize: 18),
+                          'Description:\n ${widget.description}',
+                          style: TextStyle(fontSize: 15),
                         ),
                         Text(
                           '[# ${widget.tags}]',

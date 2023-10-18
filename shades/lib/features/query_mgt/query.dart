@@ -313,31 +313,32 @@ class MyWidgetState extends State<QueryOperations> {
                           documentSnapshot['queryName'].toString(),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                            fontSize: 25,
                           ),
                         ),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "@${_formatDate(documentSnapshot['queryCode'].toString())}",
+                              "time : ${_formatDate(documentSnapshot['queryCode'].toString())}",
                               style: TextStyle(
-                                color: Color.fromARGB(202, 178, 178, 178),
+                                color: Color.fromARGB(201, 142, 142, 142),
                                 fontSize: 10,
                               ),
                             ),
                             Text(
-                              documentSnapshot['description'],
+                              // Display the first 4 characters of the user ID in grey
+                              "@user ${documentSnapshot['userID'].toString().substring(0, 6)}",
                               style: TextStyle(
-                                color: Color.fromARGB(255, 2, 3, 8),
-                                fontSize: 16,
+                                color: Color.fromARGB(199, 173, 173, 173),
+                                fontSize: 12,
                               ),
                             ),
                             Text(
                               "# ${documentSnapshot['tags'].toString()}",
                               style: TextStyle(
                                 color: Color.fromARGB(255, 79, 108, 251),
-                                fontSize: 12,
+                                fontSize: 15,
                               ),
                             ),
                           ],
