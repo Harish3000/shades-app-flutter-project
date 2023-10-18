@@ -72,7 +72,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
           children: [
             Card(
               elevation: 4,
-              margin: EdgeInsets.all(16),
+              margin: EdgeInsets.all(2),
               color: Colors.white,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,10 +132,14 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                       });
                       _animationController.forward();
                     },
-                    child: Text('Reply'),
+                    child: Text(
+                      'Reply',
+                      style: TextStyle(fontSize: 16),
+                    ),
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
                           const Color.fromARGB(255, 12, 13, 14)),
+                      minimumSize: MaterialStateProperty.all(Size(120, 40)),
                     ),
                   ),
                 ),
