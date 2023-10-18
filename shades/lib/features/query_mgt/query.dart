@@ -283,6 +283,15 @@ class MyWidgetState extends State<QueryOperations> {
               itemBuilder: (context, index) {
                 final DocumentSnapshot documentSnapshot =
                     streamSnapshot.data!.docs[index];
+
+                // Get the current user ID
+                final User? user = FirebaseAuth.instance.currentUser;
+                final String currentUserId = user?.uid ?? '';
+
+                // Check if the user ID in the query document matches the current user's ID
+                final bool canEditDelete =
+                    documentSnapshot['userID'] == currentUserId;
+
                 return Container(
                   margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(
@@ -301,77 +310,73 @@ class MyWidgetState extends State<QueryOperations> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    child: Card(
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.all(16),
+                      leading: Icon(Icons.my_library_books_rounded, size: 40),
+                      title: Text(
+                        documentSnapshot['queryName'].toString(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
-                      child: ListTile(
-                        contentPadding: EdgeInsets.all(16),
-                        leading: Icon(Icons.my_library_books_rounded, size: 40),
-                        title: Text(
-                          documentSnapshot['queryName'].toString(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25,
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "@${_formatDate(documentSnapshot['queryCode'].toString())}",
+                            style: TextStyle(
+                              color: Color.fromARGB(202, 178, 178, 178),
+                              fontSize: 10,
+                            ),
                           ),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "time : ${_formatDate(documentSnapshot['queryCode'].toString())}",
-                              style: TextStyle(
-                                color: Color.fromARGB(201, 142, 142, 142),
-                                fontSize: 10,
-                              ),
+                          Text(
+                            // Display the first 4 characters of the user ID in grey
+                            "${documentSnapshot['userID'].toString().substring(0, 4)}",
+                            style: TextStyle(
+                              color: Color.fromARGB(202, 178, 178, 178),
+                              fontSize: 10,
                             ),
-                            Text(
-                              // Display the first 4 characters of the user ID in grey
-                              "@user ${documentSnapshot['userID'].toString().substring(0, 6)}",
-                              style: TextStyle(
-                                color: Color.fromARGB(199, 173, 173, 173),
-                                fontSize: 12,
-                              ),
+                          ),
+                          Text(
+                            "# ${documentSnapshot['tags'].toString()}",
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 79, 108, 251),
+                              fontSize: 12,
                             ),
-                            Text(
-                              "# ${documentSnapshot['tags'].toString()}",
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 79, 108, 251),
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.delete_forever_rounded),
-                              onPressed: () => _delete(documentSnapshot),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.edit_square),
-                              onPressed: () => _update(documentSnapshot),
-                            ),
-                          ],
-                        ),
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ModuleDetailPage(
-                                queryName:
-                                    documentSnapshot['queryName'].toString(),
-                                queryCode:
-                                    documentSnapshot['queryCode'].toString(),
-                                description:
-                                    documentSnapshot['description'].toString(),
-                                tags: documentSnapshot['tags'].toString(),
-                              ),
-                            ),
-                          );
-                        },
+                          ),
+                        ],
                       ),
+                      trailing: canEditDelete
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.delete_forever_rounded),
+                                  onPressed: () => _delete(documentSnapshot),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.edit_square),
+                                  onPressed: () => _update(documentSnapshot),
+                                ),
+                              ],
+                            )
+                          : null,
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ModuleDetailPage(
+                              queryName:
+                                  documentSnapshot['queryName'].toString(),
+                              queryCode:
+                                  documentSnapshot['queryCode'].toString(),
+                              description:
+                                  documentSnapshot['description'].toString(),
+                              tags: documentSnapshot['tags'].toString(),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 );
