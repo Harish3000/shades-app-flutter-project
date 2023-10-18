@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_pdf_viewer/easy_pdf_viewer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ class ViewPdfForm extends StatefulWidget {
 
 class _ViewPdfFormState extends State<ViewPdfForm> {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  List<Map<String, dynamic>> pdfList = [];
+
   Future<String?> uploadPdf(String fileName, File file) async {
     final reference =
         FirebaseStorage.instance.ref().child("ResourcePdfs/$fileName.pdf");
@@ -39,6 +42,18 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
     }
   }
 
+  void getAllPdf() async {
+    final allPdfs = await _firebaseFirestore.collection("ResourcesPdfs").get();
+    pdfList = allPdfs.docs.map((e) => e.data()).toList();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getAllPdf();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,13 +61,19 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
           title: const Text('View PDF'),
         ),
         body: GridView.builder(
+            itemCount: pdfList.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2),
             itemBuilder: (context, index) {
               return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => PdfViewerScreen(
+                                pdfurl: pdfList[index]['url'],
+                              )));
+                    },
                     child: Container(
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.black)),
@@ -64,8 +85,8 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
                             height: 120,
                             width: 100,
                           ),
-                          const Text('PDF Name',
-                              style: TextStyle(fontSize: 16)),
+                          Text(pdfList[index]['name'],
+                              style: const TextStyle(fontSize: 16)),
                         ],
                       ),
                     ),
@@ -73,5 +94,39 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
             }),
         floatingActionButton: FloatingActionButton(
             onPressed: pickFile, child: const Icon(Icons.upload_file)));
+  }
+}
+
+class PdfViewerScreen extends StatefulWidget {
+  final String pdfurl;
+  const PdfViewerScreen({super.key, required this.pdfurl});
+
+  @override
+  State<PdfViewerScreen> createState() => _PdfViewerScreenState();
+}
+
+class _PdfViewerScreenState extends State<PdfViewerScreen> {
+  PDFDocument? document;
+
+  void initialisePdf() async {
+    document = await PDFDocument.fromURL(widget.pdfurl);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initialisePdf();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: document != null
+          ? PDFViewer(
+              document: document!,
+            )
+          : const Center(child: CircularProgressIndicator()),
+    );
   }
 }

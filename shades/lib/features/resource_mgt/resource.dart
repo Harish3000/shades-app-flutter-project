@@ -22,8 +22,8 @@ class MywidgetState extends State<Resourceoperations> {
   final CollectionReference _resources =
       FirebaseFirestore.instance.collection('resources');
 
-  String searchText = '';
-  bool isSearchClicked = false;
+  // String searchText = '';
+  // bool isSearchClicked = false;
 
   // Create operation
   Future<void> _create() async {
@@ -36,7 +36,7 @@ class MywidgetState extends State<Resourceoperations> {
               top: 10,
               left: 10,
               right: 10,
-              bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+              bottom: MediaQuery.of(ctx).viewInsets.bottom + 50,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -185,162 +185,161 @@ class MywidgetState extends State<Resourceoperations> {
     await _resources.doc(documentSnapshot!.id).delete();
   }
 
-  void _onSearchChanged(String value) {
-    setState(() {
-      searchText = value;
-    });
-  }
+  // void _onSearchChanged(String value) {
+  //   setState(() {
+  //     searchText = value;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: isSearchClicked
-              ? Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 253, 255, 255),
-                      borderRadius: BorderRadius.circular(30)),
-                  child: TextField(
-                    controller: _searchController,
-                    onChanged: _onSearchChanged,
-                    decoration: const InputDecoration(
-                      hintText: "Search",
-                    ),
-                  ),
-                )
-              : const Text(
-                  "search here",
-                  style: TextStyle(
-                    fontStyle: FontStyle.italic,
-                    color: Color.fromARGB(
-                        115, 253, 253, 253), // Set text color to white
-                  ),
-                ),
-          backgroundColor: const Color.fromARGB(255, 39, 10, 94),
-          actions: [
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  isSearchClicked = !isSearchClicked;
-                });
-              },
-              icon: const Icon(Icons.search_sharp),
-            )
-          ],
-        ),
-        body: StreamBuilder(
-            stream: _resources.snapshots(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-              if (streamSnapshot.hasData) {
-                return Column(
-                  children: [
-                    // Add your text widget here
-                    const Center(
-                      child: Text(
-                        'Resource List',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 2, 3, 8),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
+      appBar: AppBar(
+        // centerTitle: true,
+        // title: isSearchClicked
+        //     ? Container(
+        //         height: 40,
+        //         decoration: BoxDecoration(
+        //             color: const Color.fromARGB(255, 253, 255, 255),
+        //             borderRadius: BorderRadius.circular(30)),
+        //         child: TextField(
+        //           controller: _searchController,
+        //           onChanged: _onSearchChanged,
+        //           decoration: const InputDecoration(
+        //             hintText: "Search",
+        //           ),
+        //         ),
+        //       )
+        //     : const Text(
+        //         "search here",
+        //         style: TextStyle(
+        //           fontStyle: FontStyle.italic,
+        //           color: Color.fromARGB(
+        //               115, 253, 253, 253), // Set text color to white
+        //         ),
+        //       ),
+        // backgroundColor: const Color.fromARGB(255, 39, 10, 94),
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       setState(() {
+        //         isSearchClicked = !isSearchClicked;
+        //       });
+        //     },
+        //     icon: const Icon(Icons.search_sharp),
+        //   )
+        // ],
+      ),
+      body: StreamBuilder(
+          stream: _resources.snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+            if (streamSnapshot.hasData) {
+              return Column(
+                children: [
+                  // Add your text widget here
+                  const Center(
+                    child: Text(
+                      'Resource List',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 2, 3, 8),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
                       ),
                     ),
+                  ),
 
-                    Expanded(
-                      child: ListView.builder(
-                          itemCount: streamSnapshot.data!.docs.length,
-                          itemBuilder: (context, index) {
-                            final DocumentSnapshot documentSnapshot =
-                                streamSnapshot.data!.docs[index];
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: streamSnapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          final DocumentSnapshot documentSnapshot =
+                              streamSnapshot.data!.docs[index];
 
-                            return SizedBox(
-                              height: 110,
-                              child: Card(
-                                shadowColor: Colors.black,
-                                color: const Color.fromARGB(246, 241, 241, 240),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15)),
-                                margin: const EdgeInsets.all(10),
-                                elevation: 8,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 10, bottom: 10, left: 10, right: 10),
-                                  child: ListTile(
-                                    leading: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Image.asset(
-                                          'assets/resource/PDF.jpg',
-                                          width: 50,
-                                          height: 50,
-                                        ),
-                                        // CircleAvatar(
-                                        //   radius: 17,
-                                        //   backgroundColor:
-                                        //       const Color.fromARGB(255, 255, 106, 7),
-
-                                        // ),
-                                      ],
-                                    ),
-                                    title: Text(
-                                      documentSnapshot['resourceName']
-                                          .toString(),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 2, 3, 8),
+                          return SizedBox(
+                            height: 110,
+                            child: Card(
+                              shadowColor: Colors.black,
+                              color: const Color.fromARGB(246, 241, 241, 240),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                              margin: const EdgeInsets.all(10),
+                              elevation: 8,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 10, bottom: 10, left: 10, right: 10),
+                                child: ListTile(
+                                  leading: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Image.asset(
+                                        'assets/resource/PDF.jpg',
+                                        width: 50,
+                                        height: 50,
                                       ),
+                                      // CircleAvatar(
+                                      //   radius: 17,
+                                      //   backgroundColor:
+                                      //       const Color.fromARGB(255, 255, 106, 7),
+
+                                      // ),
+                                    ],
+                                  ),
+                                  title: Text(
+                                    documentSnapshot['resourceName'].toString(),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromARGB(255, 2, 3, 8),
                                     ),
-                                    subtitle: Text(
-                                      "${documentSnapshot['subjectCode'].toString()} \n ${documentSnapshot['Ratings'].toString()} \n ${documentSnapshot['description']}",
-                                      style: const TextStyle(
-                                        color: Color.fromARGB(255, 2, 3, 8),
+                                  ),
+                                  subtitle: Text(
+                                    "${documentSnapshot['subjectCode'].toString()} \n ${documentSnapshot['Ratings'].toString()} \n ${documentSnapshot['description']}",
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 2, 3, 8),
+                                    ),
+                                  ),
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () =>
+                                            _update(documentSnapshot),
                                       ),
-                                    ),
-                                    trailing: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.edit),
-                                          onPressed: () =>
-                                              _update(documentSnapshot),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.delete),
-                                          onPressed: () =>
-                                              _delete(documentSnapshot),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.report),
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const Scaffold(
-                                                  body: ResourceReportForm(),
-                                                  // body: ViewPdf(),
-                                                ),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        onPressed: () =>
+                                            _delete(documentSnapshot),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.report),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const Scaffold(
+                                                body: ResourceReportForm(),
+                                                // body: ViewPdf(),
                                               ),
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                            );
-                          }),
-                    ),
-                  ],
-                );
-              } else {
-                return const CircularProgressIndicator();
-              }
-            }),
-        floatingActionButton: FloatingActionButton(
+                            ),
+                          );
+                        }),
+                  ),
+                ],
+              );
+            } else {
+              return const CircularProgressIndicator();
+            }
+          }),
+      floatingActionButton: FloatingActionButton(
         onPressed: () => _create(),
         backgroundColor: const Color.fromARGB(255, 88, 168, 243),
         child: const Icon(Icons.add),
