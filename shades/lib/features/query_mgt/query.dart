@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'querypage.dart';
@@ -84,11 +85,16 @@ class MyWidgetState extends State<QueryOperations> {
                   final String timeStamp =
                       "${dateTimeNow.year}-${_formatNumber(dateTimeNow.month)}-${_formatNumber(dateTimeNow.day)} ${_formatNumber(dateTimeNow.hour)}:${_formatNumber(dateTimeNow.minute)}:${_formatNumber(dateTimeNow.second)}";
 
+                  // Get the current user ID
+                  final User? user = FirebaseAuth.instance.currentUser;
+                  final String userId = user?.uid ?? '';
+
                   await _queries.add({
                     'queryName': queryName,
                     'queryCode': timeStamp,
                     'description': description,
                     'tags': tags,
+                    'userID': userId, // Save the user ID
                   });
 
                   _queryNameController.clear();
