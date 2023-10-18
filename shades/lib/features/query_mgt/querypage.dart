@@ -80,7 +80,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.asset(
-                      'assets/module/module.jpg',
+                      'assets/query/test.gif', // Replace this line
                       width: 500,
                       height: 200,
                       fit: BoxFit.cover,
@@ -92,23 +92,26 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Query Name: ${widget.queryName}',
+                          '🎯${widget.queryName}',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          'time stamp: ${widget.queryCode}',
-                          style: TextStyle(fontSize: 16),
+                          'time: ${widget.queryCode}',
+                          style: TextStyle(fontSize: 10, color: Colors.grey),
                         ),
                         Text(
                           'Description: ${widget.description}',
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize: 18),
                         ),
                         Text(
-                          'Tags: ${widget.tags}',
-                          style: TextStyle(fontSize: 16),
+                          '[# ${widget.tags}]',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.blue,
+                          ),
                         ),
                       ],
                     ),
