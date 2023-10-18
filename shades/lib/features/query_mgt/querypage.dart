@@ -18,9 +18,14 @@ class ModuleDetailPage extends StatefulWidget {
   _ModuleDetailPageState createState() => _ModuleDetailPageState();
 }
 
-class _ModuleDetailPageState extends State<ModuleDetailPage> {
+class _ModuleDetailPageState extends State<ModuleDetailPage>
+    with TickerProviderStateMixin {
   late TextEditingController answerController;
   late List<Map<String, dynamic>> answers;
+  bool showAddAnswerSection = false;
+
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   @override
   void initState() {
@@ -28,6 +33,21 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
     answerController = TextEditingController();
     answers = [];
     _getAndSortAnswers();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+
+    _animation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -97,64 +117,88 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
               ),
             ),
             SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Visibility(
+                  visible: !showAddAnswerSection,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        showAddAnswerSection = true;
+                      });
+                      _animationController.forward();
+                    },
+                    child: Text('Reply'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          const Color.fromARGB(255, 12, 13, 14)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+            Visibility(
+              visible: showAddAnswerSection,
+              child: FadeTransition(
+                opacity: _animation,
+                child: Card(
+                  elevation: 4,
+                  color: Colors.white,
+                  margin: EdgeInsets.all(16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: <Widget>[
+                        TextFormField(
+                          controller: answerController,
+                          decoration: InputDecoration(
+                            labelText: 'Answer',
+                            prefixIcon: Icon(Icons.comment),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        SizedBox(height: 10.0),
+                        ElevatedButton(
+                          onPressed: () {
+                            final String answer = answerController.text;
+
+                            if (answer.isNotEmpty) {
+                              _submitAnswer(answer);
+                              answerController.clear();
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Please enter a valid answer.'),
+                                ),
+                              );
+                            }
+                          },
+                          child: Text(
+                            'Submit Answer',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                const Color.fromARGB(255, 12, 13, 14)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 16),
             Text(
               'Answers:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             _buildAnswers(),
-            SizedBox(height: 16),
-            Text(
-              'Add an Answer:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            Card(
-              elevation: 4,
-              color: Colors.white,
-              margin: EdgeInsets.all(16),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                      controller: answerController,
-                      decoration: InputDecoration(
-                        labelText: 'Answer',
-                        prefixIcon: Icon(Icons.comment),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    SizedBox(height: 10.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        final String answer = answerController.text;
-
-                        if (answer.isNotEmpty) {
-                          _submitAnswer(answer);
-                          answerController.clear();
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Please enter a valid answer.'),
-                            ),
-                          );
-                        }
-                      },
-                      child: Text(
-                        'Submit Answer',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            const Color.fromARGB(255, 12, 13, 14)),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -162,6 +206,20 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
   }
 
   Widget _buildAnswers() {
+    if (answers.isEmpty) {
+      return Center(
+        child: Column(
+          children: [
+            SizedBox(height: 50),
+            Text(
+              'No answers',
+              style: TextStyle(fontSize: 20),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Column(
       children: answers.map((answerData) {
         final answerId = answerData['answerId'];
@@ -174,7 +232,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
           key: ValueKey<String>(answerId),
           elevation: 2,
           color: Colors.white,
-          margin: EdgeInsets.symmetric(vertical: 8),
+          margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           child: Column(
             children: [
               ListTile(
