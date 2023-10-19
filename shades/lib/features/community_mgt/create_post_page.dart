@@ -298,7 +298,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                               Navigator.of(context).pop();
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.grey,
+                              primary: Color(0xFFAFD3E2),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),

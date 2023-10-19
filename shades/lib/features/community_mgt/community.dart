@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'create_post_page.dart';
+import 'UpdateCommunityPost.dart';
 
 void main() {
   runApp(MyApp());
@@ -94,10 +95,8 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                       children: [
                         Row(
                           children: [
-                            // Changed: Wrapped the image in ClipRRect to make it rounded
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                  25), // Rounded border for the circular frame
+                              borderRadius: BorderRadius.circular(25),
                               child: Container(
                                 width: 50,
                                 height: 50,
@@ -144,7 +143,7 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                           style: TextStyle(
                             fontSize: 18,
                             fontStyle: FontStyle.italic,
-                            color: Color(0xFF146C94), // Blue color
+                            color: Color(0xFF146C94),
                           ),
                         ),
                         SizedBox(height: 16),
@@ -192,6 +191,35 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                               ),
                             ),
                             SizedBox(width: 8),
+                            Spacer(),
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        UpdateCommunityPost(postId: postId),
+                                  ),
+                                );
+                              },
+                              child: Icon(
+                                Icons.edit,
+                                size: 30,
+                                color: Color(0xFF146C94),
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            InkWell(
+                              onTap: () {
+                                // Handle delete operation here
+                              },
+                              child: Icon(
+                                Icons.delete,
+                                size: 30,
+                                color: Color(0xFFB30000),
+                                //add outline to icon
+                              ),
+                            ),
                           ],
                         ),
                       ],
