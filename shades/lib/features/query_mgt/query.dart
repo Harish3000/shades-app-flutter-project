@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'querypage.dart';
 
 class QueryOperations extends StatefulWidget {
@@ -12,12 +11,22 @@ class QueryOperations extends StatefulWidget {
 }
 
 class MyWidgetState extends State<QueryOperations> {
-  final TextEditingController _queryNameController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _tagsController = TextEditingController();
+  late TextEditingController _queryNameController;
+  late TextEditingController _descriptionController;
+  late TextEditingController _tagsController;
+  late TextEditingController _searchController;
 
   final CollectionReference _queries =
       FirebaseFirestore.instance.collection('query');
+
+  @override
+  void initState() {
+    super.initState();
+    _queryNameController = TextEditingController();
+    _descriptionController = TextEditingController();
+    _tagsController = TextEditingController();
+    _searchController = TextEditingController();
+  }
 
   String getCurrentUserId() {
     final User? user = FirebaseAuth.instance.currentUser;
@@ -292,134 +301,173 @@ class MyWidgetState extends State<QueryOperations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder(
-        stream: _queries.snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-          if (streamSnapshot.hasData) {
-            return ListView.builder(
-              itemCount: streamSnapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                final DocumentSnapshot documentSnapshot =
-                    streamSnapshot.data!.docs[index];
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              onChanged: (value) {
+                setState(() {}); // Trigger a rebuild when the user types
+              },
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                hintText: 'Search Query...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: StreamBuilder(
+              stream: _queries.snapshots().map((querySnapshot) {
+                return querySnapshot.docs.where((doc) {
+                  final queryName = doc['queryName'].toString().toLowerCase();
+                  final searchQuery = _searchController.text.toLowerCase();
+                  return queryName.contains(searchQuery);
+                }).toList();
+              }),
+              builder: (context,
+                  AsyncSnapshot<List<QueryDocumentSnapshot>> streamSnapshot) {
+                if (streamSnapshot.hasData) {
+                  return ListView.builder(
+                    itemCount: streamSnapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      final DocumentSnapshot documentSnapshot =
+                          streamSnapshot.data![index];
 
-                final User? user = FirebaseAuth.instance.currentUser;
-                final String currentUserId = user?.uid ?? '';
+                      final User? user = FirebaseAuth.instance.currentUser;
+                      final String currentUserId = user?.uid ?? '';
 
-                return FutureBuilder(
-                  future: getUserRole(currentUserId),
-                  builder: (context, AsyncSnapshot<String> roleSnapshot) {
-                    if (roleSnapshot.connectionState == ConnectionState.done) {
-                      final String userRole = roleSnapshot.data ?? '';
+                      return FutureBuilder(
+                        future: getUserRole(currentUserId),
+                        builder: (context, AsyncSnapshot<String> roleSnapshot) {
+                          if (roleSnapshot.connectionState ==
+                              ConnectionState.done) {
+                            final String userRole = roleSnapshot.data ?? '';
 
-                      final bool canEditDelete =
-                          documentSnapshot['userID'] == currentUserId ||
-                              userRole == 'leader';
+                            final bool canEditDelete =
+                                documentSnapshot['userID'] == currentUserId ||
+                                    userRole == 'leader';
 
-                      return Container(
-                        margin: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Card(
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: ListTile(
-                            contentPadding: EdgeInsets.all(16),
-                            leading:
-                                Icon(Icons.my_library_books_rounded, size: 40),
-                            title: Text(
-                              documentSnapshot['queryName'].toString(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                            return Container(
+                              margin: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
                               ),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "@${_formatDate(documentSnapshot['queryCode'].toString())}",
-                                  style: TextStyle(
-                                    color: Color.fromARGB(202, 178, 178, 178),
-                                    fontSize: 10,
-                                  ),
+                              child: Card(
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
                                 ),
-                                Text(
-                                  "${documentSnapshot['userID'].toString().substring(0, 4)}",
-                                  style: TextStyle(
-                                    color: Color.fromARGB(202, 178, 178, 178),
-                                    fontSize: 10,
+                                child: ListTile(
+                                  contentPadding: EdgeInsets.all(16),
+                                  leading: Icon(Icons.my_library_books_rounded,
+                                      size: 40),
+                                  title: Text(
+                                    documentSnapshot['queryName'].toString(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  "# ${documentSnapshot['tags'].toString()}",
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 79, 108, 251),
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            trailing: canEditDelete
-                                ? Row(
-                                    mainAxisSize: MainAxisSize.min,
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      IconButton(
-                                        icon:
-                                            Icon(Icons.delete_forever_rounded),
-                                        onPressed: () =>
-                                            _delete(documentSnapshot),
+                                      Text(
+                                        "@${_formatDate(documentSnapshot['queryCode'].toString())}",
+                                        style: TextStyle(
+                                          color: Color.fromARGB(
+                                              202, 178, 178, 178),
+                                          fontSize: 10,
+                                        ),
                                       ),
-                                      IconButton(
-                                        icon: Icon(Icons.edit_square),
-                                        onPressed: () =>
-                                            _update(documentSnapshot),
+                                      Text(
+                                        "${documentSnapshot['userID'].toString().substring(0, 4)}",
+                                        style: TextStyle(
+                                          color: Color.fromARGB(
+                                              202, 178, 178, 178),
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                      Text(
+                                        "# ${documentSnapshot['tags'].toString()}",
+                                        style: TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 79, 108, 251),
+                                          fontSize: 12,
+                                        ),
                                       ),
                                     ],
-                                  )
-                                : null,
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => ModuleDetailPage(
-                                    queryName: documentSnapshot['queryName']
-                                        .toString(),
-                                    queryCode: documentSnapshot['queryCode']
-                                        .toString(),
-                                    description: documentSnapshot['description']
-                                        .toString(),
-                                    tags: documentSnapshot['tags'].toString(),
                                   ),
+                                  trailing: canEditDelete
+                                      ? Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                              icon: Icon(
+                                                  Icons.delete_forever_rounded),
+                                              onPressed: () =>
+                                                  _delete(documentSnapshot),
+                                            ),
+                                            IconButton(
+                                              icon: Icon(Icons.edit_square),
+                                              onPressed: () =>
+                                                  _update(documentSnapshot),
+                                            ),
+                                          ],
+                                        )
+                                      : null,
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => ModuleDetailPage(
+                                          queryName:
+                                              documentSnapshot['queryName']
+                                                  .toString(),
+                                          queryCode:
+                                              documentSnapshot['queryCode']
+                                                  .toString(),
+                                          description:
+                                              documentSnapshot['description']
+                                                  .toString(),
+                                          tags: documentSnapshot['tags']
+                                              .toString(),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
-                          ),
-                        ),
+                              ),
+                            );
+                          } else {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        },
                       );
-                    } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  },
+                    },
+                  );
+                }
+                return const Center(
+                  child: CircularProgressIndicator(),
                 );
               },
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _create(),
