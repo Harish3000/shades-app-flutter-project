@@ -22,7 +22,6 @@ class MywidgetState extends State<Moduleoperations> {
       FirebaseFirestore.instance.collection('modules');
 
   String getCurrentUserId() {
-    // Use FirebaseAuth to get the current user
     final User? user = FirebaseAuth.instance.currentUser;
 
     final String userId = user?.uid ?? '';
@@ -30,11 +29,9 @@ class MywidgetState extends State<Moduleoperations> {
   }
 
   Future<String> getUserRole(String userId) async {
-    // Replace 'users' with your actual collection name
     final DocumentSnapshot userSnapshot =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
-    // Check if the user exists and has a role field
     if (userSnapshot.exists && userSnapshot.data() != null) {
       final Map<String, dynamic> userData =
           userSnapshot.data() as Map<String, dynamic>;
@@ -487,12 +484,12 @@ class MywidgetState extends State<Moduleoperations> {
             if (userRole == 'leader') {
               return FloatingActionButton(
                 onPressed: () => _create(),
-                backgroundColor: Color.fromRGBO(114, 202, 240, 1),
+                backgroundColor: Color.fromRGBO(58, 134, 167, 1),
                 child: Icon(Icons.add),
               );
             }
           }
-          return Container(); // Empty container if not a leader
+          return Container();
         },
       ),
     );
