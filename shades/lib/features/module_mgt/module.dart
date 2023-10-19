@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -19,6 +20,29 @@ class MywidgetState extends State<Moduleoperations> {
 
   final CollectionReference _modules =
       FirebaseFirestore.instance.collection('modules');
+
+  String getCurrentUserId() {
+    // Use FirebaseAuth to get the current user
+    final User? user = FirebaseAuth.instance.currentUser;
+    // Get the user ID
+    final String userId = user?.uid ?? '';
+    return userId;
+  }
+
+  Future<String> getUserRole(String userId) async {
+    // Replace 'users' with your actual collection name
+    final DocumentSnapshot userSnapshot =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+    // Check if the user exists and has a role field
+    if (userSnapshot.exists && userSnapshot.data() != null) {
+      final Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
+      return userData['role'] ?? ''; // Assuming 'role' is a String field
+    } else {
+      return ''; // Default to an empty string or another default value
+    }
+  }
 
   Future<void> _create([DocumentSnapshot? documentSnapshot]) async {
     double selectedRating = 0;
@@ -307,7 +331,35 @@ class MywidgetState extends State<Moduleoperations> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Modules gallery'),
+        backgroundColor: Color.fromARGB(255, 247, 247, 247),
+        title: Text(
+          "Search",
+          style: TextStyle(color: Colors.black),
+        ),
+        iconTheme: IconThemeData(color: const Color.fromARGB(255, 0, 0, 0)),
+        actions: <Widget>[
+          Container(
+            margin: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 0, 0, 0),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: IconButton(
+              icon:
+                  Icon(Icons.search, color: Color.fromARGB(255, 255, 254, 254)),
+              onPressed: () {
+                // Handle search icon click here
+              },
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.filter_list,
+                color: Color.fromARGB(255, 0, 0, 0)), // Add a Filters button
+            onPressed: () {
+              // Handle Filters button click here
+            },
+          ),
+        ],
       ),
       body: StreamBuilder(
         stream: _modules.snapshots(),
@@ -318,137 +370,147 @@ class MywidgetState extends State<Moduleoperations> {
               itemBuilder: (context, index) {
                 final DocumentSnapshot documentSnapshot =
                     streamSnapshot.data!.docs[index];
-                return Container(
-                  margin: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 174, 204, 248),
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
+
+                return Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
                   ),
-                  child: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.all(16),
+                    leading: Image.asset(
+                      'assets/module/book.jpg',
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
                     ),
-                    child: Card(
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                    title: Text(
+                      documentSnapshot['moduleName'].toString(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
                       ),
-                      child: ListTile(
-                        contentPadding: EdgeInsets.all(16),
-                        leading: Image.asset(
-                          'assets/module/module.jpg',
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                        ),
-                        title: Text(
-                          documentSnapshot['moduleName'].toString(),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Subject Code: ${documentSnapshot['subjectCode'].toString()}",
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                            color: Color.fromARGB(255, 2, 3, 8),
+                            fontSize: 14,
                           ),
                         ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
                           children: [
                             Text(
-                              "Subject Code: ${documentSnapshot['subjectCode'].toString()}",
+                              "Rating: ",
                               style: TextStyle(
                                 color: Color.fromARGB(255, 2, 3, 8),
                                 fontSize: 14,
                               ),
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  "Rating: ",
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 2, 3, 8),
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                RatingBar.builder(
-                                  itemSize: 15,
-                                  initialRating: double.parse(
-                                      documentSnapshot['Ratings'].toString()),
-                                  minRating: 1,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating: true,
-                                  itemCount: 5,
-                                  itemPadding:
-                                      EdgeInsets.symmetric(horizontal: 4.0),
-                                  itemBuilder: (context, _) => Icon(
-                                    Icons.circle,
-                                    color: Color.fromARGB(255, 240, 93, 8),
-                                  ),
-                                  onRatingUpdate: (rating) {
-                                    // Handle rating update here
-                                  },
-                                ),
-                              ],
-                            ),
-                            Text(
-                              documentSnapshot['description'],
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 2, 3, 8),
-                                fontSize: 14,
+                            RatingBar.builder(
+                              itemSize: 15,
+                              initialRating: double.parse(
+                                documentSnapshot['Ratings'].toString(),
                               ),
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              itemCount: 5,
+                              itemPadding:
+                                  EdgeInsets.symmetric(horizontal: 4.0),
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Color.fromARGB(255, 240, 93, 8),
+                              ),
+                              onRatingUpdate: (rating) {
+                                // Handle rating update here
+                              },
                             ),
                           ],
                         ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.close),
-                              onPressed: () => _delete(documentSnapshot),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.tune),
-                              onPressed: () => _update(documentSnapshot),
-                            ),
-                          ],
+                        Text(
+                          documentSnapshot['description'],
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 2, 3, 8),
+                            fontSize: 14,
+                          ),
                         ),
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ModuleDetailPage(
-                                moduleName:
-                                    documentSnapshot['moduleName'].toString(),
-                                subjectCode:
-                                    documentSnapshot['subjectCode'].toString(),
-                                description:
-                                    documentSnapshot['description'].toString(),
-                                ratings: documentSnapshot['Ratings'].toString(),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                      ],
                     ),
+                    trailing: FutureBuilder(
+                      future: getUserRole(
+                          getCurrentUserId()), // Replace with actual user role retrieval
+                      builder: (context, AsyncSnapshot<String> roleSnapshot) {
+                        if (roleSnapshot.connectionState ==
+                            ConnectionState.done) {
+                          final String userRole = roleSnapshot.data ?? '';
+
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (userRole == 'leader') // Check user role
+                                IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () => _delete(documentSnapshot),
+                                ),
+                              if (userRole == 'leader') // Check user role
+                                IconButton(
+                                  icon: Icon(Icons.change_circle),
+                                  onPressed: () => _update(documentSnapshot),
+                                ),
+                            ],
+                          );
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
+                    ),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ModuleDetailPage(
+                            moduleName:
+                                documentSnapshot['moduleName'].toString(),
+                            subjectCode:
+                                documentSnapshot['subjectCode'].toString(),
+                            description:
+                                documentSnapshot['description'].toString(),
+                            ratings: documentSnapshot['Ratings'].toString(),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 );
               },
             );
           }
-          return const Center(
+          return Center(
             child: CircularProgressIndicator(),
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _create(),
-        backgroundColor: const Color.fromARGB(255, 88, 168, 243),
-        child: const Icon(Icons.add),
+      floatingActionButton: FutureBuilder(
+        future: getUserRole(getCurrentUserId()),
+        builder: (context, AsyncSnapshot<String> roleSnapshot) {
+          if (roleSnapshot.connectionState == ConnectionState.done) {
+            final String userRole = roleSnapshot.data ?? '';
+
+            if (userRole == 'leader') {
+              return FloatingActionButton(
+                onPressed: () => _create(),
+                backgroundColor: Color.fromRGBO(91, 163, 194, 1),
+                child: Icon(Icons.add),
+              );
+            }
+          }
+          return Container(); // Empty container if not a leader
+        },
       ),
     );
   }

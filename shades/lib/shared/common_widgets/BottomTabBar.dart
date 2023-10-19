@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:flutter/material.dart';
 import 'package:shades/features/community_mgt/community.dart';
 import 'package:shades/features/module_mgt/module.dart';
 import 'package:shades/features/query_mgt/query.dart';
@@ -73,7 +72,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
             label: 'Query',
           ),
           BottomNavigationBarItem(
-            backgroundColor: Colors.teal,
+            backgroundColor: Color.fromARGB(255, 0, 219, 248),
             icon: Icon(Icons.apps), // Customize the icon for Modules
             label: 'Modules',
           ),
