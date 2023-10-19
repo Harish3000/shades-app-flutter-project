@@ -64,20 +64,6 @@ class _CommunityOperationsState extends State<CommunityOperations> {
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
-                  primary: Colors.grey,
-                  backgroundColor: Colors.white,
-                ),
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(fontSize: 20, color: Colors.black),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              SizedBox(width: 8), // Added SizedBox for spacing
-              TextButton(
-                style: TextButton.styleFrom(
                   primary: Colors.white,
                   backgroundColor: Colors.red,
                 ),
@@ -88,6 +74,20 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                 onPressed: () {
                   // Delete the post and close the dialog
                   _deletePost(postId);
+                  Navigator.of(context).pop();
+                },
+              ),
+              SizedBox(width: 8), // Added SizedBox for spacing
+              TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.grey,
+                  backgroundColor: Colors.white,
+                ),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(fontSize: 20, color: Colors.black),
+                ),
+                onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
