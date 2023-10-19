@@ -68,56 +68,62 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Card(
-              elevation: 4,
-              margin: EdgeInsets.all(2),
-              color: Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      'assets/query/test.gif', // Replace this line
-                      width: 500,
-                      height: 200,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
+            Stack(
+              children: [
+                Image.asset(
+                  'assets/query/test3.gif', // Replace this line
+                  width: double.infinity,
+                  height: 400,
+                  fit: BoxFit.cover,
+                ),
+                Positioned(
+                  top: 250, // Adjust this value as needed
+                  left: 5,
+                  right: 5,
+                  child: Card(
+                    elevation: 4,
+                    color: Colors.white,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '🎯${widget.queryName}',
-                          style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          '             time: ${widget.queryCode}\n',
-                          style: TextStyle(fontSize: 10, color: Colors.grey),
-                        ),
-                        Text(
-                          'Description:\n ${widget.description}',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                        Text(
-                          '[# ${widget.tags}]',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.blue,
+                        Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '🎯${widget.queryName}',
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                '             time: ${widget.queryCode}\n',
+                                style:
+                                    TextStyle(fontSize: 10, color: Colors.grey),
+                              ),
+                              Text(
+                                'Description:\n ${widget.description}',
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              Text(
+                                '[# ${widget.tags}]',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             SizedBox(height: 16),
             Row(
@@ -239,15 +245,15 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
           key: ValueKey<String>(answerId),
           elevation: 2,
           color: Colors.white,
-          margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
           child: Column(
             children: [
               ListTile(
-                title: Text('Answer by $userName'),
+                title: Text('Answer: $answer'),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Answer: $answer'),
+                    Text('Answer by $userName'),
                     Row(
                       children: [
                         IconButton(
