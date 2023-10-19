@@ -112,7 +112,7 @@ class MywidgetState extends State<Moduleoperations> {
                 itemSize: 30.0,
                 itemBuilder: (context, _) => Icon(
                   Icons.star,
-                  color: Color.fromARGB(255, 228, 152, 12),
+                  color: Color.fromARGB(255, 253, 123, 2),
                 ),
                 onRatingUpdate: (rating) {
                   selectedRating = rating;
@@ -224,7 +224,7 @@ class MywidgetState extends State<Moduleoperations> {
                 itemSize: 30.0,
                 itemBuilder: (context, _) => Icon(
                   Icons.star,
-                  color: Color.fromARGB(255, 228, 152, 12),
+                  color: Color.fromARGB(255, 248, 162, 3),
                 ),
                 onRatingUpdate: (rating) {
                   selectedRating = rating;
@@ -372,6 +372,7 @@ class MywidgetState extends State<Moduleoperations> {
                     streamSnapshot.data!.docs[index];
 
                 return Card(
+                  color: Color.fromARGB(255, 240, 241, 241),
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
@@ -380,8 +381,8 @@ class MywidgetState extends State<Moduleoperations> {
                     contentPadding: EdgeInsets.all(16),
                     leading: Image.asset(
                       'assets/module/book.jpg',
-                      width: 50,
-                      height: 50,
+                      width: 60,
+                      height: 60,
                       fit: BoxFit.cover,
                     ),
                     title: Text(
@@ -423,7 +424,7 @@ class MywidgetState extends State<Moduleoperations> {
                                   EdgeInsets.symmetric(horizontal: 4.0),
                               itemBuilder: (context, _) => Icon(
                                 Icons.star,
-                                color: Color.fromARGB(255, 240, 93, 8),
+                                color: Color.fromARGB(255, 252, 199, 27),
                               ),
                               onRatingUpdate: (rating) {
                                 // Handle rating update here
@@ -504,7 +505,7 @@ class MywidgetState extends State<Moduleoperations> {
             if (userRole == 'leader') {
               return FloatingActionButton(
                 onPressed: () => _create(),
-                backgroundColor: Color.fromRGBO(91, 163, 194, 1),
+                backgroundColor: Color.fromRGBO(114, 202, 240, 1),
                 child: Icon(Icons.add),
               );
             }
