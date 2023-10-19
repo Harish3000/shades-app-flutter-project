@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shades/features/resource_mgt/resource.dart';
-// import 'package:shades/features/resource_mgt/Pdf.dart';
-import 'package:shades/features/resource_mgt/ViewPdf.dart';
-import 'package:shades/features/resource_mgt/upload.dart';
+// import 'package:shades/features/resource_mgt/view_all_pdf.dart';
+import 'package:shades/features/resource_mgt/report_success.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -181,7 +180,7 @@ class _ResourceReportFormState extends State<ResourceReportForm> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const Scaffold(
-                                  body: ViewPdfForm(),
+                                  body: Upload(),
                                 ),
                               ),
                             ); // This line will navigate back to the previous screen.

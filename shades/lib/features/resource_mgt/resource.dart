@@ -1,8 +1,12 @@
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shades/features/resource_mgt/reportResource.dart';
-import 'package:shades/features/resource_mgt/upload.dart';
-import 'package:shades/features/resource_mgt/ViewPdf.dart';
+import 'package:file_picker/file_picker.dart';
+
+import 'package:shades/features/resource_mgt/report_resource.dart';
+import 'package:shades/features/resource_mgt/upload_success.dart';
+import 'package:shades/features/resource_mgt/view_all_pdf.dart';
 
 class Resourceoperations extends StatefulWidget {
   const Resourceoperations({super.key});
@@ -21,9 +25,50 @@ class MywidgetState extends State<Resourceoperations> {
 
   final CollectionReference _resources =
       FirebaseFirestore.instance.collection('resources');
+  bool filePicked = false; // Flag to check if a file has been picked
 
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  List<Map<String, dynamic>> pdfList = [];
   // String searchText = '';
   // bool isSearchClicked = false;
+
+//upload pdf
+  Future<String?> uploadPdf(String fileName, File file) async {
+    final reference =
+        FirebaseStorage.instance.ref().child("ResourcePdfs/$fileName.pdf");
+    final uploadTask = reference.putFile(file);
+    await uploadTask.whenComplete(() {});
+    final downloadLink = await reference.getDownloadURL();
+    return downloadLink;
+  }
+
+  void pickFileAndUpload() async {
+    final pickedFile = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+
+    if (pickedFile != null) {
+      String fileName = pickedFile.files[0].name;
+      File file = File(pickedFile.files[0].path!);
+      final downloadLink = await uploadPdf(fileName, file);
+      await _firebaseFirestore.collection("resources_pdfs").add({
+        "name": fileName,
+        "url": downloadLink,
+      });
+      print("Resource Uploaded successfully!");
+      setState(() {
+        filePicked =
+            true; // Set the flag to indicate that the file has been picked
+      });
+
+      // After uploading the file, navigate to the Upload page if the flag is set
+      if (filePicked) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Upload()),
+        );
+      }
+    }
+  }
 
   // Create operation
   Future<void> _create() async {
@@ -84,12 +129,9 @@ class MywidgetState extends State<Resourceoperations> {
                       _descriptionController.text = "";
                       _ratingsController.text = "";
 
-                      // Navigator.of(context).pop();
-                      // ignore: use_build_context_synchronously
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Upload()));
+                      pickFileAndUpload();
+
+                      Navigator.of(context).pop();
                     },
                     child: const Text("Create")),
               ],
@@ -185,51 +227,10 @@ class MywidgetState extends State<Resourceoperations> {
     await _resources.doc(documentSnapshot!.id).delete();
   }
 
-  // void _onSearchChanged(String value) {
-  //   setState(() {
-  //     searchText = value;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // centerTitle: true,
-        // title: isSearchClicked
-        //     ? Container(
-        //         height: 40,
-        //         decoration: BoxDecoration(
-        //             color: const Color.fromARGB(255, 253, 255, 255),
-        //             borderRadius: BorderRadius.circular(30)),
-        //         child: TextField(
-        //           controller: _searchController,
-        //           onChanged: _onSearchChanged,
-        //           decoration: const InputDecoration(
-        //             hintText: "Search",
-        //           ),
-        //         ),
-        //       )
-        //     : const Text(
-        //         "search here",
-        //         style: TextStyle(
-        //           fontStyle: FontStyle.italic,
-        //           color: Color.fromARGB(
-        //               115, 253, 253, 253), // Set text color to white
-        //         ),
-        //       ),
-        // backgroundColor: const Color.fromARGB(255, 39, 10, 94),
-        // actions: [
-        //   IconButton(
-        //     onPressed: () {
-        //       setState(() {
-        //         isSearchClicked = !isSearchClicked;
-        //       });
-        //     },
-        //     icon: const Icon(Icons.search_sharp),
-        //   )
-        // ],
-      ),
+      appBar: AppBar(),
       body: StreamBuilder(
           stream: _resources.snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
@@ -254,78 +255,89 @@ class MywidgetState extends State<Resourceoperations> {
                         itemBuilder: (context, index) {
                           final DocumentSnapshot documentSnapshot =
                               streamSnapshot.data!.docs[index];
+                          return GestureDetector(
+                            onTap: () {
+                              // Navigate to the ViewPdf screen when tapped
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ViewPdfForm(),
+                                ),
+                              );
+                            },
+                            child: SizedBox(
+                              height: 110,
+                              child: Card(
+                                shadowColor: Colors.black,
+                                color: const Color.fromARGB(246, 241, 241, 240),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15)),
+                                margin: const EdgeInsets.all(10),
+                                elevation: 8,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 10, bottom: 10, left: 10, right: 10),
+                                  child: ListTile(
+                                    leading: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Image.asset(
+                                          'assets/resource/PDF.jpg',
+                                          width: 50,
+                                          height: 50,
+                                        ),
+                                        // CircleAvatar(
+                                        //   radius: 17,
+                                        //   backgroundColor:
+                                        //       const Color.fromARGB(255, 255, 106, 7),
 
-                          return SizedBox(
-                            height: 110,
-                            child: Card(
-                              shadowColor: Colors.black,
-                              color: const Color.fromARGB(246, 241, 241, 240),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              margin: const EdgeInsets.all(10),
-                              elevation: 8,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 10, bottom: 10, left: 10, right: 10),
-                                child: ListTile(
-                                  leading: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Image.asset(
-                                        'assets/resource/PDF.jpg',
-                                        width: 50,
-                                        height: 50,
-                                      ),
-                                      // CircleAvatar(
-                                      //   radius: 17,
-                                      //   backgroundColor:
-                                      //       const Color.fromARGB(255, 255, 106, 7),
-
-                                      // ),
-                                    ],
-                                  ),
-                                  title: Text(
-                                    documentSnapshot['resourceName'].toString(),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromARGB(255, 2, 3, 8),
+                                        // ),
+                                      ],
                                     ),
-                                  ),
-                                  subtitle: Text(
-                                    "${documentSnapshot['subjectCode'].toString()} \n ${documentSnapshot['Ratings'].toString()} \n ${documentSnapshot['description']}",
-                                    style: const TextStyle(
-                                      color: Color.fromARGB(255, 2, 3, 8),
+                                    title: Text(
+                                      documentSnapshot['resourceName']
+                                          .toString(),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Color.fromARGB(255, 2, 3, 8),
+                                      ),
                                     ),
-                                  ),
-                                  trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () =>
-                                            _update(documentSnapshot),
+                                    subtitle: Text(
+                                      "${documentSnapshot['subjectCode'].toString()} \n ${documentSnapshot['Ratings'].toString()} \n ${documentSnapshot['description']}",
+                                      style: const TextStyle(
+                                        color: Color.fromARGB(255, 2, 3, 8),
                                       ),
-                                      IconButton(
-                                        icon: const Icon(Icons.delete),
-                                        onPressed: () =>
-                                            _delete(documentSnapshot),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.report),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const Scaffold(
-                                                body: ResourceReportForm(),
-                                                // body: ViewPdf(),
+                                    ),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.edit),
+                                          onPressed: () =>
+                                              _update(documentSnapshot),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete),
+                                          onPressed: () =>
+                                              _delete(documentSnapshot),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.report),
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const Scaffold(
+                                                  body: ResourceReportForm(),
+                                                  // body: ViewPdf(),
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ],
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -340,9 +352,12 @@ class MywidgetState extends State<Resourceoperations> {
             }
           }),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _create(),
+        onPressed: () {
+          _create();
+        },
         backgroundColor: const Color.fromARGB(255, 88, 168, 243),
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.upload_file),
+        // child: const Icon(Icons.add),
       ),
     );
   }
