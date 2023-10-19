@@ -94,8 +94,10 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                       children: [
                         Row(
                           children: [
+                            // Changed: Wrapped the image in ClipRRect to make it rounded
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(25),
+                              borderRadius: BorderRadius.circular(
+                                  25), // Rounded border for the circular frame
                               child: Container(
                                 width: 50,
                                 height: 50,
@@ -109,7 +111,7 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                                   'assets/community/community images/l2.jpg',
                                   width: 50,
                                   height: 50,
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.fill,
                                 ),
                               ),
                             ),
@@ -126,17 +128,24 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                         SizedBox(height: 12),
                         Text(
                           '$title',
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.left,
                         ),
                         SizedBox(height: 8),
                         Text(
                           '$description',
                           style: TextStyle(fontSize: 18),
+                          textAlign: TextAlign.justify,
                         ),
                         SizedBox(height: 8),
                         Text(
                           '$hashtags',
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontStyle: FontStyle.italic,
+                            color: Color(0xFF146C94), // Blue color
+                          ),
                         ),
                         SizedBox(height: 16),
                         Container(
