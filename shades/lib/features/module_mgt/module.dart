@@ -335,6 +335,13 @@ class MywidgetState extends State<Moduleoperations> {
           style: TextStyle(color: Colors.black),
         ),
         iconTheme: IconThemeData(color: const Color.fromARGB(255, 0, 0, 0)),
+        leading: Container(
+          margin: EdgeInsets.all(10),
+          child: Image.asset(
+            'assets/module/logo.png', // Replace with the path to your logo image
+            width: 30,
+          ),
+        ),
         actions: <Widget>[
           Container(
             margin: EdgeInsets.all(10),
@@ -351,8 +358,7 @@ class MywidgetState extends State<Moduleoperations> {
             ),
           ),
           IconButton(
-            icon: Icon(Icons.filter_list,
-                color: Color.fromARGB(255, 0, 0, 0)), // Add a Filters button
+            icon: Icon(Icons.filter_list, color: Color.fromARGB(255, 0, 0, 0)),
             onPressed: () {
               // Handle Filters button click here
             },

@@ -32,16 +32,27 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.moduleName,
-          style: TextStyle(
-            fontSize: 24,
-            fontFamily: 'Montserrat',
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
+        iconTheme: IconThemeData(color: const Color.fromARGB(255, 0, 0, 0)),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/module/logo.png', // Replace with the path to your logo image
+              width: 25, // Adjust the width as needed
+            ),
+            SizedBox(
+                width: 10), // Add some spacing between the logo and the title
+            Text(
+              widget.moduleName,
+              style: TextStyle(
+                fontSize: 18,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w600,
+                color: const Color.fromARGB(255, 0, 0, 0),
+              ),
+            ),
+          ],
         ),
-        backgroundColor: Color.fromRGBO(20, 108, 148, 1),
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
