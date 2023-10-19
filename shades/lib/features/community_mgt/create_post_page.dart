@@ -216,6 +216,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
                     labelText: 'Enter Community Name',
                     hintText: 'Community Name',
                     hintStyle: TextStyle(fontSize: 16),
+                    fillColor: Color(0xFFF6F1F1), // Input field color
+                    filled: true,
                   ),
                 ),
                 SizedBox(height: 16),
@@ -230,6 +232,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
                     labelText: 'Enter Post Title',
                     hintText: 'Post Title',
                     hintStyle: TextStyle(fontSize: 16),
+                    fillColor: Color(0xFFF6F1F1), // Input field color
+                    filled: true,
                   ),
                 ),
                 SizedBox(height: 16),
@@ -247,6 +251,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
                     labelText: 'Enter Description',
                     hintText: 'Description',
                     hintStyle: TextStyle(fontSize: 16),
+                    fillColor: Color(0xFFF6F1F1), // Input field color
+                    filled: true,
                   ),
                 ),
                 SizedBox(height: 16),
@@ -261,6 +267,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
                     labelText: 'Enter Hashtags',
                     hintText: 'Hashtags',
                     hintStyle: TextStyle(fontSize: 16),
+                    fillColor: Color(0xFFF6F1F1), // Input field color
+                    filled: true,
                   ),
                 ),
                 SizedBox(height: 32),
@@ -298,7 +306,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                               Navigator.of(context).pop();
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: Color(0xFFAFD3E2),
+                              primary: Colors.grey,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),

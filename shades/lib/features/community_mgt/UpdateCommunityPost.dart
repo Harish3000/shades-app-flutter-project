@@ -16,6 +16,28 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _hashtagsController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchPostData();
+  }
+
+  void _fetchPostData() async {
+    DocumentSnapshot snapshot = await FirebaseFirestore.instance
+        .collection('community_collection')
+        .doc(widget.postId)
+        .get();
+
+    if (snapshot.exists) {
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      setState(() {
+        _titleController.text = data['title'];
+        _descriptionController.text = data['description'];
+        _hashtagsController.text = data['hashtags'];
+      });
+    }
+  }
+
   void _updatePost() async {
     if (_formKey.currentState!.validate()) {
       await FirebaseFirestore.instance
@@ -42,28 +64,15 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: FutureBuilder<DocumentSnapshot>(
-            future: FirebaseFirestore.instance
-                .collection('community_collection')
-                .doc(widget.postId)
-                .get(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              }
-
-              var postData = snapshot.data;
-              if (postData == null) {
-                return Center(
-                  child: Text('Post not found.'),
-                );
-              }
-
-              _titleController.text = postData['title'];
-              _descriptionController.text = postData['description'];
-              _hashtagsController.text = postData['hashtags'];
-
-              return Form(
+          child: Material(
+            elevation: 8.0,
+            shadowColor: Color(0xFF146C94), // Shadow color
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
                 key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -77,6 +86,8 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
                             TextStyle(fontSize: 18, color: Colors.black),
                         hintText: 'Enter title',
                         hintStyle: TextStyle(fontSize: 18, color: Colors.black),
+                        fillColor: Color(0xFFF6F1F1), // User input field color
+                        filled: true,
                       ),
                       style: TextStyle(fontSize: 18),
                       validator: (value) {
@@ -88,7 +99,7 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
                     ),
                     SizedBox(height: 20),
                     Container(
-                      height: 100,
+                      height: 80, // Adjusted height according to the form
                       child: TextFormField(
                         controller: _descriptionController,
                         maxLines: null,
@@ -99,6 +110,9 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
                           hintText: 'Enter description',
                           hintStyle:
                               TextStyle(fontSize: 18, color: Colors.black),
+                          fillColor:
+                              Color(0xFFF6F1F1), // User input field color
+                          filled: true,
                         ),
                         style: TextStyle(fontSize: 18),
                         validator: (value) {
@@ -118,6 +132,8 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
                             TextStyle(fontSize: 18, color: Colors.black),
                         hintText: 'Enter hashtags',
                         hintStyle: TextStyle(fontSize: 18, color: Colors.black),
+                        fillColor: Color(0xFFF6F1F1), // User input field color
+                        filled: true,
                       ),
                       style: TextStyle(fontSize: 18),
                     ),
@@ -174,8 +190,8 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
                     ),
                   ],
                 ),
-              );
-            },
+              ),
+            ),
           ),
         ),
       ),
