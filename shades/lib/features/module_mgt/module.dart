@@ -17,7 +17,7 @@ class MywidgetState extends State<Moduleoperations> {
   final TextEditingController _subjectCodeController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _ratingsController = TextEditingController();
-
+  final TextEditingController _searchController = TextEditingController();
   final CollectionReference _modules =
       FirebaseFirestore.instance.collection('modules');
 
@@ -329,51 +329,49 @@ class MywidgetState extends State<Moduleoperations> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 247, 247, 247),
-        title: Text(
-          "Search",
-          style: TextStyle(color: Colors.black),
-        ),
-        iconTheme: IconThemeData(color: const Color.fromARGB(255, 0, 0, 0)),
-        leading: Container(
-          margin: EdgeInsets.all(10),
-          child: Image.asset(
-            'assets/module/logo.png', // Replace with the path to your logo image
-            width: 30,
-          ),
-        ),
-        actions: <Widget>[
-          Container(
-            margin: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 0, 0, 0),
-              borderRadius: BorderRadius.circular(20.0),
+        title: Text('Search'),
+        backgroundColor: Colors.black,
+        leading: Image.asset('assets/module/logo.png',
+            width: 20, height: 20), // Set the background color to black
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              width: 340,
+              child: TextField(
+                controller: _searchController,
+                onChanged: (value) {
+                  setState(() {}); // Trigger a rebuild when the user types
+                },
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: 'Search Modules',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                ),
+              ),
             ),
-            child: IconButton(
-              icon:
-                  Icon(Icons.search, color: Color.fromARGB(255, 255, 254, 254)),
-              onPressed: () {
-                // Handle search icon click here
-              },
-            ),
-          ),
-          IconButton(
-            icon: Icon(Icons.filter_list, color: Color.fromARGB(255, 0, 0, 0)),
-            onPressed: () {
-              // Handle Filters button click here
-            },
           ),
         ],
       ),
       body: StreamBuilder(
-        stream: _modules.snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+        stream: _modules.snapshots().map((querySnapshot) {
+          return querySnapshot.docs.where((doc) {
+            final moduleName = doc['moduleName'].toString().toLowerCase();
+            final searchQuery = _searchController.text.toLowerCase();
+            return moduleName.contains(searchQuery);
+          }).toList();
+        }),
+        builder: (context,
+            AsyncSnapshot<List<QueryDocumentSnapshot>> streamSnapshot) {
           if (streamSnapshot.hasData) {
             return ListView.builder(
-              itemCount: streamSnapshot.data!.docs.length,
+              itemCount: streamSnapshot.data!.length,
               itemBuilder: (context, index) {
                 final DocumentSnapshot documentSnapshot =
-                    streamSnapshot.data!.docs[index];
+                    streamSnapshot.data![index];
 
                 return Card(
                   color: Color.fromARGB(255, 240, 241, 241),
@@ -415,25 +413,7 @@ class MywidgetState extends State<Moduleoperations> {
                                 fontSize: 14,
                               ),
                             ),
-                            RatingBar.builder(
-                              itemSize: 15,
-                              initialRating: double.parse(
-                                documentSnapshot['Ratings'].toString(),
-                              ),
-                              minRating: 1,
-                              direction: Axis.horizontal,
-                              allowHalfRating: true,
-                              itemCount: 5,
-                              itemPadding:
-                                  EdgeInsets.symmetric(horizontal: 4.0),
-                              itemBuilder: (context, _) => Icon(
-                                Icons.star,
-                                color: Color.fromARGB(255, 252, 199, 27),
-                              ),
-                              onRatingUpdate: (rating) {
-                                // Handle rating update here
-                              },
-                            ),
+                            // Add your RatingBar widget here
                           ],
                         ),
                         Text(
