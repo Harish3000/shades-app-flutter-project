@@ -218,17 +218,15 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: const Color.fromRGBO(
-                      20, 108, 148, 1), // Set your desired button color
-                  shape: BoxShape.rectangle, // Make the button circular
+                  color: const Color.fromRGBO(20, 108, 148, 1),
+                  shape: BoxShape.rectangle,
                 ),
                 child: Padding(
-                  padding:
-                      const EdgeInsets.all(5.0), // Adjust padding as needed
+                  padding: const EdgeInsets.all(5.0),
                   child: Icon(
-                    Icons.add, // Replace with your desired icon
-                    color: Colors.white, // Set the icon color
-                    size: 20, // Set the icon size as needed
+                    Icons.add,
+                    color: Colors.white,
+                    size: 20,
                   ),
                 ),
               ),

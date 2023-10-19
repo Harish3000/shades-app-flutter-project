@@ -24,7 +24,7 @@ class MywidgetState extends State<Moduleoperations> {
   String getCurrentUserId() {
     // Use FirebaseAuth to get the current user
     final User? user = FirebaseAuth.instance.currentUser;
-    // Get the user ID
+
     final String userId = user?.uid ?? '';
     return userId;
   }
@@ -38,9 +38,9 @@ class MywidgetState extends State<Moduleoperations> {
     if (userSnapshot.exists && userSnapshot.data() != null) {
       final Map<String, dynamic> userData =
           userSnapshot.data() as Map<String, dynamic>;
-      return userData['role'] ?? ''; // Assuming 'role' is a String field
+      return userData['role'] ?? '';
     } else {
-      return ''; // Default to an empty string or another default value
+      return '';
     }
   }
 
@@ -124,8 +124,7 @@ class MywidgetState extends State<Moduleoperations> {
                   final String moduleName = _moduleNameController.text;
                   final String subjectCode = _subjectCodeController.text;
                   final String description = _descriptionController.text;
-                  final String ratings =
-                      selectedRating.toString(); // Use the selected rating
+                  final String ratings = selectedRating.toString();
 
                   await _modules.add({
                     'moduleName': moduleName,
@@ -150,8 +149,7 @@ class MywidgetState extends State<Moduleoperations> {
   }
 
   Future<void> _update([DocumentSnapshot? documentSnapshot]) async {
-    double selectedRating = 0; // Added for rating selection
-
+    double selectedRating = 0;
     if (documentSnapshot != null) {
       _moduleNameController.text = documentSnapshot['moduleName'].toString();
       _subjectCodeController.text = documentSnapshot['subjectCode'].toString();
@@ -298,7 +296,7 @@ class MywidgetState extends State<Moduleoperations> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: Text(
                 'Cancel',
