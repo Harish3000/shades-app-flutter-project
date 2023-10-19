@@ -81,11 +81,11 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
                     TextFormField(
                       controller: _titleController,
                       decoration: InputDecoration(
-                        labelText: 'Title',
-                        labelStyle:
-                            TextStyle(fontSize: 18, color: Colors.black),
-                        hintText: 'Enter title',
-                        hintStyle: TextStyle(fontSize: 18, color: Colors.black),
+                        labelText: 'Title', // Label Title for Title Field
+                        labelStyle: TextStyle(
+                            fontSize: 25,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
                         fillColor: Color(0xFFF6F1F1), // User input field color
                         filled: true,
                       ),
@@ -104,12 +104,13 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
                         controller: _descriptionController,
                         maxLines: null,
                         decoration: InputDecoration(
-                          labelText: 'Description',
-                          labelStyle:
-                              TextStyle(fontSize: 18, color: Colors.black),
-                          hintText: 'Enter description',
-                          hintStyle:
-                              TextStyle(fontSize: 18, color: Colors.black),
+                          labelText:
+                              'Description', // Label Title for Description Field
+                          labelStyle: TextStyle(
+                              fontSize: 25,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+
                           fillColor:
                               Color(0xFFF6F1F1), // User input field color
                           filled: true,
@@ -127,11 +128,12 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
                     TextFormField(
                       controller: _hashtagsController,
                       decoration: InputDecoration(
-                        labelText: 'Hash Tags',
-                        labelStyle:
-                            TextStyle(fontSize: 18, color: Colors.black),
-                        hintText: 'Enter hashtags',
-                        hintStyle: TextStyle(fontSize: 18, color: Colors.black),
+                        labelText:
+                            'Hash Tags', // Label Title for Hash Tags Field
+                        labelStyle: TextStyle(
+                            fontSize: 25,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
                         fillColor: Color(0xFFF6F1F1), // User input field color
                         filled: true,
                       ),
