@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'create_post_page.dart';
@@ -38,33 +39,59 @@ class _CommunityOperationsState extends State<CommunityOperations> {
   Future<void> _showDeleteConfirmationDialog(String postId) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap a button to dismiss the dialog
+      barrierDismissible: true, // user can tap outside the dialog to close it
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Confirm Deletion'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Are you sure you want to delete this post?'),
-              ],
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+          child: AlertDialog(
+            backgroundColor: Color(0xFFF6F1F1),
+            title: Center(
+              child: Text(
+                'Confirm Deletion',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
+            content: Text(
+              'Are you sure you want to delete this post?',
+              style: TextStyle(
+                fontSize: 20,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            actions: <Widget>[
+              Center(
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                      primary: Colors.grey, backgroundColor: Colors.white),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(fontSize: 20, color: Colors.black),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+              Center(
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                      primary: Colors.red, backgroundColor: Colors.white),
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(fontSize: 20, color: Colors.black),
+                  ),
+                  onPressed: () {
+                    // Delete the post and close the dialog
+                    _deletePost(postId);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ],
           ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Delete'),
-              onPressed: () {
-                // Delete the post and close the dialog
-                _deletePost(postId);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
         );
       },
     );
