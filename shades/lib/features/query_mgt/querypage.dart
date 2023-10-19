@@ -208,7 +208,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
             ),
             SizedBox(height: 16),
             Text(
-              'Answers:',
+              'Answers',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             _buildAnswers(),
