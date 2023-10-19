@@ -19,6 +19,25 @@ class MyWidgetState extends State<QueryOperations> {
   final CollectionReference _queries =
       FirebaseFirestore.instance.collection('query');
 
+  String getCurrentUserId() {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String userId = user?.uid ?? '';
+    return userId;
+  }
+
+  Future<String> getUserRole(String userId) async {
+    final DocumentSnapshot userSnapshot =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+    if (userSnapshot.exists && userSnapshot.data() != null) {
+      final Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
+      return userData['role'] ?? '';
+    } else {
+      return '';
+    }
+  }
+
   Future<void> _create([DocumentSnapshot? documentSnapshot]) async {
     await showModalBottomSheet(
       isScrollControlled: true,
@@ -85,7 +104,6 @@ class MyWidgetState extends State<QueryOperations> {
                   final String timeStamp =
                       "${dateTimeNow.year}-${_formatNumber(dateTimeNow.month)}-${_formatNumber(dateTimeNow.day)} ${_formatNumber(dateTimeNow.hour)}:${_formatNumber(dateTimeNow.minute)}:${_formatNumber(dateTimeNow.second)}";
 
-                  // Get the current user ID
                   final User? user = FirebaseAuth.instance.currentUser;
                   final String userId = user?.uid ?? '';
 
@@ -94,7 +112,7 @@ class MyWidgetState extends State<QueryOperations> {
                     'queryCode': timeStamp,
                     'description': description,
                     'tags': tags,
-                    'userID': userId, // Save the user ID
+                    'userID': userId,
                   });
 
                   _queryNameController.clear();
@@ -238,7 +256,7 @@ class MyWidgetState extends State<QueryOperations> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: Text(
                 'Cancel',
@@ -251,7 +269,7 @@ class MyWidgetState extends State<QueryOperations> {
             TextButton(
               onPressed: () async {
                 await _queries.doc(documentSnapshot!.id).delete();
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: Text(
                 'Delete',
@@ -284,101 +302,116 @@ class MyWidgetState extends State<QueryOperations> {
                 final DocumentSnapshot documentSnapshot =
                     streamSnapshot.data!.docs[index];
 
-                // Get the current user ID
                 final User? user = FirebaseAuth.instance.currentUser;
                 final String currentUserId = user?.uid ?? '';
 
-                // Check if the user ID in the query document matches the current user's ID
-                final bool canEditDelete =
-                    documentSnapshot['userID'] == currentUserId;
+                return FutureBuilder(
+                  future: getUserRole(currentUserId),
+                  builder: (context, AsyncSnapshot<String> roleSnapshot) {
+                    if (roleSnapshot.connectionState == ConnectionState.done) {
+                      final String userRole = roleSnapshot.data ?? '';
 
-                return Container(
-                  margin: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: ListTile(
-                      contentPadding: EdgeInsets.all(16),
-                      leading: Icon(Icons.my_library_books_rounded, size: 40),
-                      title: Text(
-                        documentSnapshot['queryName'].toString(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                      final bool canEditDelete =
+                          documentSnapshot['userID'] == currentUserId ||
+                              userRole == 'leader';
+
+                      return Container(
+                        margin: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
                         ),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "@${_formatDate(documentSnapshot['queryCode'].toString())}",
-                            style: TextStyle(
-                              color: Color.fromARGB(202, 178, 178, 178),
-                              fontSize: 10,
-                            ),
+                        child: Card(
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                          Text(
-                            // Display the first 4 characters of the user ID in grey
-                            "${documentSnapshot['userID'].toString().substring(0, 4)}",
-                            style: TextStyle(
-                              color: Color.fromARGB(202, 178, 178, 178),
-                              fontSize: 10,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.all(16),
+                            leading:
+                                Icon(Icons.my_library_books_rounded, size: 40),
+                            title: Text(
+                              documentSnapshot['queryName'].toString(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
                             ),
-                          ),
-                          Text(
-                            "# ${documentSnapshot['tags'].toString()}",
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 79, 108, 251),
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                      trailing: canEditDelete
-                          ? Row(
-                              mainAxisSize: MainAxisSize.min,
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                IconButton(
-                                  icon: Icon(Icons.delete_forever_rounded),
-                                  onPressed: () => _delete(documentSnapshot),
+                                Text(
+                                  "@${_formatDate(documentSnapshot['queryCode'].toString())}",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(202, 178, 178, 178),
+                                    fontSize: 10,
+                                  ),
                                 ),
-                                IconButton(
-                                  icon: Icon(Icons.edit_square),
-                                  onPressed: () => _update(documentSnapshot),
+                                Text(
+                                  "${documentSnapshot['userID'].toString().substring(0, 4)}",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(202, 178, 178, 178),
+                                    fontSize: 10,
+                                  ),
+                                ),
+                                Text(
+                                  "# ${documentSnapshot['tags'].toString()}",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 79, 108, 251),
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ],
-                            )
-                          : null,
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ModuleDetailPage(
-                              queryName:
-                                  documentSnapshot['queryName'].toString(),
-                              queryCode:
-                                  documentSnapshot['queryCode'].toString(),
-                              description:
-                                  documentSnapshot['description'].toString(),
-                              tags: documentSnapshot['tags'].toString(),
                             ),
+                            trailing: canEditDelete
+                                ? Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon:
+                                            Icon(Icons.delete_forever_rounded),
+                                        onPressed: () =>
+                                            _delete(documentSnapshot),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.edit_square),
+                                        onPressed: () =>
+                                            _update(documentSnapshot),
+                                      ),
+                                    ],
+                                  )
+                                : null,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ModuleDetailPage(
+                                    queryName: documentSnapshot['queryName']
+                                        .toString(),
+                                    queryCode: documentSnapshot['queryCode']
+                                        .toString(),
+                                    description: documentSnapshot['description']
+                                        .toString(),
+                                    tags: documentSnapshot['tags'].toString(),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                  ),
+                        ),
+                      );
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
                 );
               },
             );
