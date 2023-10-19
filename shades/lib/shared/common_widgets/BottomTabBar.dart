@@ -18,7 +18,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
     Queryoperations(),
     const Moduleoperations(),
     const Resourceoperations(),
-    const Communityoperations(),
+    CommunityOperations(),
   ];
   List<String> _tabTitles = [
     'Query',
