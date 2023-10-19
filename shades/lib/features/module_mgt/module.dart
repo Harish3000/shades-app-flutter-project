@@ -234,8 +234,7 @@ class MywidgetState extends State<Moduleoperations> {
                   final String moduleName = _moduleNameController.text;
                   final String subjectCode = _subjectCodeController.text;
                   final String description = _descriptionController.text;
-                  final String ratings =
-                      selectedRating.toString(); // Use the selected rating
+                  final String ratings = selectedRating.toString();
 
                   await _modules.doc(documentSnapshot!.id).update({
                     'moduleName': moduleName,
@@ -309,7 +308,7 @@ class MywidgetState extends State<Moduleoperations> {
             TextButton(
               onPressed: () async {
                 await _modules.doc(documentSnapshot!.id).delete();
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: Text(
                 'Delete',
@@ -331,8 +330,7 @@ class MywidgetState extends State<Moduleoperations> {
       appBar: AppBar(
         title: Text('Search'),
         backgroundColor: Colors.black,
-        leading: Image.asset('assets/module/logo.png',
-            width: 20, height: 20), // Set the background color to black
+        leading: Image.asset('assets/module/logo.png', width: 20, height: 20),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
