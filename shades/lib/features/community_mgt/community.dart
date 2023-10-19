@@ -39,7 +39,7 @@ class _CommunityOperationsState extends State<CommunityOperations> {
   Future<void> _showDeleteConfirmationDialog(String postId) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: true, // user can tap outside the dialog to close it
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
@@ -47,51 +47,50 @@ class _CommunityOperationsState extends State<CommunityOperations> {
             backgroundColor: Color(0xFFF6F1F1),
             title: Center(
               child: Text(
-                'Confirm Deletion',
+                'Are you sure you want to delete this post ? ',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
-            content: Text(
-              'Are you sure you want to delete this post?',
-              style: TextStyle(
-                fontSize: 20,
-              ),
-              textAlign: TextAlign.center,
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.red,
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  ),
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(fontSize: 20, color: Colors.black),
+                  ),
+                  onPressed: () {
+                    // Delete the post and close the dialog
+                    _deletePost(postId);
+                    Navigator.of(context).pop();
+                  },
+                ),
+                SizedBox(width: 16), // Added SizedBox for spacing
+                TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.grey,
+                    backgroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  ),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(fontSize: 20, color: Colors.black),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
             ),
-            actions: <Widget>[
-              TextButton(
-                style: TextButton.styleFrom(
-                  primary: Colors.white,
-                  backgroundColor: Colors.red,
-                ),
-                child: Text(
-                  'Delete',
-                  style: TextStyle(fontSize: 20, color: Colors.black),
-                ),
-                onPressed: () {
-                  // Delete the post and close the dialog
-                  _deletePost(postId);
-                  Navigator.of(context).pop();
-                },
-              ),
-              SizedBox(width: 8), // Added SizedBox for spacing
-              TextButton(
-                style: TextButton.styleFrom(
-                  primary: Colors.grey,
-                  backgroundColor: Colors.white,
-                ),
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(fontSize: 20, color: Colors.black),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
           ),
         );
       },
