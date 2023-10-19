@@ -83,7 +83,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
             label: 'Resources',
           ),
           BottomNavigationBarItem(
-            backgroundColor: Colors.purple,
+            backgroundColor: Color(0xFF146C94),
             icon: Icon(Icons.group), // Customize the icon for Community
             label: 'Community',
           ),

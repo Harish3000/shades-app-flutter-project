@@ -54,7 +54,15 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                 'img1.jpg',
                 'img2.jpg',
                 'img3.jpg',
-                'img4.jpg'
+                'img4.jpg',
+                'img5.jpg',
+                'img6.jpg',
+                'img7.jpg',
+                'img8.jpg',
+                'img9.jpg',
+                'img10.jpg',
+                'img11.jpg',
+                'img12.jpg'
               ];
               int randomIndex = random.nextInt(imageNames.length);
               String randomImageName = imageNames[randomIndex];
@@ -72,16 +80,48 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                         width: 3.0,
                       ),
                       color: Color(0xFFF6F1F1),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '$comName',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24,
-                          ),
+                        Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(25),
+                              child: Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Color(0xFF146C94),
+                                    width: 3.0,
+                                  ),
+                                ),
+                                child: Image.asset(
+                                  'assets/community/community images/l2.jpg',
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            Text(
+                              '$comName',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24,
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(height: 12),
                         Text(
@@ -99,11 +139,27 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                           style: TextStyle(fontSize: 18),
                         ),
                         SizedBox(height: 16),
-                        Image.asset(
-                          'assets/community/$randomImageName',
+                        Container(
                           width: double.infinity,
                           height: 200,
-                          fit: BoxFit.cover,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.asset(
+                              'assets/community/$randomImageName',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                         SizedBox(height: 16),
                         Row(
