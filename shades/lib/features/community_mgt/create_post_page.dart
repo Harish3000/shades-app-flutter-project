@@ -207,7 +207,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
               children: [
                 Text(
                   'Community Name',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),
                 TextField(
@@ -223,7 +223,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                 SizedBox(height: 16),
                 Text(
                   'Post Title',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),
                 TextField(
@@ -239,7 +239,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                 SizedBox(height: 16),
                 Text(
                   'Description',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),
                 TextField(
@@ -258,7 +258,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                 SizedBox(height: 16),
                 Text(
                   'Hashtags',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),
                 TextField(
@@ -290,7 +290,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                             child: Text(
                               'Create',
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 22,
                                 color: Colors.black,
                               ),
                             ),
@@ -314,7 +314,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                             child: Text(
                               'Cancel',
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 22,
                                 color: Colors.black,
                               ),
                             ),

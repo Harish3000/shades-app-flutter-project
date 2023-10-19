@@ -26,6 +26,50 @@ class _CommunityOperationsState extends State<CommunityOperations> {
   Set<String> likedPosts = Set<String>();
   Random random = Random();
 
+  // Function to delete a post by its ID
+  void _deletePost(String postId) async {
+    await FirebaseFirestore.instance
+        .collection('community_collection')
+        .doc(postId)
+        .delete();
+  }
+
+  // Function to show delete confirmation dialog
+  Future<void> _showDeleteConfirmationDialog(String postId) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap a button to dismiss the dialog
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Deletion'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Are you sure you want to delete this post?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Delete'),
+              onPressed: () {
+                // Delete the post and close the dialog
+                _deletePost(postId);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -212,13 +256,13 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                             SizedBox(width: 8),
                             InkWell(
                               onTap: () {
-                                // Handle delete operation here
+                                // Show delete confirmation dialog
+                                _showDeleteConfirmationDialog(postId);
                               },
                               child: Icon(
                                 Icons.delete,
                                 size: 30,
                                 color: Color(0xFFB30000),
-                                //add outline to icon
                               ),
                             ),
                           ],
