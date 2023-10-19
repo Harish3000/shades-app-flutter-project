@@ -219,7 +219,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
               child: Container(
                 decoration: BoxDecoration(
                   color: const Color.fromRGBO(20, 108, 148, 1),
-                  shape: BoxShape.rectangle,
+                  shape: BoxShape.circle,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(5.0),
