@@ -89,7 +89,7 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
                         fillColor: Color(0xFFF6F1F1), // User input field color
                         filled: true,
                       ),
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 20),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter title';
@@ -97,9 +97,9 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 30),
                     Container(
-                      height: 80, // Adjusted height according to the form
+                      height: 120, // Adjusted height according to the form
                       child: TextFormField(
                         controller: _descriptionController,
                         maxLines: null,
@@ -114,7 +114,7 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
                               Color(0xFFF6F1F1), // User input field color
                           filled: true,
                         ),
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 20),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter description';
@@ -123,7 +123,7 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
                         },
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 20),
                     TextFormField(
                       controller: _hashtagsController,
                       decoration: InputDecoration(
@@ -135,9 +135,9 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
                         fillColor: Color(0xFFF6F1F1), // User input field color
                         filled: true,
                       ),
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 20),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 30),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -149,13 +149,13 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
                               style: ElevatedButton.styleFrom(
                                 primary: Color(0xFF19A7CE),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
+                                  borderRadius: BorderRadius.circular(35),
                                 ),
                               ),
                               child: Text(
                                 'Update',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 23,
                                   color: Colors.black,
                                 ),
                               ),
@@ -173,13 +173,13 @@ class _UpdateCommunityPostState extends State<UpdateCommunityPost> {
                               style: ElevatedButton.styleFrom(
                                 primary: Color(0xFFAFD3E2),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
+                                  borderRadius: BorderRadius.circular(35),
                                 ),
                               ),
                               child: Text(
                                 'Cancel',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 23,
                                   color: Colors.black,
                                 ),
                               ),

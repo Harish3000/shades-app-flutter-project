@@ -96,10 +96,10 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                         Row(
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(25),
+                              borderRadius: BorderRadius.circular(100),
                               child: Container(
-                                width: 50,
-                                height: 50,
+                                width: 60,
+                                height: 60,
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                     color: Color(0xFF146C94),
@@ -107,10 +107,10 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                                   ),
                                 ),
                                 child: Image.asset(
-                                  'assets/community/community images/l2.jpg',
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.fill,
+                                  'assets/community/community images/l2.png',
+                                  width: 10,
+                                  height: 10,
+                                  fit: BoxFit.fitWidth,
                                 ),
                               ),
                             ),
@@ -166,6 +166,7 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                             child: Image.asset(
                               'assets/community/$randomImageName',
                               fit: BoxFit.cover,
+                              height: 12 * 2,
                             ),
                           ),
                         ),
