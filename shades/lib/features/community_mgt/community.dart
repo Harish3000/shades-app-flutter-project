@@ -62,33 +62,34 @@ class _CommunityOperationsState extends State<CommunityOperations> {
               textAlign: TextAlign.center,
             ),
             actions: <Widget>[
-              Center(
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                      primary: Colors.grey, backgroundColor: Colors.white),
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(fontSize: 20, color: Colors.black),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+              TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.grey,
+                  backgroundColor: Colors.white,
                 ),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(fontSize: 20, color: Colors.black),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
               ),
-              Center(
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                      primary: Colors.red, backgroundColor: Colors.white),
-                  child: Text(
-                    'Delete',
-                    style: TextStyle(fontSize: 20, color: Colors.black),
-                  ),
-                  onPressed: () {
-                    // Delete the post and close the dialog
-                    _deletePost(postId);
-                    Navigator.of(context).pop();
-                  },
+              SizedBox(width: 8), // Added SizedBox for spacing
+              TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.white,
+                  backgroundColor: Colors.red,
                 ),
+                child: Text(
+                  'Delete',
+                  style: TextStyle(fontSize: 20, color: Colors.black),
+                ),
+                onPressed: () {
+                  // Delete the post and close the dialog
+                  _deletePost(postId);
+                  Navigator.of(context).pop();
+                },
               ),
             ],
           ),
