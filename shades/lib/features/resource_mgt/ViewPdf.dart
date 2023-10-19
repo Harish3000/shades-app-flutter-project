@@ -66,7 +66,7 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
                 crossAxisCount: 2),
             itemBuilder: (context, index) {
               return Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(10),
                   child: InkWell(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
@@ -76,17 +76,30 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black)),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                              color: const Color.fromARGB(255, 30, 90, 180),
+                              width: 2)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Image.asset(
                             "assets/resource/PDF.jpg",
-                            height: 120,
+                            height: 90,
                             width: 100,
                           ),
-                          Text(pdfList[index]['name'],
-                              style: const TextStyle(fontSize: 16)),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0, right: 8),
+                            child: Center(
+                              child: Text(
+                                pdfList[index]['name'],
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    fontStyle: FontStyle.normal,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
