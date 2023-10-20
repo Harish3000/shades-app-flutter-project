@@ -39,10 +39,10 @@ class _BottomTabBarState extends State<BottomTabBar> {
           style: const TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Color.fromARGB(255, 255, 255, 255),
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 0, 3, 3),
+        backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
         elevation: 0,
         actions: [
           IconButton(

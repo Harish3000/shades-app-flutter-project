@@ -259,7 +259,8 @@ class MywidgetState extends State<Resourceoperations> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Resource Operations'),
+        backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
+        title: const Text('Resource List'),
       ),
       body: StreamBuilder(
         stream: _resources.snapshots(),
@@ -362,28 +363,25 @@ class MywidgetState extends State<Resourceoperations> {
                                               onPressed: () =>
                                                   _delete(documentSnapshot),
                                             ),
-                                          if (userRole == 'student')
-                                            IconButton(
-                                              icon: const Icon(Icons.download),
-                                              onPressed: () =>
-                                                  _update(documentSnapshot),
-                                            ),
-                                          if (userRole == 'student')
-                                            IconButton(
-                                              icon: const Icon(Icons.report),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const Scaffold(
-                                                      body:
-                                                          ResourceReportForm(),
-                                                    ),
+                                          IconButton(
+                                            icon: const Icon(Icons.download),
+                                            onPressed: () =>
+                                                _update(documentSnapshot),
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(Icons.report),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const Scaffold(
+                                                    body: ResourceReportForm(),
                                                   ),
-                                                );
-                                              },
-                                            ),
+                                                ),
+                                              );
+                                            },
+                                          ),
                                         ],
                                       ),
                                     ),

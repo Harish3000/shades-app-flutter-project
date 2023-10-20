@@ -44,10 +44,10 @@ class _ResourceReportFormState extends State<ResourceReportForm> {
                   title: const Text(
                     'Report a Resource',
                     style: TextStyle(
-                        backgroundColor: Color.fromRGBO(20, 108, 148, 1.000),
+                        backgroundColor: Colors.transparent,
                         fontSize: 25,
                         fontWeight: FontWeight.w900,
-                        color: Color.fromRGBO(20, 108, 148, 1)),
+                        color: Color.fromRGBO(255, 255, 255, 1)),
                   ),
                 ),
                 const SizedBox(height: 16),
