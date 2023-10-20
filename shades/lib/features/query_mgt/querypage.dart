@@ -45,7 +45,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
     _animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
-
+    userRole = '';
     _getUserRole();
   }
 
