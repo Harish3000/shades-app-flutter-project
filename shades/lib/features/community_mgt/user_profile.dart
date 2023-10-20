@@ -38,62 +38,123 @@ class _UserProfilePageState extends State<UserProfilePage> {
     return userDocument.data() ?? {};
   }
 
+  Widget _buildProfileOption(String title, Color color) {
+    String imagePath = 'assets/community/profile images/';
+    String imageName = '';
+
+    if (title.contains('About')) {
+      imageName = 'about.png';
+    } else if (title.contains('Badges')) {
+      imageName = 'badge.png';
+    } else if (title.contains('Contributor')) {
+      imageName = 'contribute.png';
+    } else if (title.contains('Invite')) {
+      imageName = 'invite.png';
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+          child: Row(
+            children: [
+              Image.asset(
+                '$imagePath$imageName',
+                width: 32,
+                height: 32,
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 25,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF146C94),
-        elevation: 0, // Remove elevation for a cleaner look
+        elevation: 0,
       ),
-      body: Stack(
-        children: <Widget>[
-          Container(
-              height: 260, // Half of the screen height
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 260,
               decoration: BoxDecoration(
                 color: const Color(0xFF146C94),
                 borderRadius: BorderRadius.only(
-                  bottomLeft:
-                      Radius.circular(50), // Radius for bottom left corner
-                  bottomRight:
-                      Radius.circular(50), // Radius for bottom right corner
+                  bottomLeft: Radius.circular(50),
+                  bottomRight: Radius.circular(50),
                 ),
-              )),
-          Positioned(
-            top: MediaQuery.of(context).size.height /
-                500, // Adjust the position as needed
-            left: 0,
-            right: 0,
-            child: Center(
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage: AssetImage(_profileImageURL),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      _username.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      _email,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: AssetImage(_profileImageURL),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    _username.toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    _email,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.white,
-                    ),
-                  ),
+                children: [
+                  _buildProfileOption(
+                      'Become a Contributor', Color(0xFFF6F1F1)),
+                  _buildProfileOption('Invite a Friend', Color(0xFFF6F1F1)),
+                  _buildProfileOption('Badges', Color(0xFFF6F1F1)),
+                  _buildProfileOption('About', Color(0xFFF6F1F1)),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
