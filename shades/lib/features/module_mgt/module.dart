@@ -326,7 +326,7 @@ class MywidgetState extends State<Moduleoperations> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Search'),
-        backgroundColor: Colors.black,
+        backgroundColor: Color.fromARGB(0, 74, 156, 190),
         leading: Image.asset('assets/module/logo.png', width: 20, height: 20),
         actions: [
           Padding(
@@ -396,13 +396,20 @@ class MywidgetState extends State<Moduleoperations> {
                           "Subject Code: ${documentSnapshot['subjectCode'].toString()}",
                           style: TextStyle(
                             color: Color.fromARGB(255, 2, 3, 8),
-                            fontSize: 14,
+                            fontSize: 13,
+                          ),
+                        ),
+                        Text(
+                          documentSnapshot['description'],
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 2, 3, 8),
+                            fontSize: 13,
                           ),
                         ),
                         Row(
                           children: [
                             Text(
-                              "Rating: ",
+                              "Ratings : ",
                               style: TextStyle(
                                 color: Color.fromARGB(255, 2, 3, 8),
                                 fontSize: 14,
@@ -426,13 +433,6 @@ class MywidgetState extends State<Moduleoperations> {
                               },
                             ),
                           ],
-                        ),
-                        Text(
-                          documentSnapshot['description'],
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 2, 3, 8),
-                            fontSize: 14,
-                          ),
                         ),
                       ],
                     ),
