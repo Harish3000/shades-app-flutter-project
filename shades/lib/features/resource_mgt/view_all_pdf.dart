@@ -32,6 +32,7 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
           title: const Text('View PDF'),
         ),
         body: GridView.builder(
@@ -80,7 +81,10 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
                   ));
             }),
         floatingActionButton: FloatingActionButton(
-            onPressed: () {}, child: const Icon(Icons.upload_file)));
+          onPressed: () {},
+          backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
+          child: const Icon(Icons.download),
+        ));
   }
 }
 
