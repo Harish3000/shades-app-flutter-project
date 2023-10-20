@@ -53,9 +53,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 color: const Color(0xFF146C94),
                 borderRadius: BorderRadius.only(
                   bottomLeft:
-                      Radius.circular(30), // Radius for bottom left corner
+                      Radius.circular(50), // Radius for bottom left corner
                   bottomRight:
-                      Radius.circular(30), // Radius for bottom right corner
+                      Radius.circular(50), // Radius for bottom right corner
                 ),
               )),
           Positioned(
