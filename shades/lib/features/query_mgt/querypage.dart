@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'query_report.dart';
 
 class ModuleDetailPage extends StatefulWidget {
   final String queryName;
@@ -286,10 +287,10 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                           icon: Icon(Icons.flag_circle_rounded,
                               color: Color.fromARGB(255, 124, 117, 117)),
                           onPressed: () {
-                            _updateDislikes(answerId, dislikes + 1);
+                            _reportAnswer(answerId);
                           },
                         ),
-                        Text('Dislikes: $dislikes'),
+                        Text('Report: $dislikes'),
                       ],
                     ),
                   ],
@@ -391,13 +392,13 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
     _getAndSortAnswers();
   }
 
-  void _updateDislikes(String answerId, int newDislikes) async {
-    await FirebaseFirestore.instance
-        .collection('query_answers')
-        .doc(answerId)
-        .update({'dislikes': newDislikes});
-
-    _getAndSortAnswers();
+  void _reportAnswer(String answerId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => QueryReportPage(answerId: answerId),
+      ),
+    );
   }
 
   void _submitAnswer(String answer) async {
