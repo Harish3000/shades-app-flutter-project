@@ -281,9 +281,9 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                             _updateLikes(answerId, likes + 1);
                           },
                         ),
-                        Text('Likes: $likes'),
+                        Text('$likes  '),
                         IconButton(
-                          icon: Icon(Icons.heart_broken,
+                          icon: Icon(Icons.flag_circle_rounded,
                               color: Color.fromARGB(255, 124, 117, 117)),
                           onPressed: () {
                             _updateDislikes(answerId, dislikes + 1);
