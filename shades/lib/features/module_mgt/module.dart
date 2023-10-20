@@ -109,7 +109,7 @@ class MywidgetState extends State<Moduleoperations> {
                 itemSize: 30.0,
                 itemBuilder: (context, _) => Icon(
                   Icons.star,
-                  color: Color.fromARGB(255, 253, 123, 2),
+                  color: Color.fromARGB(255, 253, 122, 0),
                 ),
                 onRatingUpdate: (rating) {
                   selectedRating = rating;
@@ -408,7 +408,23 @@ class MywidgetState extends State<Moduleoperations> {
                                 fontSize: 14,
                               ),
                             ),
-                            // Add your RatingBar widget here
+                            RatingBar.builder(
+                              initialRating: 3, // Set the initial rating here
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              itemSize: 15,
+                              itemCount: 5,
+                              itemPadding:
+                                  EdgeInsets.symmetric(horizontal: 4.0),
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Color.fromARGB(192, 255, 137, 3),
+                              ),
+                              onRatingUpdate: (rating) {
+                                // Add your code to handle rating updates here
+                              },
+                            ),
                           ],
                         ),
                         Text(
