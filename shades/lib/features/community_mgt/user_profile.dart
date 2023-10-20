@@ -38,7 +38,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     return userDocument.data() ?? {};
   }
 
-  Widget _buildProfileOption(String title, Color color) {
+  Widget _buildProfileOption(String title, String subtext, Color color) {
     String imagePath = 'assets/community/profile images/';
     String imageName = '';
 
@@ -78,11 +78,25 @@ class _UserProfilePageState extends State<UserProfilePage> {
               ),
               SizedBox(width: 16),
               Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 25,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                          fontSize: 22, // Adjust main text size here
+                          fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      subtext,
+                      style: TextStyle(
+                        fontSize: 18, // Adjust subtext size here
+                        color: Colors.grey,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -145,11 +159,16 @@ class _UserProfilePageState extends State<UserProfilePage> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
+                  _buildProfileOption('Become a Contributor',
+                      'Wanna upgrade your profile?', Color(0xFFF6F1F1)),
                   _buildProfileOption(
-                      'Become a Contributor', Color(0xFFF6F1F1)),
-                  _buildProfileOption('Invite a Friend', Color(0xFFF6F1F1)),
-                  _buildProfileOption('Badges', Color(0xFFF6F1F1)),
-                  _buildProfileOption('About', Color(0xFFF6F1F1)),
+                      'Invite a Friend',
+                      'Share the application among your friends',
+                      Color(0xFFF6F1F1)),
+                  _buildProfileOption('Badges',
+                      'View your achieved badges here', Color(0xFFF6F1F1)),
+                  _buildProfileOption(
+                      'About', 'Go for "Shades" App About', Color(0xFFF6F1F1)),
                 ],
               ),
             ),
@@ -159,3 +178,5 @@ class _UserProfilePageState extends State<UserProfilePage> {
     );
   }
 }
+
+void main() => runApp(MaterialApp(home: UserProfilePage()));
