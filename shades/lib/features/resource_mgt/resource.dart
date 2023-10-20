@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:shades/features/resource_mgt/report_resource.dart';
 import 'package:shades/features/resource_mgt/upload_success.dart';
@@ -31,6 +32,33 @@ class MywidgetState extends State<Resourceoperations> {
   List<Map<String, dynamic>> pdfList = [];
   // String searchText = '';
   // bool isSearchClicked = false;
+
+  // Inside your State class, add a method to get the current user ID
+  String getCurrentUserId() {
+    // Use FirebaseAuth to get the current user
+    final User? user = FirebaseAuth.instance.currentUser;
+    // Get the user ID
+    final String userId = user?.uid ?? '';
+    return userId;
+  }
+
+//get user roles
+  Future<String> getUserRole(String userId) async {
+    // Replace 'users' with your actual collection name
+    final DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('resources')
+        .doc(userId)
+        .get();
+
+    // Check if the user exists and has a role field
+    if (userSnapshot.exists && userSnapshot.data() != null) {
+      final Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
+      return userData['role'] ?? ''; // Assuming 'role' is a String field
+    } else {
+      return ''; // Default to an empty string or another default value
+    }
+  }
 
 //upload pdf
   Future<String?> uploadPdf(String fileName, File file) async {
@@ -230,134 +258,162 @@ class MywidgetState extends State<Resourceoperations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text('Resource Operations'),
+      ),
       body: StreamBuilder(
-          stream: _resources.snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-            if (streamSnapshot.hasData) {
-              return Column(
-                children: [
-                  // Add your text widget here
-                  const Center(
-                    child: Text(
-                      'Resource List',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 2, 3, 8),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+        stream: _resources.snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+          return FutureBuilder(
+            future: getUserRole(getCurrentUserId()),
+            builder: (context, AsyncSnapshot<String> roleSnapshot) {
+              if (roleSnapshot.connectionState == ConnectionState.done) {
+                final String userRole = roleSnapshot.data ?? '';
+
+                if (streamSnapshot.hasData) {
+                  return Column(
+                    children: [
+                      const SizedBox(
+                        height: 20,
                       ),
-                    ),
-                  ),
+                      const Center(
+                        child: Text(
+                          'Resource List',
+                          style: TextStyle(
+                            color: Color.fromRGBO(20, 108, 148, 1.000),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: streamSnapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            final DocumentSnapshot documentSnapshot =
+                                streamSnapshot.data!.docs[index];
 
-                  Expanded(
-                    child: ListView.builder(
-                        itemCount: streamSnapshot.data!.docs.length,
-                        itemBuilder: (context, index) {
-                          final DocumentSnapshot documentSnapshot =
-                              streamSnapshot.data!.docs[index];
-                          return GestureDetector(
-                            onTap: () {
-                              // Navigate to the ViewPdf screen when tapped
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const ViewPdfForm(),
-                                ),
-                              );
-                            },
-                            child: SizedBox(
-                              height: 110,
-                              child: Card(
-                                shadowColor: Colors.black,
-                                color: const Color.fromARGB(246, 241, 241, 240),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15)),
-                                margin: const EdgeInsets.all(10),
-                                elevation: 8,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 10, bottom: 10, left: 10, right: 10),
-                                  child: ListTile(
-                                    leading: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Image.asset(
-                                          'assets/resource/PDF.jpg',
-                                          width: 50,
-                                          height: 50,
-                                        ),
-                                        // CircleAvatar(
-                                        //   radius: 17,
-                                        //   backgroundColor:
-                                        //       const Color.fromARGB(255, 255, 106, 7),
-
-                                        // ),
-                                      ],
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const ViewPdfForm(),
+                                  ),
+                                );
+                              },
+                              child: SizedBox(
+                                height: 160,
+                                child: Card(
+                                  shadowColor: Colors.black,
+                                  color:
+                                      const Color.fromARGB(246, 241, 241, 240),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  margin: const EdgeInsets.all(10),
+                                  elevation: 8,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 20,
+                                      bottom: 10,
+                                      left: 10,
+                                      right: 10,
                                     ),
-                                    title: Text(
-                                      documentSnapshot['resourceName']
-                                          .toString(),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 2, 3, 8),
+                                    child: ListTile(
+                                      leading: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Image.asset(
+                                            'assets/resource/PDF.jpg',
+                                            width: 70,
+                                            height: 50,
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    subtitle: Text(
-                                      "${documentSnapshot['subjectCode'].toString()} \n ${documentSnapshot['Ratings'].toString()} \n ${documentSnapshot['description']}",
-                                      style: const TextStyle(
-                                        color: Color.fromARGB(255, 2, 3, 8),
+                                      title: Text(
+                                        documentSnapshot['resourceName']
+                                            .toString(),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Color.fromARGB(255, 2, 3, 8),
+                                        ),
                                       ),
-                                    ),
-                                    trailing: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.edit),
-                                          onPressed: () =>
-                                              _update(documentSnapshot),
+                                      subtitle: Text(
+                                        "${documentSnapshot['subjectCode'].toString()} \n ${documentSnapshot['Ratings'].toString()} \n ${documentSnapshot['description']}",
+                                        style: const TextStyle(
+                                          color: Color.fromARGB(255, 2, 3, 8),
                                         ),
-                                        IconButton(
-                                          icon: const Icon(Icons.delete),
-                                          onPressed: () =>
-                                              _delete(documentSnapshot),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.report),
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const Scaffold(
-                                                  body: ResourceReportForm(),
-                                                  // body: ViewPdf(),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ],
+                                      ),
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          if (userRole == 'leader')
+                                            IconButton(
+                                              icon: const Icon(Icons.edit),
+                                              onPressed: () =>
+                                                  _update(documentSnapshot),
+                                            ),
+                                          if (userRole == 'leader')
+                                            IconButton(
+                                              icon: const Icon(Icons.delete),
+                                              onPressed: () =>
+                                                  _delete(documentSnapshot),
+                                            ),
+                                          if (userRole == 'student')
+                                            IconButton(
+                                              icon: const Icon(Icons.download),
+                                              onPressed: () =>
+                                                  _update(documentSnapshot),
+                                            ),
+                                          if (userRole == 'student')
+                                            IconButton(
+                                              icon: const Icon(Icons.report),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const Scaffold(
+                                                      body:
+                                                          ResourceReportForm(),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        }),
-                  ),
-                ],
-              );
-            } else {
-              return const CircularProgressIndicator();
-            }
-          }),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _create();
         },
-        backgroundColor: const Color.fromARGB(255, 88, 168, 243),
+        backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
         child: const Icon(Icons.upload_file),
-        // child: const Icon(Icons.add),
       ),
     );
   }

@@ -44,7 +44,7 @@ class _ResourceReportFormState extends State<ResourceReportForm> {
                   title: const Text(
                     'Report a Resource',
                     style: TextStyle(
-                        backgroundColor: Colors.transparent,
+                        backgroundColor: Color.fromRGBO(20, 108, 148, 1.000),
                         fontSize: 25,
                         fontWeight: FontWeight.w900,
                         color: Color.fromRGBO(20, 108, 148, 1)),

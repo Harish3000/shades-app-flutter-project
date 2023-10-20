@@ -48,12 +48,12 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
                                 pdfurl: pdfList[index]['url'],
                               )));
                     },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                              color: const Color.fromARGB(255, 30, 90, 180),
-                              width: 2)),
+                    child: Card(
+                      elevation: 10,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side: const BorderSide(
+                              color: Color.fromARGB(255, 8, 23, 45), width: 1)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
