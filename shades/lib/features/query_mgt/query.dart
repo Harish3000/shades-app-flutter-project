@@ -313,9 +313,9 @@ class MyWidgetState extends State<QueryOperations> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
-                hintText: 'Search Query...',
+                hintText: '  Search Query...',
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(25),
                 ),
               ),
             ),

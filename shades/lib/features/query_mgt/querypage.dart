@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ModuleDetailPage extends StatefulWidget {
@@ -23,9 +24,9 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
   late TextEditingController answerController;
   late List<Map<String, dynamic>> answers;
   bool showAddAnswerSection = false;
-
   late AnimationController _animationController;
   late Animation<double> _animation;
+  late String userRole;
 
   @override
   void initState() {
@@ -33,21 +34,36 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
     answerController = TextEditingController();
     answers = [];
     _getAndSortAnswers();
-
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 500),
     );
-
     _animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
+
+    _getUserRole();
   }
 
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  Future<void> _getUserRole() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String userId = user?.uid ?? '';
+    final DocumentSnapshot userSnapshot =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+    if (userSnapshot.exists && userSnapshot.data() != null) {
+      final Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
+      userRole = userData['role'] ?? '';
+    } else {
+      userRole = '';
+    }
   }
 
   @override
@@ -73,13 +89,13 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
             Stack(
               children: [
                 Image.asset(
-                  'assets/query/test3.gif', // Replace this line
+                  'assets/query/test3.gif',
                   width: double.infinity,
                   height: 400,
                   fit: BoxFit.cover,
                 ),
                 Positioned(
-                  top: 250, // Adjust this value as needed
+                  top: 250,
                   left: 5,
                   right: 5,
                   child: Card(
@@ -236,7 +252,9 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
     return Column(
       children: answers.map((answerData) {
         final answerId = answerData['answerId'];
-        final userName = answerData['userName'];
+        final userID = answerData['userID'];
+        final displayUserID =
+            userID.length > 6 ? userID.substring(0, 6) : userID;
         final answer = answerData['answer'];
         final likes = answerData['likes'] ?? 0;
         final dislikes = answerData['dislikes'] ?? 0;
@@ -253,7 +271,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Answer by $userName'),
+                    Text('@ user_$displayUserID'),
                     Row(
                       children: [
                         IconButton(
@@ -276,11 +294,69 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                     ),
                   ],
                 ),
+                trailing: _buildDeleteButton(userID, answerId),
               ),
             ],
           ),
         );
       }).toList(),
+    );
+  }
+
+  Widget? _buildDeleteButton(String answerUserID, String answerId) {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String currentUserId = user?.uid ?? '';
+    final bool canDelete =
+        answerUserID == currentUserId || userRole == 'leader';
+
+    return canDelete
+        ? IconButton(
+            icon: Icon(Icons.delete_forever_rounded),
+            onPressed: () => _deleteAnswer(answerId),
+          )
+        : null;
+  }
+
+  void _deleteAnswer(String answerId) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Answer'),
+          content: Text('Are you sure you want to delete this answer?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                await FirebaseFirestore.instance
+                    .collection('query_answers')
+                    .doc(answerId)
+                    .delete();
+                Navigator.of(context).pop();
+                _getAndSortAnswers(); // Refresh the answers after deletion
+              },
+              child: Text(
+                'Delete',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -295,7 +371,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
       answers = snapshot.docs.map((doc) {
         return {
           'answerId': doc.id,
-          'userName': doc['userName'],
+          'userID': doc['userID'],
           'answer': doc['answer'],
           'likes': doc['likes'] ?? 0,
           'dislikes': doc['dislikes'] ?? 0,
@@ -325,10 +401,13 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
   }
 
   void _submitAnswer(String answer) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final userID = currentUser?.uid ?? 'Anonymous';
+
     await FirebaseFirestore.instance.collection('query_answers').add({
       'queryName': widget.queryName,
       'queryCode': widget.queryCode,
-      'userName': 'Anonymous',
+      'userID': userID,
       'answer': answer,
       'likes': 0,
       'dislikes': 0,
