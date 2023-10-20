@@ -182,7 +182,7 @@ class _QueryReportPageState extends State<QueryReportPage> {
                               _showSuccessPopup();
 
                               // Navigate back twice after 2 seconds
-                              await Future.delayed(Duration(seconds: 1));
+                              await Future.delayed(Duration(seconds: 2));
                               Navigator.pop(context);
                               Navigator.pop(context);
                             } catch (e) {
