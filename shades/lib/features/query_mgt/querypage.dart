@@ -28,13 +28,16 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
   late AnimationController _animationController;
   late Animation<double> _animation;
   late String userRole;
+  late Map<String, int> reportedIssuesCount;
 
   @override
   void initState() {
     super.initState();
     answerController = TextEditingController();
     answers = [];
+    reportedIssuesCount = {};
     _getAndSortAnswers();
+    _getReportedIssuesCount();
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 500),
@@ -64,6 +67,19 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
       userRole = userData['role'] ?? '';
     } else {
       userRole = '';
+    }
+  }
+
+  Future<void> _getReportedIssuesCount() async {
+    final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection('query_answer_reports')
+        .get();
+
+    for (final doc in snapshot.docs) {
+      final answerId = doc['answerId'];
+      final count = reportedIssuesCount[answerId] ?? 0;
+      reportedIssuesCount[answerId] = count + 1;
     }
   }
 
@@ -259,30 +275,42 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
         final answer = answerData['answer'];
         final likes = answerData['likes'] ?? 0;
         final dislikes = answerData['dislikes'] ?? 0;
+        final hasIssues = reportedIssuesCount.containsKey(answerId) &&
+            reportedIssuesCount[answerId]! > 2;
 
         return Card(
           key: ValueKey<String>(answerId),
           elevation: 2,
           color: Colors.white,
-          margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+          margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
           child: Column(
             children: [
               ListTile(
-                title: Text('Answer: $answer'),
+                title: Text(
+                  '$answer',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+                ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('@ user_$displayUserID'),
+                    Text(
+                      '@ user_$displayUserID',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.grey,
+                      ),
+                    ),
                     Row(
                       children: [
                         IconButton(
                           icon: Icon(Icons.favorite,
-                              color: Color.fromARGB(255, 124, 117, 117)),
+                              color: Color.fromARGB(255, 177, 177, 177)),
                           onPressed: () {
                             _updateLikes(answerId, likes + 1);
                           },
                         ),
-                        Text('$likes  '),
+                        Text('$likes      '),
                         IconButton(
                           icon: Icon(Icons.flag_circle_rounded,
                               color: Color.fromARGB(255, 124, 117, 117)),
@@ -290,9 +318,25 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                             _reportAnswer(answerId);
                           },
                         ),
-                        Text('Report: $dislikes'),
+                        Text('Report'),
                       ],
                     ),
+                    if (hasIssues)
+                      Column(
+                        children: [
+                          SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Icon(Icons.error, color: Colors.red),
+                              Text(
+                                '  This answer has some issues ',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                        ],
+                      ),
                   ],
                 ),
                 trailing: _buildDeleteButton(userID, answerId),
