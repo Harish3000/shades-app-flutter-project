@@ -34,7 +34,26 @@ class _ContributorPageState extends State<ContributorPage> {
         'userRole': userRole,
       });
 
-      // Navigate to a success screen or perform any other actions here
+      // Show popup dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Profile Upgraded Successfully!'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Login as a Community Leader'),
+                onPressed: () {
+                  // Close the dialog
+                  Navigator.of(context).pop();
+                  // Navigate to the login page
+                  Navigator.pushReplacementNamed(context, '/login');
+                },
+              ),
+            ],
+          );
+        },
+      );
     } else {
       // Handle the case where the user is not logged in
       print('User is not logged in.');
