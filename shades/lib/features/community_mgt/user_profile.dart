@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'ContributionPage.dart';
+import 'InvitePage.dart';
+import 'BadgesPage.dart';
+import 'AboutPage.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -38,7 +42,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
     return userDocument.data() ?? {};
   }
 
-  Widget _buildProfileOption(String title, String subtext, Color color) {
+  Widget _buildProfileOption(
+      String title, String subtext, Color color, VoidCallback onTap) {
     String imagePath = 'assets/community/profile images/';
     String imageName = '';
 
@@ -52,60 +57,64 @@ class _UserProfilePageState extends State<UserProfilePage> {
       imageName = 'invite.png';
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              spreadRadius: 2,
-              blurRadius: 4,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
-          child: Row(
-            children: [
-              Image.asset(
-                '$imagePath$imageName',
-                width: 32,
-                height: 32,
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          title,
-                          style: TextStyle(
-                            fontSize: 22, // Adjust main text size here
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Spacer(),
-                        Icon(Icons.arrow_forward_ios, size: 18),
-                      ],
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      subtext,
-                      style: TextStyle(
-                        fontSize: 16, // Adjust subtext size here
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 16.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                spreadRadius: 2,
+                blurRadius: 4,
+                offset: Offset(0, 2),
               ),
             ],
+          ),
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+            child: Row(
+              children: [
+                Image.asset(
+                  '$imagePath$imageName',
+                  width: 32,
+                  height: 32,
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            title,
+                            style: TextStyle(
+                              fontSize: 22, // Adjust main text size here
+                            ),
+                          ),
+                          Spacer(),
+                          Icon(Icons.arrow_forward_ios, size: 18),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        subtext,
+                        style: TextStyle(
+                          fontSize: 16, // Adjust subtext size here
+                          color: Color(0xFF146C94),
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -166,15 +175,37 @@ class _UserProfilePageState extends State<UserProfilePage> {
               child: Column(
                 children: [
                   _buildProfileOption('Become a Contributor',
-                      'Wanna upgrade profile?', Color(0xFFF6F1F1)),
+                      'Wanna upgrade profile?', Color(0xFFF6F1F1), () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ContributorPage()),
+                    );
+                  }),
                   _buildProfileOption(
                       'Invite a Friend',
                       'Share the application among your friends',
-                      Color(0xFFF6F1F1)),
+                      Color(0xFFF6F1F1), () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => InvitePage()),
+                    );
+                  }),
                   _buildProfileOption('Badges',
-                      'View your achieved badges here', Color(0xFFF6F1F1)),
+                      'View your achieved badges here', Color(0xFFF6F1F1), () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => BadgesPage()),
+                    );
+                  }),
                   _buildProfileOption(
-                      'About', 'Go for "Shades" App About', Color(0xFFF6F1F1)),
+                      'About', 'Go for "Shades" App About', Color(0xFFF6F1F1),
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AboutPage()),
+                    );
+                  }),
                 ],
               ),
             ),
