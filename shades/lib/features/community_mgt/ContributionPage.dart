@@ -23,7 +23,7 @@ class _ContributorPageState extends State<ContributorPage> {
       String communityId = _communityIdController.text;
       String communityName = _selectedCommunity;
       String designation = _designationController.text;
-      String userRole = 'Leader';
+      String userRole = 'leader';
 
       // Update user's profile in Firestore
       await FirebaseFirestore.instance.collection('users').doc(userId).update({
@@ -31,7 +31,7 @@ class _ContributorPageState extends State<ContributorPage> {
         'communityId': communityId,
         'communityName': communityName,
         'designation': designation,
-        'userRole': userRole,
+        'role': userRole,
       });
 
       // Show popup dialog

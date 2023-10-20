@@ -15,11 +15,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
   late String _username;
   late String _email;
   late String _profileImageURL;
+  late String _role = ''; // Variable to store user's role
 
   @override
   void initState() {
     super.initState();
     _email = ''; // Initialize _email here
+    _role = ''; // Initialize _role here
     _loadUserData();
   }
 
@@ -29,6 +31,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       _username = (userData['username'] ?? '');
       _email = userData['email'] ?? '';
       _profileImageURL = 'assets/community/profile images/pp.png';
+      _role = userData['role'] ?? ''; // Retrieve user's role from data
     });
   }
 
@@ -144,9 +147,23 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: AssetImage(_profileImageURL),
+                    Stack(
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage: AssetImage(_profileImageURL),
+                        ),
+                        if (_role == 'leader') // Check if the user is a leader
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Image.asset(
+                              'assets/community/profile images/verified.png',
+                              width: 24, // Adjust the icon size as needed
+                              height: 24,
+                            ),
+                          ),
+                      ],
                     ),
                     SizedBox(height: 20),
                     Text(
