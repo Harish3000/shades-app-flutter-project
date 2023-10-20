@@ -81,19 +81,25 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                          fontSize: 22, // Adjust main text size here
-                          fontWeight: FontWeight.w500),
+                    Row(
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 22, // Adjust main text size here
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Spacer(),
+                        Icon(Icons.arrow_forward_ios, size: 18),
+                      ],
                     ),
                     SizedBox(height: 8),
                     Text(
                       subtext,
                       style: TextStyle(
-                        fontSize: 18, // Adjust subtext size here
+                        fontSize: 16, // Adjust subtext size here
                         color: Colors.grey,
-                        fontStyle: FontStyle.italic,
                       ),
                     ),
                   ],
@@ -160,7 +166,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
               child: Column(
                 children: [
                   _buildProfileOption('Become a Contributor',
-                      'Wanna upgrade your profile?', Color(0xFFF6F1F1)),
+                      'Wanna upgrade profile?', Color(0xFFF6F1F1)),
                   _buildProfileOption(
                       'Invite a Friend',
                       'Share the application among your friends',
@@ -178,5 +184,3 @@ class _UserProfilePageState extends State<UserProfilePage> {
     );
   }
 }
-
-void main() => runApp(MaterialApp(home: UserProfilePage()));
