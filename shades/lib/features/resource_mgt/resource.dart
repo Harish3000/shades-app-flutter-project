@@ -107,9 +107,9 @@ class MywidgetState extends State<Resourceoperations> {
           return Padding(
             padding: EdgeInsets.only(
               top: 10,
-              left: 10,
-              right: 10,
-              bottom: MediaQuery.of(ctx).viewInsets.bottom + 50,
+              left: 20,
+              right: 20,
+              bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -118,50 +118,81 @@ class MywidgetState extends State<Resourceoperations> {
                 const Center(
                   child: Text("Insert Resource Details",
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                 ),
-                TextField(
+                const SizedBox(height: 20),
+                TextFormField(
                   controller: _resourceNameController,
-                  decoration: const InputDecoration(labelText: "Module Name"),
+                  decoration: const InputDecoration(
+                      labelText: "Module Name",
+                      border: OutlineInputBorder(),
+                      filled: true,
+                      prefixIcon: Icon(Icons.book)),
                 ),
+                const SizedBox(height: 12),
                 TextField(
                   controller: _subjectCodeController,
-                  decoration: const InputDecoration(labelText: "Subject Code"),
+                  decoration: const InputDecoration(
+                    labelText: "Subject Code",
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    prefixIcon: Icon(Icons.code),
+                  ),
                 ),
+                const SizedBox(height: 12),
                 TextField(
                   controller: _descriptionController,
-                  decoration: const InputDecoration(labelText: "Description"),
+                  decoration: const InputDecoration(
+                    labelText: "Description",
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    prefixIcon: Icon(Icons.description),
+                  ),
                 ),
+                const SizedBox(height: 12),
                 TextField(
                   controller: _ratingsController,
-                  decoration: const InputDecoration(labelText: "File Name"),
+                  decoration: const InputDecoration(
+                    labelText: "File Name",
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    prefixIcon: Icon(Icons.file_copy),
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 ElevatedButton(
-                    onPressed: () async {
-                      final String resourceName = _resourceNameController.text;
-                      final String subjectCode = _subjectCodeController.text;
-                      final String description = _descriptionController.text;
-                      final String ratings = _ratingsController.text;
+                  onPressed: () async {
+                    final String resourceName = _resourceNameController.text;
+                    final String subjectCode = _subjectCodeController.text;
+                    final String description = _descriptionController.text;
+                    final String ratings = _ratingsController.text;
 
-                      await _resources.add({
-                        'resourceName': resourceName,
-                        'subjectCode': subjectCode,
-                        'description': description,
-                        'Ratings': ratings,
-                      });
-                      _resourceNameController.text = "";
-                      _subjectCodeController.text = "";
-                      _descriptionController.text = "";
-                      _ratingsController.text = "";
+                    await _resources.add({
+                      'resourceName': resourceName,
+                      'subjectCode': subjectCode,
+                      'description': description,
+                      'Ratings': ratings,
+                    });
+                    _resourceNameController.text = "";
+                    _subjectCodeController.text = "";
+                    _descriptionController.text = "";
+                    _ratingsController.text = "";
 
-                      pickFileAndUpload();
+                    pickFileAndUpload();
 
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("Create")),
+                    Navigator.of(context).pop();
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Center(
+                        widthFactor: 2.5,
+                        child: Text("Create",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold))),
+                  ),
+                )
               ],
             ),
           );
@@ -184,8 +215,8 @@ class MywidgetState extends State<Resourceoperations> {
           return Padding(
             padding: EdgeInsets.only(
               top: 10,
-              left: 10,
-              right: 10,
+              left: 20,
+              right: 20,
               bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
             ),
             child: Column(
@@ -195,55 +226,80 @@ class MywidgetState extends State<Resourceoperations> {
                 const Center(
                   child: Text("Update Resource Details",
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                 ),
-                TextField(
+                const SizedBox(height: 20),
+                TextFormField(
                   controller: _resourceNameController,
-                  decoration: const InputDecoration(labelText: "Resource Name"),
+                  decoration: const InputDecoration(
+                    labelText: "Resource Name",
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    prefixIcon: Icon(Icons.schema_outlined),
+                  ),
                 ),
-                TextField(
+                const SizedBox(height: 12),
+                TextFormField(
                   controller: _subjectCodeController,
-                  decoration: const InputDecoration(labelText: "Subject Code"),
+                  decoration: const InputDecoration(
+                    labelText: "Subject Code",
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    prefixIcon: Icon(Icons.code),
+                  ),
                 ),
-                TextField(
+                const SizedBox(height: 12),
+                TextFormField(
                   controller: _descriptionController,
-                  decoration: const InputDecoration(labelText: "Description"),
+                  decoration: const InputDecoration(
+                    labelText: "Description",
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    prefixIcon: Icon(Icons.description),
+                  ),
                 ),
-                TextField(
+                const SizedBox(height: 12),
+                TextFormField(
                   controller: _ratingsController,
-                  decoration: const InputDecoration(labelText: "File Name"),
+                  decoration: const InputDecoration(
+                    labelText: "File Name",
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    prefixIcon: Icon(Icons.file_copy),
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 ElevatedButton(
-                    onPressed: () async {
-                      final String resourceName = _resourceNameController.text;
-                      final String subjectCode = _subjectCodeController.text;
-                      final String description = _descriptionController.text;
-                      final String ratings = _ratingsController.text;
+                  onPressed: () async {
+                    final String resourceName = _resourceNameController.text;
+                    final String subjectCode = _subjectCodeController.text;
+                    final String description = _descriptionController.text;
+                    final String ratings = _ratingsController.text;
 
-                      // await _resources.({
-                      //   'resourceName': resourceName,
-                      //   'subjectCode': subjectCode,
-                      //   'description': description,
-                      //   'Ratings': ratings,
-                      // });
+                    await _resources.doc(documentSnapshot!.id).update({
+                      'resourceName': resourceName,
+                      'subjectCode': subjectCode,
+                      'description': description,
+                      'Ratings': ratings,
+                    });
+                    _resourceNameController.text = "";
+                    _subjectCodeController.text = "";
+                    _descriptionController.text = "";
+                    _ratingsController.text = "";
 
-                      await _resources.doc(documentSnapshot!.id).update({
-                        'resourceName': resourceName,
-                        'subjectCode': subjectCode,
-                        'description': description,
-                        'Ratings': ratings,
-                      });
-                      _resourceNameController.text = "";
-                      _subjectCodeController.text = "";
-                      _descriptionController.text = "";
-                      _ratingsController.text = "";
-
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("Update"))
+                    Navigator.of(context).pop();
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Center(
+                        widthFactor: 2.5,
+                        child: Text("Update",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold))),
+                  ),
+                )
               ],
             ),
           );
@@ -251,8 +307,106 @@ class MywidgetState extends State<Resourceoperations> {
   }
 
   //delete operation
+  // Future<void> _delete([DocumentSnapshot? documentSnapshot]) async {
+  //   await _resources.doc(documentSnapshot!.id).delete();
+  // }
+
   Future<void> _delete([DocumentSnapshot? documentSnapshot]) async {
-    await _resources.doc(documentSnapshot!.id).delete();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.all(20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Icon(
+                Icons.warning,
+                size: 64,
+                color: Colors.red,
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Confirm Deletion',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Are you sure you want to delete this Resource?',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Container(
+                width: 100,
+                height: 50,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 119, 156, 168),
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 6,
+                      offset: const Offset(1, 1),
+                    ),
+                  ],
+                ),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                await _resources.doc(documentSnapshot!.id).delete();
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Container(
+                width: 100,
+                height: 50,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.red[100],
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 6,
+                      offset: const Offset(1, 1),
+                    ),
+                  ],
+                ),
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -260,7 +414,7 @@ class MywidgetState extends State<Resourceoperations> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
-        title: const Text('Resource List'),
+        // title: const Text('Resource gallery'),
       ),
       body: StreamBuilder(
         stream: _resources.snapshots(),
@@ -275,7 +429,7 @@ class MywidgetState extends State<Resourceoperations> {
                   return Column(
                     children: [
                       const SizedBox(
-                        height: 20,
+                        height: 16,
                       ),
                       const Center(
                         child: Text(
@@ -288,7 +442,7 @@ class MywidgetState extends State<Resourceoperations> {
                         ),
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 16,
                       ),
                       Expanded(
                         child: ListView.builder(
@@ -307,7 +461,7 @@ class MywidgetState extends State<Resourceoperations> {
                                 );
                               },
                               child: SizedBox(
-                                height: 160,
+                                height: 170,
                                 child: Card(
                                   shadowColor: Colors.black,
                                   color:
@@ -329,7 +483,7 @@ class MywidgetState extends State<Resourceoperations> {
                                         children: [
                                           Image.asset(
                                             'assets/resource/PDF.jpg',
-                                            width: 70,
+                                            width: 80,
                                             height: 50,
                                           ),
                                         ],
@@ -338,6 +492,7 @@ class MywidgetState extends State<Resourceoperations> {
                                         documentSnapshot['resourceName']
                                             .toString(),
                                         style: const TextStyle(
+                                          fontSize: 22,
                                           fontWeight: FontWeight.bold,
                                           color: Color.fromARGB(255, 2, 3, 8),
                                         ),
@@ -346,30 +501,30 @@ class MywidgetState extends State<Resourceoperations> {
                                         "${documentSnapshot['subjectCode'].toString()} \n ${documentSnapshot['Ratings'].toString()} \n ${documentSnapshot['description']}",
                                         style: const TextStyle(
                                           color: Color.fromARGB(255, 2, 3, 8),
+                                          fontSize: 16,
                                         ),
                                       ),
                                       trailing: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          if (userRole == 'leader')
-                                            IconButton(
-                                              icon: const Icon(Icons.edit),
-                                              onPressed: () =>
-                                                  _update(documentSnapshot),
-                                            ),
-                                          if (userRole == 'leader')
-                                            IconButton(
-                                              icon: const Icon(Icons.delete),
-                                              onPressed: () =>
-                                                  _delete(documentSnapshot),
-                                            ),
+                                          // if (userRole == 'leader')
                                           IconButton(
-                                            icon: const Icon(Icons.download),
+                                            iconSize: 30,
+                                            icon: const Icon(Icons.edit),
                                             onPressed: () =>
                                                 _update(documentSnapshot),
                                           ),
+                                          // if (userRole == 'leader')
                                           IconButton(
-                                            icon: const Icon(Icons.report),
+                                            iconSize: 30,
+                                            icon: const Icon(Icons.delete),
+                                            onPressed: () =>
+                                                _delete(documentSnapshot),
+                                          ),
+                                          IconButton(
+                                            iconSize: 30,
+                                            icon:
+                                                const Icon(Icons.report_sharp),
                                             onPressed: () {
                                               Navigator.push(
                                                 context,
@@ -395,11 +550,13 @@ class MywidgetState extends State<Resourceoperations> {
                     ],
                   );
                 } else {
-                  return const CircularProgressIndicator();
+                  return const CircularProgressIndicator(
+                      strokeWidth: 6, backgroundColor: Colors.grey);
                 }
               } else {
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                      strokeWidth: 6, backgroundColor: Colors.grey),
                 );
               }
             },

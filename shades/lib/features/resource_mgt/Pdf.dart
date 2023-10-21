@@ -163,7 +163,7 @@
 //           else
 //             const Text('No file selected'),
 //           if (isUploading)
-//             const CircularProgressIndicator()
+//             const CircularProgressIndicator(backgroundColor: Colors.grey)
 //           else
 //             ElevatedButton(
 //               onPressed: uploadFile,
@@ -210,7 +210,7 @@
 //           ? PDFViewer(
 //               document: document!,
 //             )
-//           : const Center(child: CircularProgressIndicator()),
+//           : const Center(child: CircularProgressIndicator(strokeWidth: 6,backgroundColor: Colors.grey)),
 //     );
 //   }
 // }

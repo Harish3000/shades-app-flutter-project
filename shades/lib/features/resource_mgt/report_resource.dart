@@ -25,29 +25,28 @@ class _ResourceReportFormState extends State<ResourceReportForm> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: SafeArea(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
+        // title: const Text('Report Resource'),
+      ),
+      body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppBar(
-                  leading: IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  title: const Text(
-                    'Report a Resource',
+                const SizedBox(height: 16),
+                const Center(
+                  child: Text(
+                    'Report Resource ',
                     style: TextStyle(
-                        backgroundColor: Colors.transparent,
-                        fontSize: 25,
-                        fontWeight: FontWeight.w900,
-                        color: Color.fromRGBO(255, 255, 255, 1)),
+                      color: Color.fromRGBO(20, 108, 148, 1.000),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),

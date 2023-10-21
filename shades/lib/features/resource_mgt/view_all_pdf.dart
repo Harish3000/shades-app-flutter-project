@@ -4,6 +4,9 @@ import 'package:easy_pdf_viewer/easy_pdf_viewer.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:http/http.dart' as http;
+import 'package:shades/features/resource_mgt/download_success.dart';
+import 'package:shades/features/resource_mgt/resource.dart';
 
 class ViewPdfForm extends StatefulWidget {
   const ViewPdfForm({super.key});
@@ -15,6 +18,7 @@ class ViewPdfForm extends StatefulWidget {
 class _ViewPdfFormState extends State<ViewPdfForm> {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> pdfList = [];
+  bool downloading = false;
 
   void getAllPdf() async {
     final allPdfs = await _firebaseFirestore.collection("resources_pdfs").get();
@@ -41,7 +45,8 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
                 crossAxisCount: 2),
             itemBuilder: (context, index) {
               return Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.only(
+                      left: 8.0, right: 8, top: 0, bottom: 0),
                   child: InkWell(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
@@ -60,11 +65,12 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
                         children: [
                           Image.asset(
                             "assets/resource/PDF.jpg",
-                            height: 90,
+                            height: 70,
                             width: 100,
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 8.0, right: 8),
+                            padding: const EdgeInsets.only(
+                                left: 8.0, right: 8, top: 5),
                             child: Center(
                               child: Text(
                                 pdfList[index]['name'],
@@ -75,16 +81,61 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
                               ),
                             ),
                           ),
+                          IconButton(
+                            icon: const Icon(Icons.download_sharp),
+                            onPressed: () {
+                              downloadAndOpenPdf(pdfList[index]['url']);
+                            },
+                          ),
                         ],
                       ),
                     ),
                   ));
             }),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+                  const Resourceoperations(), // Navigate to Resourceoperations
+            ));
+          },
           backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
-          child: const Icon(Icons.download),
+          child: const Icon(Icons.upload_file),
         ));
+  }
+
+  void downloadAndOpenPdf(String pdfUrl) async {
+    try {
+      setState(() {
+        // Set a flag to indicate that download is in progress
+        downloading = true;
+      });
+      var response = await http.get(Uri.parse(pdfUrl));
+      if (response.statusCode == 200) {
+        var time = DateTime.now().millisecondsSinceEpoch;
+        var path = '/storage/emulated/0/Download/pdf-$time.pdf';
+        var file = File(path);
+        await file.writeAsBytes(response.bodyBytes);
+        print('File downloaded to: $path');
+
+        // Open the downloaded PDF
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => const Upload(
+              // pdfurl: path,
+              ),
+        ));
+      } else {
+        print(
+            'Failed to download the file. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    } finally {
+      setState(() {
+        // Set the flag to indicate that download is complete
+        downloading = false;
+      });
+    }
   }
 }
 
@@ -117,7 +168,11 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
           ? PDFViewer(
               document: document!,
             )
-          : const Center(child: CircularProgressIndicator()),
+          : const Center(
+              child: CircularProgressIndicator(
+              strokeWidth: 6,
+              backgroundColor: Colors.grey,
+            )),
     );
   }
 }

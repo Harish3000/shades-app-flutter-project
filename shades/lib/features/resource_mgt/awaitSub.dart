@@ -103,7 +103,7 @@
 //         ElevatedButton(
 //           onPressed: _isUploading ? null : _uploadPDF,
 //           child: _isUploading
-//               ? const CircularProgressIndicator()
+//               ? const CircularProgressIndicator(strokeWidth: 6,backgroundColor: Colors.grey)
 //               : const Text('Upload PDF'),
 //         ),
 //       ],
@@ -122,7 +122,7 @@
 //             FirebaseFirestore.instance.collection('pdf_metadata').snapshots(),
 //         builder: (context, snapshot) {
 //           if (!snapshot.hasData) {
-//             return const CircularProgressIndicator();
+//             return const CircularProgressIndicator(strokeWidth: 6,backgroundColor: Colors.grey);
 //           }
 
 //           final documents = snapshot.data?.docs;
