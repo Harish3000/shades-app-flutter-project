@@ -237,32 +237,41 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                             ),
                             SizedBox(width: 8),
                             Spacer(),
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        UpdateCommunityPost(postId: postId),
+                            PopupMenuButton<String>(
+                              icon: Icon(Icons.more_vert,
+                                  size: 30, color: Color(0xFF146C94)),
+                              itemBuilder: (BuildContext context) =>
+                                  <PopupMenuEntry<String>>[
+                                PopupMenuItem<String>(
+                                  value: 'edit',
+                                  child: ListTile(
+                                    leading: Icon(Icons.edit,
+                                        color: Color(0xFF146C94)),
+                                    title: Text('Edit'),
                                   ),
-                                );
+                                ),
+                                PopupMenuItem<String>(
+                                  value: 'delete',
+                                  child: ListTile(
+                                    leading: Icon(Icons.delete,
+                                        color: Color(0xFFB30000)),
+                                    title: Text('Delete'),
+                                  ),
+                                ),
+                              ],
+                              onSelected: (String choice) {
+                                if (choice == 'edit') {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          UpdateCommunityPost(postId: postId),
+                                    ),
+                                  );
+                                } else if (choice == 'delete') {
+                                  _showDeleteConfirmationDialog(postId);
+                                }
                               },
-                              child: Icon(
-                                Icons.edit,
-                                size: 30,
-                                color: Color(0xFF146C94),
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            InkWell(
-                              onTap: () {
-                                _showDeleteConfirmationDialog(postId);
-                              },
-                              child: Icon(
-                                Icons.delete,
-                                size: 30,
-                                color: Color(0xFFB30000),
-                              ),
                             ),
                           ],
                         ),
