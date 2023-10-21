@@ -387,6 +387,14 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                           ),
                         ),
                         ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Color(0xFF146C94), // Background color
+                            onPrimary: Colors.white, // Font color
+                            //button radius
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
+                          ),
                           onPressed: () {
                             String comment = _commentController.text;
                             if (comment.isNotEmpty) {
@@ -394,7 +402,7 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                               _commentController.clear();
                             }
                           },
-                          child: Text('Post Comment'),
+                          child: Text('Post'),
                         ),
                       ],
                     ),
