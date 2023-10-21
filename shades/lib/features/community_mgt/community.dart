@@ -27,7 +27,6 @@ class _CommunityOperationsState extends State<CommunityOperations> {
   Set<String> likedPosts = Set<String>();
   Random random = Random();
 
-  // Function to delete a post by its ID
   void _deletePost(String postId) async {
     await FirebaseFirestore.instance
         .collection('community_collection')
@@ -35,22 +34,21 @@ class _CommunityOperationsState extends State<CommunityOperations> {
         .delete();
   }
 
-  // Function to show delete confirmation dialog
   Future<void> _showDeleteConfirmationDialog(String postId) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: true,
       builder: (BuildContext context) {
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: AlertDialog(
-            backgroundColor: Color(0xFFF6F1F1),
+            backgroundColor: Colors.transparent,
             title: Center(
               child: Text(
-                'Are you sure you want to delete this post ? ',
+                'Are you sure you want to delete this post?',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -69,12 +67,11 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                     style: TextStyle(fontSize: 20, color: Colors.black),
                   ),
                   onPressed: () {
-                    // Delete the post and close the dialog
                     _deletePost(postId);
                     Navigator.of(context).pop();
                   },
                 ),
-                SizedBox(width: 16), // Added SizedBox for spacing
+                SizedBox(width: 16),
                 TextButton(
                   style: TextButton.styleFrom(
                     primary: Colors.grey,
@@ -100,6 +97,7 @@ class _CommunityOperationsState extends State<CommunityOperations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF6F1F1),
       body: Center(
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
@@ -146,20 +144,12 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                     width: double.infinity,
                     padding: EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(35),
+                      borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: Color(0xFF146C94),
-                        width: 3.0,
+                        width: 1.9,
                       ),
-                      color: Color(0xFFF6F1F1),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
+                      color: Colors.transparent,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,17 +161,9 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                               child: Container(
                                 width: 60,
                                 height: 60,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Color(0xFF146C94),
-                                    width: 3.0,
-                                  ),
-                                ),
                                 child: Image.asset(
                                   'assets/community/community images/l2.png',
-                                  width: 10,
-                                  height: 10,
-                                  fit: BoxFit.fitWidth,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
@@ -223,21 +205,12 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                           height: 200,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 5,
-                                blurRadius: 7,
-                                offset: Offset(0, 3),
-                              ),
-                            ],
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: Image.asset(
                               'assets/community/$randomImageName',
                               fit: BoxFit.cover,
-                              height: 12 * 2,
                             ),
                           ),
                         ),
@@ -283,7 +256,6 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                             SizedBox(width: 8),
                             InkWell(
                               onTap: () {
-                                // Show delete confirmation dialog
                                 _showDeleteConfirmationDialog(postId);
                               },
                               child: Icon(
