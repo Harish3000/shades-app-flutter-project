@@ -11,6 +11,8 @@ class CommunityOperations extends StatefulWidget {
 }
 
 class _CommunityOperationsState extends State<CommunityOperations> {
+  TextEditingController _commentController = TextEditingController();
+
   Set<String> likedPosts = Set<String>();
   Random random = Random();
 
@@ -79,6 +81,17 @@ class _CommunityOperationsState extends State<CommunityOperations> {
         );
       },
     );
+  }
+
+  Future<void> _addComment(String postId, String comment) async {
+    await FirebaseFirestore.instance
+        .collection('community_collection')
+        .doc(postId)
+        .collection('comments')
+        .add({
+      'text': comment,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
   }
 
   @override
@@ -259,6 +272,61 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                               },
                             ),
                           ],
+                        ),
+                        // Comment Section
+                        StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('community_collection')
+                              .doc(postId)
+                              .collection('comments')
+                              .orderBy('timestamp', descending: true)
+                              .snapshots(),
+                          builder: (context, commentSnapshot) {
+                            if (commentSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            }
+
+                            var commentsData = commentSnapshot.data?.docs ?? [];
+                            List<Widget> commentWidgets = [];
+
+                            for (var commentData in commentsData) {
+                              var commentText = commentData['text'];
+                              var commentTimestamp =
+                                  commentData['timestamp']?.toDate() ??
+                                      DateTime.now();
+
+                              commentWidgets.add(
+                                ListTile(
+                                  title: Text(commentText),
+                                  subtitle: Text(
+                                    'Posted on ${commentTimestamp.toString()}',
+                                  ),
+                                ),
+                              );
+                            }
+
+                            return Column(
+                              children: commentWidgets,
+                            );
+                          },
+                        ),
+                        // Comment input field and button
+                        TextField(
+                          controller: _commentController,
+                          decoration: InputDecoration(
+                            hintText: 'Add a comment...',
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            String comment = _commentController.text;
+                            if (comment.isNotEmpty) {
+                              _addComment(postId, comment);
+                              _commentController.clear();
+                            }
+                          },
+                          child: Text('Post Comment'),
                         ),
                       ],
                     ),
