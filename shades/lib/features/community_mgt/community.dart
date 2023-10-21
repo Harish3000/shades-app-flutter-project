@@ -5,19 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'create_post_page.dart';
 import 'UpdateCommunityPost.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CommunityOperations(),
-    );
-  }
-}
-
 class CommunityOperations extends StatefulWidget {
   @override
   _CommunityOperationsState createState() => _CommunityOperationsState();
@@ -41,7 +28,7 @@ class _CommunityOperationsState extends State<CommunityOperations> {
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: AlertDialog(
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.grey,
             title: Center(
               child: Text(
                 'Are you sure you want to delete this post?',
@@ -75,7 +62,7 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                 TextButton(
                   style: TextButton.styleFrom(
                     primary: Colors.grey,
-                    backgroundColor: Colors.grey,
+                    backgroundColor: Colors.white,
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   ),
                   child: Text(
