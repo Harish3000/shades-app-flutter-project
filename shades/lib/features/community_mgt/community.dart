@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:ui';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'create_post_page.dart';
@@ -84,11 +85,22 @@ class _CommunityOperationsState extends State<CommunityOperations> {
   }
 
   Future<void> _addComment(String postId, String comment) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    String userId = user?.uid ?? '';
+
+    // Fetch the username from the 'users' collection
+    DocumentSnapshot userSnapshot =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+    String username = userSnapshot['username'] ?? 'Unknown User';
+
     await FirebaseFirestore.instance
         .collection('community_collection')
         .doc(postId)
         .collection('comments')
         .add({
+      'userId': userId,
+      'username': username,
       'text': comment,
       'timestamp': FieldValue.serverTimestamp(),
     });
