@@ -15,6 +15,8 @@ class _CommunityOperationsState extends State<CommunityOperations> {
   TextEditingController _commentController = TextEditingController();
   bool areCommentsVisible = false; // Track whether comments are visible or not
   Set<String> likedPosts = Set<String>();
+  Map<String, bool> postCommentsVisibility = {};
+
   Random random = Random();
 
   void _deletePost(String postId) async {
@@ -254,17 +256,14 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                             InkWell(
                               onTap: () {
                                 setState(() {
-                                  areCommentsVisible = !areCommentsVisible;
+                                  postCommentsVisibility[postId] =
+                                      postCommentsVisibility.containsKey(postId)
+                                          ? !postCommentsVisibility[postId]!
+                                          : true;
                                 });
                               },
-                              child: Icon(
-                                Icons.comment, // Comment Icon
-                                size: 30,
-                                color: areCommentsVisible
-                                    ? Colors.blue
-                                    : Colors
-                                        .black, // Change color based on visibility
-                              ),
+                              child: Icon(Icons.comment, // Comment Icon
+                                  size: 30),
                             ),
                             Spacer(),
                             PopupMenuButton<String>(
@@ -303,7 +302,7 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                             ),
                           ],
                         ),
-                        // Comment Section
+
                         // Comment Section
                         StreamBuilder(
                           stream: FirebaseFirestore.instance
@@ -371,9 +370,12 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                               );
                             }).toList();
 
-                            return Column(
-                              children: commentWidgets,
-                            );
+                            return postCommentsVisibility.containsKey(postId) &&
+                                    postCommentsVisibility[postId]!
+                                ? Column(
+                                    children: commentWidgets,
+                                  )
+                                : Container(); // Hide comments if visibility flag is false
                           },
                         ),
 
