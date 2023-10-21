@@ -44,7 +44,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
             Text(
               widget.moduleName,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.w600,
                 color: const Color.fromARGB(255, 0, 0, 0),
@@ -81,7 +81,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Module Name: ${widget.moduleName}',
+                          'Module : ${widget.moduleName}',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -180,11 +180,12 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
                                 Text('Reviews: $comment'),
                                 Row(
                                   children: [
-                                    IconButton(
-                                      icon: Icon(Icons.favorite,
-                                          color: Color.fromARGB(
-                                              255, 124, 117, 117)),
-                                      onPressed: () {
+                                    InkWell(
+                                      child: Image.asset(
+                                          'assets/module/heart.png',
+                                          width: 16,
+                                          height: 16),
+                                      onTap: () {
                                         FirebaseFirestore.instance
                                             .collection('module_reviews')
                                             .doc(reviewId)
@@ -193,11 +194,14 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
                                         });
                                       },
                                     ),
-                                    Text('Likes: $likes'),
+                                    Text(' Likes: $likes'),
                                     IconButton(
-                                      icon: Icon(Icons.heart_broken,
-                                          color: Color.fromARGB(
-                                              255, 124, 117, 117)),
+                                      icon: Image.asset(
+                                        'assets/module/broken-heart.png', // Path to your custom image
+                                        width:
+                                            19, // Set the width and height as needed
+                                        height: 16,
+                                      ),
                                       onPressed: () {
                                         FirebaseFirestore.instance
                                             .collection('module_reviews')
@@ -270,48 +274,55 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {
-                          final String review = reviewController.text;
-                          final double rating =
-                              double.tryParse(ratingController.text) ?? 0.0;
+                          onPressed: () {
+                            final String review = reviewController.text;
+                            final double rating =
+                                double.tryParse(ratingController.text) ?? 0.0;
 
-                          if (review.isNotEmpty && rating >= 1 && rating <= 5) {
-                            FirebaseFirestore.instance
-                                .collection('module_reviews')
-                                .add({
-                              'moduleName': widget.moduleName,
-                              'subjectCode': widget.subjectCode,
-                              'userName': 'Anonymous',
-                              'rating': rating,
-                              'reviews': review,
-                              'likes': 0,
-                              'dislikes': 0,
-                            });
+                            if (review.isNotEmpty &&
+                                rating >= 1 &&
+                                rating <= 5) {
+                              FirebaseFirestore.instance
+                                  .collection('module_reviews')
+                                  .add({
+                                'moduleName': widget.moduleName,
+                                'subjectCode': widget.subjectCode,
+                                'userName': 'Anonymous',
+                                'rating': rating,
+                                'reviews': review,
+                                'likes': 0,
+                                'dislikes': 0,
+                              });
 
-                            reviewController.clear();
-                            ratingController.clear();
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    'Please enter a valid review and rating.'),
+                              reviewController.clear();
+                              ratingController.clear();
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      'Please enter a valid review and rating.'),
+                                ),
+                              );
+                            }
+                          },
+                          child: Text(
+                            'Submit Review',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 235, 235, 235),
+                            ),
+                          ),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Color.fromRGBO(20, 108, 148, 1),
+                            ),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    10.0), // You can adjust the radius value as needed
                               ),
-                            );
-                          }
-                        },
-                        child: Text(
-                          'Submit Review',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Color.fromARGB(255, 235, 235, 235),
-                          ),
-                        ),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            Color.fromRGBO(20, 108, 148, 1),
-                          ),
-                        ),
-                      ),
+                            ),
+                          )),
                     ],
                   ),
                 ),

@@ -50,7 +50,7 @@ class MywidgetState extends State<Moduleoperations> {
       builder: (BuildContext ctx) {
         return Padding(
           padding: EdgeInsets.only(
-            top: 10,
+            top: 20,
             left: 20,
             right: 20,
             bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
@@ -63,8 +63,9 @@ class MywidgetState extends State<Moduleoperations> {
                 child: Text(
                   "Insert Module Details",
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 21,
                     fontWeight: FontWeight.bold,
+                    color: const Color.fromARGB(255, 0, 0, 0), // Modern color
                   ),
                 ),
               ),
@@ -73,33 +74,45 @@ class MywidgetState extends State<Moduleoperations> {
                 controller: _moduleNameController,
                 decoration: InputDecoration(
                   labelText: "Module Name",
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12), // Border radius
+                  ),
                   filled: true,
                   prefixIcon: Icon(Icons.school),
                 ),
               ),
-              SizedBox(height: 12),
+              SizedBox(height: 16),
               TextFormField(
                 controller: _subjectCodeController,
                 decoration: InputDecoration(
                   labelText: "Subject Code",
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12), // Border radius
+                  ),
                   filled: true,
                   prefixIcon: Icon(Icons.code),
                 ),
               ),
-              SizedBox(height: 12),
+              SizedBox(height: 16),
               TextFormField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
                   labelText: "Description",
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12), // Border radius
+                  ),
                   filled: true,
                   prefixIcon: Icon(Icons.description),
                 ),
               ),
-              SizedBox(height: 12),
-              Text("Ratings:"),
+              SizedBox(height: 16),
+              Text(
+                "Ratings:",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               RatingBar.builder(
                 initialRating: selectedRating,
                 minRating: 1,
@@ -109,13 +122,13 @@ class MywidgetState extends State<Moduleoperations> {
                 itemSize: 30.0,
                 itemBuilder: (context, _) => Icon(
                   Icons.star,
-                  color: Color.fromARGB(255, 253, 122, 0),
+                  color: Colors.orange, // Modern color
                 ),
                 onRatingUpdate: (rating) {
                   selectedRating = rating;
                 },
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () async {
                   final String moduleName = _moduleNameController.text;
@@ -136,7 +149,18 @@ class MywidgetState extends State<Moduleoperations> {
 
                   Navigator.of(context).pop();
                 },
-                child: Text("Create", style: TextStyle(fontSize: 18)),
+                style: ElevatedButton.styleFrom(
+                  primary:
+                      const Color.fromARGB(255, 0, 0, 0), // Modern button color
+                  minimumSize: Size(double.infinity, 45),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(22), // Border radius
+                  ),
+                ),
+                child: Text(
+                  "Create",
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
               )
             ],
           ),
@@ -326,26 +350,52 @@ class MywidgetState extends State<Moduleoperations> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Search'),
-        backgroundColor: Color.fromARGB(0, 74, 156, 190),
-        leading: Image.asset('assets/module/logo.png', width: 20, height: 20),
+        backgroundColor: Color.fromARGB(
+            255, 220, 226, 228), // Set your desired background color
+        leading: Image.asset('assets/module/logo.png',
+            width: 15, height: 15), // Replace with your image path
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              width: 340,
-              child: TextField(
-                controller: _searchController,
-                onChanged: (value) {
-                  setState(() {}); // Trigger a rebuild when the user types
-                },
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: 'Search Modules',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(18),
+            child: Container(
+              width: 320,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.search,
+                      color: const Color.fromARGB(
+                          255, 0, 0, 0), // Change the icon color as needed
+                    ),
                   ),
-                ),
+                  Expanded(
+                    child: TextField(
+                      controller: _searchController,
+                      onChanged: (value) {
+                        setState(() {});
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Search Modules',
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.clear,
+                      color: const Color.fromARGB(
+                          255, 0, 0, 0), // Change the icon color as needed
+                    ),
+                    onPressed: () {
+                      _searchController.clear();
+                    },
+                  ),
+                ],
               ),
             ),
           ),
@@ -368,119 +418,152 @@ class MywidgetState extends State<Moduleoperations> {
                 final DocumentSnapshot documentSnapshot =
                     streamSnapshot.data![index];
 
-                return Card(
-                  color: Color.fromARGB(255, 240, 241, 241),
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.all(16),
-                    leading: Image.asset(
-                      'assets/module/book.jpg',
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                    ),
-                    title: Text(
-                      documentSnapshot['moduleName'].toString(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ModuleDetailPage(
+                          moduleName: documentSnapshot['moduleName'].toString(),
+                          subjectCode:
+                              documentSnapshot['subjectCode'].toString(),
+                          description:
+                              documentSnapshot['description'].toString(),
+                          ratings: documentSnapshot['Ratings'].toString(),
+                        ),
                       ),
+                    );
+                  },
+                  child: Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Column(
                       children: [
-                        Text(
-                          "Subject Code: ${documentSnapshot['subjectCode'].toString()}",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 2, 3, 8),
-                            fontSize: 13,
+                        // Image Row
+                        Container(
+                          width: double.infinity,
+                          height: 120, // Adjust the height as needed
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15),
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15),
+                            ),
+                            child: Image.asset(
+                              'assets/module/read.png',
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                        Text(
-                          documentSnapshot['description'],
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 2, 3, 8),
-                            fontSize: 13,
+
+                        // Content Row
+                        Container(
+                          padding: EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                documentSnapshot['moduleName'].toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              SizedBox(
+                                  height:
+                                      8), // Add space between module name and ratings
+
+                              Row(
+                                children: [
+                                  Text(
+                                    "Ratings : ",
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  RatingBar.builder(
+                                    initialRating: 3,
+                                    minRating: 1,
+                                    direction: Axis.horizontal,
+                                    allowHalfRating: true,
+                                    itemSize: 15,
+                                    itemCount: 5,
+                                    itemPadding:
+                                        EdgeInsets.symmetric(horizontal: 4.0),
+                                    itemBuilder: (context, _) => Icon(
+                                      Icons.star,
+                                      color: Colors.orange,
+                                    ),
+                                    onRatingUpdate: (rating) {
+                                      // Add your code to handle rating updates here
+                                    },
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                  height:
+                                      8), // Add space between ratings and descriptions
+
+                              Text(
+                                "Subject Code: ${documentSnapshot['subjectCode'].toString()}",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              Text(
+                                documentSnapshot['description'],
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Row(
-                          children: [
-                            Text(
-                              "Ratings : ",
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 2, 3, 8),
-                                fontSize: 14,
-                              ),
-                            ),
-                            RatingBar.builder(
-                              initialRating: 3, // Set the initial rating here
-                              minRating: 1,
-                              direction: Axis.horizontal,
-                              allowHalfRating: true,
-                              itemSize: 15,
-                              itemCount: 5,
-                              itemPadding:
-                                  EdgeInsets.symmetric(horizontal: 4.0),
-                              itemBuilder: (context, _) => Icon(
-                                Icons.star,
-                                color: Color.fromARGB(192, 255, 137, 3),
-                              ),
-                              onRatingUpdate: (rating) {
-                                // Add your code to handle rating updates here
-                              },
-                            ),
-                          ],
+
+                        // Action Row
+                        FutureBuilder(
+                          future: getUserRole(getCurrentUserId()),
+                          builder:
+                              (context, AsyncSnapshot<String> roleSnapshot) {
+                            if (roleSnapshot.connectionState ==
+                                ConnectionState.done) {
+                              final String userRole = roleSnapshot.data ?? '';
+
+                              return Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (userRole == 'leader')
+                                    IconButton(
+                                      icon: Icon(Icons.remove_circle),
+                                      onPressed: () =>
+                                          _delete(documentSnapshot),
+                                    ),
+                                  if (userRole == 'leader')
+                                    IconButton(
+                                      icon: Icon(Icons.change_circle),
+                                      onPressed: () =>
+                                          _update(documentSnapshot),
+                                    ),
+                                ],
+                              );
+                            } else {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
                         ),
                       ],
                     ),
-                    trailing: FutureBuilder(
-                      future: getUserRole(
-                          getCurrentUserId()), // Replace with actual user role retrieval
-                      builder: (context, AsyncSnapshot<String> roleSnapshot) {
-                        if (roleSnapshot.connectionState ==
-                            ConnectionState.done) {
-                          final String userRole = roleSnapshot.data ?? '';
-
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (userRole == 'leader') // Check user role
-                                IconButton(
-                                  icon: Icon(Icons.close),
-                                  onPressed: () => _delete(documentSnapshot),
-                                ),
-                              if (userRole == 'leader') // Check user role
-                                IconButton(
-                                  icon: Icon(Icons.change_circle),
-                                  onPressed: () => _update(documentSnapshot),
-                                ),
-                            ],
-                          );
-                        } else {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      },
-                    ),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => ModuleDetailPage(
-                            moduleName:
-                                documentSnapshot['moduleName'].toString(),
-                            subjectCode:
-                                documentSnapshot['subjectCode'].toString(),
-                            description:
-                                documentSnapshot['description'].toString(),
-                            ratings: documentSnapshot['Ratings'].toString(),
-                          ),
-                        ),
-                      );
-                    },
                   ),
                 );
               },
@@ -500,8 +583,9 @@ class MywidgetState extends State<Moduleoperations> {
             if (userRole == 'leader') {
               return FloatingActionButton(
                 onPressed: () => _create(),
-                backgroundColor: Color.fromRGBO(58, 134, 167, 1),
-                child: Icon(Icons.add),
+                backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+                child: Image.asset(
+                    'assets/module/plus.png'), // Load the custom PNG image
               );
             }
           }
