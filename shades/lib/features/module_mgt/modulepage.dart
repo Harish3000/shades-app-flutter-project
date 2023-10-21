@@ -36,11 +36,10 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
         title: Row(
           children: [
             Image.asset(
-              'assets/module/logo.png', // Replace with the path to your logo image
-              width: 25, // Adjust the width as needed
+              'assets/module/logo.png',
+              width: 25,
             ),
-            SizedBox(
-                width: 10), // Add some spacing between the logo and the title
+            SizedBox(width: 10),
             Text(
               widget.moduleName,
               style: TextStyle(
@@ -197,9 +196,8 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
                                     Text(' Likes: $likes'),
                                     IconButton(
                                       icon: Image.asset(
-                                        'assets/module/broken-heart.png', // Path to your custom image
-                                        width:
-                                            19, // Set the width and height as needed
+                                        'assets/module/broken-heart.png',
+                                        width: 19,
                                         height: 16,
                                       ),
                                       onPressed: () {
@@ -318,8 +316,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
                             ),
                             shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    10.0), // You can adjust the radius value as needed
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
                             ),
                           )),
