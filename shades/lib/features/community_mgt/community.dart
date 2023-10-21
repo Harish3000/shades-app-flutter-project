@@ -41,7 +41,7 @@ class _CommunityOperationsState extends State<CommunityOperations> {
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: AlertDialog(
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.white,
             title: Center(
               child: Text(
                 'Are you sure you want to delete this post?',
@@ -75,7 +75,7 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                 TextButton(
                   style: TextButton.styleFrom(
                     primary: Colors.grey,
-                    backgroundColor: Colors.white,
+                    backgroundColor: Colors.grey,
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   ),
                   child: Text(
@@ -245,17 +245,15 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                                 PopupMenuItem<String>(
                                   value: 'edit',
                                   child: ListTile(
-                                    leading: Icon(Icons.edit,
-                                        color: Color(0xFF146C94)),
-                                    title: Text('Edit'),
+                                    title: Text('Edit',
+                                        style: TextStyle(fontSize: 20)),
                                   ),
                                 ),
                                 PopupMenuItem<String>(
                                   value: 'delete',
                                   child: ListTile(
-                                    leading: Icon(Icons.delete,
-                                        color: Color(0xFFB30000)),
-                                    title: Text('Delete'),
+                                    title: Text('Delete',
+                                        style: TextStyle(fontSize: 20)),
                                   ),
                                 ),
                               ],
