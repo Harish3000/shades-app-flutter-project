@@ -248,7 +248,7 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                                     ? Icons.favorite
                                     : Icons.favorite_border,
                                 size: 30,
-                                color: isLiked ? Colors.red : Colors.black,
+                                color: isLiked ? Colors.red : Color(0xFF146C94),
                               ),
                             ),
                             SizedBox(width: 8),
@@ -263,6 +263,7 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                                 });
                               },
                               child: Icon(Icons.comment, // Comment Icon
+                                  color: Color(0xFF146C94),
                                   size: 30),
                             ),
                             Spacer(),
