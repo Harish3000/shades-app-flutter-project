@@ -37,7 +37,6 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
     answers = [];
     reportedIssuesCount = {};
     _getAndSortAnswers();
-    _getReportedIssuesCount();
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 500),
@@ -76,11 +75,12 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
         .collection('query_answer_reports')
         .get();
 
-    for (final doc in snapshot.docs) {
+    reportedIssuesCount.clear();
+
+    snapshot.docs.forEach((doc) {
       final answerId = doc['answerId'];
-      final count = reportedIssuesCount[answerId] ?? 0;
-      reportedIssuesCount[answerId] = count + 1;
-    }
+      reportedIssuesCount[answerId] = (reportedIssuesCount[answerId] ?? 0) + 1;
+    });
   }
 
   @override
@@ -266,85 +266,95 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
       );
     }
 
-    return Column(
-      children: answers.map((answerData) {
-        final answerId = answerData['answerId'];
-        final userID = answerData['userID'];
-        final displayUserID =
-            userID.length > 6 ? userID.substring(0, 6) : userID;
-        final answer = answerData['answer'];
-        final likes = answerData['likes'] ?? 0;
-        final dislikes = answerData['dislikes'] ?? 0;
-        final hasIssues = reportedIssuesCount.containsKey(answerId) &&
-            reportedIssuesCount[answerId]! > 2;
+    return FutureBuilder<void>(
+      future: _getReportedIssuesCount(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Column(
+            children: answers.map((answerData) {
+              final answerId = answerData['answerId'];
+              final userID = answerData['userID'];
+              final displayUserID =
+                  userID.length > 6 ? userID.substring(0, 6) : userID;
+              final answer = answerData['answer'];
+              final likes = answerData['likes'] ?? 0;
+              final dislikes = answerData['dislikes'] ?? 0;
+              final hasIssues = reportedIssuesCount.containsKey(answerId) &&
+                  reportedIssuesCount[answerId]! > 2;
 
-        return Card(
-          key: ValueKey<String>(answerId),
-          elevation: 2,
-          color: Colors.white,
-          margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-          child: Column(
-            children: [
-              ListTile(
-                title: Text(
-                  '$answer',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
-                ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              return Card(
+                key: ValueKey<String>(answerId),
+                elevation: 2,
+                color: Colors.white,
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                child: Column(
                   children: [
-                    Text(
-                      '@ user_$displayUserID',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.grey,
+                    ListTile(
+                      title: Text(
+                        '$answer',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.normal),
                       ),
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.favorite,
-                              color: Color.fromARGB(255, 177, 177, 177)),
-                          onPressed: () {
-                            _updateLikes(answerId, likes + 1);
-                          },
-                        ),
-                        Text('$likes      '),
-                        IconButton(
-                          icon: Icon(Icons.flag_circle_rounded,
-                              color: Color.fromARGB(255, 124, 117, 117)),
-                          onPressed: () {
-                            _reportAnswer(answerId);
-                          },
-                        ),
-                        Text('Report'),
-                      ],
-                    ),
-                    if (hasIssues)
-                      Column(
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 8),
+                          Text(
+                            '@ user_$displayUserID',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.grey,
+                            ),
+                          ),
                           Row(
                             children: [
-                              Icon(Icons.error, color: Colors.red),
-                              Text(
-                                '  This answer has some issues ',
-                                style: TextStyle(color: Colors.red),
+                              IconButton(
+                                icon: Icon(Icons.favorite,
+                                    color: Color.fromARGB(255, 177, 177, 177)),
+                                onPressed: () {
+                                  _updateLikes(answerId, likes + 1);
+                                },
                               ),
+                              Text('$likes      '),
+                              IconButton(
+                                icon: Icon(Icons.flag_circle_rounded,
+                                    color: Color.fromARGB(255, 124, 117, 117)),
+                                onPressed: () {
+                                  _reportAnswer(answerId);
+                                },
+                              ),
+                              Text('Report'),
                             ],
                           ),
-                          SizedBox(height: 10),
+                          if (hasIssues)
+                            Column(
+                              children: [
+                                SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Icon(Icons.error, color: Colors.red),
+                                    Text(
+                                      '  This answer has some issues ',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                              ],
+                            ),
                         ],
                       ),
+                      trailing: _buildDeleteButton(userID, answerId),
+                    ),
                   ],
                 ),
-                trailing: _buildDeleteButton(userID, answerId),
-              ),
-            ],
-          ),
-        );
-      }).toList(),
+              );
+            }).toList(),
+          );
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 
@@ -436,13 +446,16 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
     _getAndSortAnswers();
   }
 
-  void _reportAnswer(String answerId) {
-    Navigator.push(
+  void _reportAnswer(String answerId) async {
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => QueryReportPage(answerId: answerId),
       ),
     );
+
+    // Refresh data after returning from QueryReportPage
+    _getAndSortAnswers();
   }
 
   void _submitAnswer(String answer) async {
