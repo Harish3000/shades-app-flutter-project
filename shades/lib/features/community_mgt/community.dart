@@ -13,7 +13,7 @@ class CommunityOperations extends StatefulWidget {
 
 class _CommunityOperationsState extends State<CommunityOperations> {
   TextEditingController _commentController = TextEditingController();
-
+  bool areCommentsVisible = false; // Track whether comments are visible or not
   Set<String> likedPosts = Set<String>();
   Random random = Random();
 
@@ -93,6 +93,7 @@ class _CommunityOperationsState extends State<CommunityOperations> {
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
     String username = userSnapshot['username'] ?? 'Unknown User';
+    String userRole = userSnapshot['role'] ?? '';
 
     await FirebaseFirestore.instance
         .collection('community_collection')
@@ -103,6 +104,7 @@ class _CommunityOperationsState extends State<CommunityOperations> {
       'username': username,
       'text': comment,
       'timestamp': FieldValue.serverTimestamp(),
+      'userRole': userRole
     });
   }
 
@@ -248,6 +250,22 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                               ),
                             ),
                             SizedBox(width: 8),
+                            // Comment Icon
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  areCommentsVisible = !areCommentsVisible;
+                                });
+                              },
+                              child: Icon(
+                                Icons.comment, // Comment Icon
+                                size: 30,
+                                color: areCommentsVisible
+                                    ? Colors.blue
+                                    : Colors
+                                        .black, // Change color based on visibility
+                              ),
+                            ),
                             Spacer(),
                             PopupMenuButton<String>(
                               icon: Icon(Icons.more_vert,
@@ -286,6 +304,7 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                           ],
                         ),
                         // Comment Section
+                        // Comment Section
                         StreamBuilder(
                           stream: FirebaseFirestore.instance
                               .collection('community_collection')
@@ -300,29 +319,64 @@ class _CommunityOperationsState extends State<CommunityOperations> {
                             }
 
                             var commentsData = commentSnapshot.data?.docs ?? [];
-                            List<Widget> commentWidgets = [];
 
-                            for (var commentData in commentsData) {
+                            var commentWidgets =
+                                commentsData.map((commentData) {
                               var commentText = commentData['text'];
                               var commentTimestamp =
                                   commentData['timestamp']?.toDate() ??
                                       DateTime.now();
+                              var commentUsername = commentData['username'];
+                              var commentUserRole = commentData['userRole'];
+                              var commentUserImageUrl =
+                                  'assets/community/profile images/pp.png';
 
-                              commentWidgets.add(
-                                ListTile(
-                                  title: Text(commentText),
-                                  subtitle: Text(
-                                    'Posted on ${commentTimestamp.toString()}',
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 20,
+                                        backgroundImage:
+                                            AssetImage(commentUserImageUrl),
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        '$commentUsername', // Display the username
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 19,
+                                        ),
+                                      ),
+                                      if (commentUserRole == 'leader')
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Image.asset(
+                                            'assets/community/profile images/verified.png',
+                                            width: 16,
+                                            height: 16,
+                                          ),
+                                        ),
+                                    ],
                                   ),
-                                ),
+                                  ListTile(
+                                    title: Text(commentText),
+                                    subtitle: Text(
+                                        'Posted on ${commentTimestamp.toString()}'),
+                                  ),
+                                  Divider(), // Add a divider between comments
+                                ],
                               );
-                            }
+                            }).toList();
 
                             return Column(
                               children: commentWidgets,
                             );
                           },
                         ),
+
                         // Comment input field and button
                         TextField(
                           controller: _commentController,
