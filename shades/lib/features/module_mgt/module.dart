@@ -65,7 +65,7 @@ class MywidgetState extends State<Moduleoperations> {
                   style: TextStyle(
                     fontSize: 21,
                     fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 0, 0, 0), // Modern color
+                    color: const Color.fromARGB(255, 0, 0, 0),
                   ),
                 ),
               ),
@@ -75,7 +75,7 @@ class MywidgetState extends State<Moduleoperations> {
                 decoration: InputDecoration(
                   labelText: "Module Name",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12), // Border radius
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   filled: true,
                   prefixIcon: Icon(Icons.school),
@@ -87,7 +87,7 @@ class MywidgetState extends State<Moduleoperations> {
                 decoration: InputDecoration(
                   labelText: "Subject Code",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12), // Border radius
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   filled: true,
                   prefixIcon: Icon(Icons.code),
@@ -99,7 +99,7 @@ class MywidgetState extends State<Moduleoperations> {
                 decoration: InputDecoration(
                   labelText: "Description",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12), // Border radius
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   filled: true,
                   prefixIcon: Icon(Icons.description),
@@ -122,7 +122,7 @@ class MywidgetState extends State<Moduleoperations> {
                 itemSize: 30.0,
                 itemBuilder: (context, _) => Icon(
                   Icons.star,
-                  color: Colors.orange, // Modern color
+                  color: Colors.orange,
                 ),
                 onRatingUpdate: (rating) {
                   selectedRating = rating;
@@ -150,11 +150,10 @@ class MywidgetState extends State<Moduleoperations> {
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  primary:
-                      const Color.fromARGB(255, 0, 0, 0), // Modern button color
+                  primary: const Color.fromARGB(255, 0, 0, 0),
                   minimumSize: Size(double.infinity, 45),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(22), // Border radius
+                    borderRadius: BorderRadius.circular(22),
                   ),
                 ),
                 child: Text(
@@ -350,10 +349,8 @@ class MywidgetState extends State<Moduleoperations> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Search'),
-        backgroundColor: Color.fromARGB(
-            255, 220, 226, 228), // Set your desired background color
-        leading: Image.asset('assets/module/logo.png',
-            width: 15, height: 15), // Replace with your image path
+        backgroundColor: Color.fromARGB(255, 220, 226, 228),
+        leading: Image.asset('assets/module/logo.png', width: 15, height: 15),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -369,8 +366,7 @@ class MywidgetState extends State<Moduleoperations> {
                     padding: const EdgeInsets.all(8.0),
                     child: Icon(
                       Icons.search,
-                      color: const Color.fromARGB(
-                          255, 0, 0, 0), // Change the icon color as needed
+                      color: const Color.fromARGB(255, 0, 0, 0),
                     ),
                   ),
                   Expanded(
@@ -388,8 +384,7 @@ class MywidgetState extends State<Moduleoperations> {
                   IconButton(
                     icon: Icon(
                       Icons.clear,
-                      color: const Color.fromARGB(
-                          255, 0, 0, 0), // Change the icon color as needed
+                      color: const Color.fromARGB(255, 0, 0, 0),
                     ),
                     onPressed: () {
                       _searchController.clear();
@@ -440,10 +435,9 @@ class MywidgetState extends State<Moduleoperations> {
                     ),
                     child: Column(
                       children: [
-                        // Image Row
                         Container(
                           width: double.infinity,
-                          height: 120, // Adjust the height as needed
+                          height: 120,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(15),
@@ -461,8 +455,6 @@ class MywidgetState extends State<Moduleoperations> {
                             ),
                           ),
                         ),
-
-                        // Content Row
                         Container(
                           padding: EdgeInsets.all(16),
                           child: Column(
@@ -475,10 +467,7 @@ class MywidgetState extends State<Moduleoperations> {
                                   fontSize: 18,
                                 ),
                               ),
-                              SizedBox(
-                                  height:
-                                      8), // Add space between module name and ratings
-
+                              SizedBox(height: 8),
                               Row(
                                 children: [
                                   Text(
@@ -501,16 +490,11 @@ class MywidgetState extends State<Moduleoperations> {
                                       Icons.star,
                                       color: Colors.orange,
                                     ),
-                                    onRatingUpdate: (rating) {
-                                      // Add your code to handle rating updates here
-                                    },
+                                    onRatingUpdate: (rating) {},
                                   ),
                                 ],
                               ),
-                              SizedBox(
-                                  height:
-                                      8), // Add space between ratings and descriptions
-
+                              SizedBox(height: 8),
                               Text(
                                 "Subject Code: ${documentSnapshot['subjectCode'].toString()}",
                                 style: TextStyle(
@@ -528,8 +512,6 @@ class MywidgetState extends State<Moduleoperations> {
                             ],
                           ),
                         ),
-
-                        // Action Row
                         FutureBuilder(
                           future: getUserRole(getCurrentUserId()),
                           builder:
@@ -584,8 +566,7 @@ class MywidgetState extends State<Moduleoperations> {
               return FloatingActionButton(
                 onPressed: () => _create(),
                 backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-                child: Image.asset(
-                    'assets/module/plus.png'), // Load the custom PNG image
+                child: Image.asset('assets/module/plus.png'),
               );
             }
           }
