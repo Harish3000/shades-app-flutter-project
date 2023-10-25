@@ -41,10 +41,8 @@ class MywidgetState extends State<Resourceoperations> {
 //get user roles
   Future<String> getUserRole(String userId) async {
     // Replace 'users' with your actual collection name
-    final DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-        .collection('resources')
-        .doc(userId)
-        .get();
+    final DocumentSnapshot userSnapshot =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
     // Check if the user exists and has a role field
     if (userSnapshot.exists && userSnapshot.data() != null) {
@@ -408,7 +406,6 @@ class MywidgetState extends State<Resourceoperations> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
-        // title: const Text('Resource gallery'),
       ),
       body: StreamBuilder(
         stream: _resources.snapshots(),
@@ -450,12 +447,12 @@ class MywidgetState extends State<Resourceoperations> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const ViewPdfForm(),
+                                    builder: (context) => const Upload(),
                                   ),
                                 );
                               },
                               child: SizedBox(
-                                height: 190,
+                                height: 170,
                                 child: Card(
                                   shadowColor: Colors.black,
                                   color:
@@ -466,10 +463,10 @@ class MywidgetState extends State<Resourceoperations> {
                                   elevation: 8,
                                   child: Padding(
                                     padding: const EdgeInsets.only(
-                                      top: 40,
-                                      bottom: 0,
-                                      left: 0,
-                                      right: 0,
+                                      top: 35,
+                                      bottom: 10,
+                                      left: 10,
+                                      right: 10,
                                     ),
                                     child: ListTile(
                                       leading: Column(
@@ -483,7 +480,6 @@ class MywidgetState extends State<Resourceoperations> {
                                         ],
                                       ),
                                       title: SizedBox(
-                                        width: 200,
                                         child: Text(
                                           documentSnapshot['resourceName']
                                               .toString(),
@@ -504,36 +500,61 @@ class MywidgetState extends State<Resourceoperations> {
                                       trailing: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          // if (userRole == 'leader')
-                                          IconButton(
-                                            iconSize: 28,
-                                            icon: const Icon(Icons.edit),
-                                            onPressed: () =>
-                                                _update(documentSnapshot),
-                                          ),
-                                          // if (userRole == 'leader')
-                                          IconButton(
-                                            iconSize: 28,
-                                            icon: const Icon(Icons.delete),
-                                            onPressed: () =>
-                                                _delete(documentSnapshot),
-                                          ),
-                                          IconButton(
-                                            iconSize: 28,
-                                            icon:
-                                                const Icon(Icons.report_sharp),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const Scaffold(
-                                                    body: ResourceReportForm(),
-                                                  ),
+                                          if (userRole == 'leader')
+                                            Row(
+                                              children: [
+                                                IconButton(
+                                                  iconSize: 28,
+                                                  icon: const Icon(Icons.edit),
+                                                  onPressed: () =>
+                                                      _update(documentSnapshot),
                                                 ),
-                                              );
-                                            },
-                                          ),
+                                                IconButton(
+                                                  iconSize: 28,
+                                                  icon:
+                                                      const Icon(Icons.delete),
+                                                  onPressed: () =>
+                                                      _delete(documentSnapshot),
+                                                ),
+                                              ],
+                                            ),
+                                          if (userRole == 'student')
+                                            Row(
+                                              children: [
+                                                IconButton(
+                                                  iconSize: 28,
+                                                  icon: const Icon(
+                                                      Icons.download_sharp),
+                                                  onPressed: () {
+                                                    // Pass the file name to ViewPdfForm when "Download" is pressed
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const Upload(),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                                IconButton(
+                                                  iconSize: 28,
+                                                  icon: const Icon(
+                                                      Icons.report_sharp),
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const Scaffold(
+                                                          body:
+                                                              ResourceReportForm(),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                         ],
                                       ),
                                     ),

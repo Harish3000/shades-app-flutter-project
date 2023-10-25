@@ -9,6 +9,7 @@ class Upload extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
           title: const Text('Report Resources'),
         ),
         body: Center(
