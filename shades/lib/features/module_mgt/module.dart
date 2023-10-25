@@ -259,12 +259,23 @@ class MywidgetState extends State<Moduleoperations> {
                   final String description = _descriptionController.text;
                   final String ratings = selectedRating.toString();
 
-                  await _modules.doc(documentSnapshot!.id).update({
-                    'moduleName': moduleName,
-                    'subjectCode': subjectCode,
-                    'description': description,
-                    'Ratings': ratings,
-                  });
+                  if (documentSnapshot != null) {
+                    // Update an existing document
+                    await _modules.doc(documentSnapshot.id).update({
+                      'moduleName': moduleName,
+                      'subjectCode': subjectCode,
+                      'description': description,
+                      'Ratings': ratings,
+                    });
+                  } else {
+                    // Create a new document
+                    await _modules.add({
+                      'moduleName': moduleName,
+                      'subjectCode': subjectCode,
+                      'description': description,
+                      'Ratings': ratings,
+                    });
+                  }
 
                   _moduleNameController.clear();
                   _subjectCodeController.clear();
@@ -272,7 +283,19 @@ class MywidgetState extends State<Moduleoperations> {
 
                   Navigator.of(context).pop();
                 },
-                child: Text("Update", style: TextStyle(fontSize: 18)),
+                style: ElevatedButton.styleFrom(
+                  primary: const Color.fromARGB(255, 0, 0, 0),
+                  minimumSize: Size(double.infinity, 45),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(22),
+                  ),
+                ),
+                child: Text(
+                  documentSnapshot != null
+                      ? "Update"
+                      : "Create", // Use "Update" for editing, "Create" for creating
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
               )
             ],
           ),
