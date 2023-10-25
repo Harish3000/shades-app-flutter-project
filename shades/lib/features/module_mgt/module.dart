@@ -493,8 +493,9 @@ class MywidgetState extends State<Moduleoperations> {
                                   Text(
                                     "Ratings : ",
                                     style: TextStyle(
-                                      color: Colors.grey,
+                                      color: const Color.fromARGB(255, 0, 0, 0),
                                       fontSize: 14,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   RatingBar.builder(
@@ -509,21 +510,21 @@ class MywidgetState extends State<Moduleoperations> {
                                     itemBuilder: (context, _) => Image.asset(
                                       'assets/module/star.png',
                                       width: 15,
-                                      height: 15,
+                                      height: 14,
                                     ),
                                     onRatingUpdate: (rating) {},
                                   )
                                 ],
                               ),
-                              SizedBox(height: 8),
+                              SizedBox(height: 5),
                               Text(
                                 "Subject Code: ${documentSnapshot['subjectCode'].toString()}",
                                 style: TextStyle(
-                                  color:
-                                      const Color.fromARGB(255, 173, 172, 172),
-                                  fontSize: 13,
-                                ),
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold),
                               ),
+                              SizedBox(height: 5),
                               Text(
                                 documentSnapshot['description'],
                                 style: TextStyle(
