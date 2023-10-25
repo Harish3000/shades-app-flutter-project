@@ -383,7 +383,7 @@ class MywidgetState extends State<Moduleoperations> {
                   ),
                   IconButton(
                     icon: Icon(
-                      Icons.clear,
+                      Icons.clear_all,
                       color: const Color.fromARGB(255, 0, 0, 0),
                     ),
                     onPressed: () {
