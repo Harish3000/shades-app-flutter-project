@@ -21,8 +21,6 @@ class MywidgetState extends State<Resourceoperations> {
   final TextEditingController _resourceNameController = TextEditingController();
   final TextEditingController _subjectCodeController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _ratingsController = TextEditingController();
-  final TextEditingController _searchController = TextEditingController();
 
   final CollectionReference _resources =
       FirebaseFirestore.instance.collection('resources');
@@ -30,8 +28,6 @@ class MywidgetState extends State<Resourceoperations> {
 
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> pdfList = [];
-  // String searchText = '';
-  // bool isSearchClicked = false;
 
   // Inside your State class, add a method to get the current user ID
   String getCurrentUserId() {
@@ -70,17 +66,17 @@ class MywidgetState extends State<Resourceoperations> {
     return downloadLink;
   }
 
-  void pickFileAndUpload() async {
+  void pickFileAndUpload(String fileName) async {
     final pickedFile = await FilePicker.platform
         .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
 
     if (pickedFile != null) {
-      String fileName = pickedFile.files[0].name;
+      // String fileName = pickedFile.files[0].name;
       File file = File(pickedFile.files[0].path!);
       final downloadLink = await uploadPdf(fileName, file);
       await _firebaseFirestore.collection("resources_pdfs").add({
-        "name": fileName,
-        "url": downloadLink,
+        'fileName': fileName,
+        'url': downloadLink,
       });
       print("Resource Uploaded successfully!");
       setState(() {
@@ -149,16 +145,6 @@ class MywidgetState extends State<Resourceoperations> {
                     prefixIcon: Icon(Icons.description),
                   ),
                 ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _ratingsController,
-                  decoration: const InputDecoration(
-                    labelText: "File Name",
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    prefixIcon: Icon(Icons.file_copy),
-                  ),
-                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -167,20 +153,20 @@ class MywidgetState extends State<Resourceoperations> {
                     final String resourceName = _resourceNameController.text;
                     final String subjectCode = _subjectCodeController.text;
                     final String description = _descriptionController.text;
-                    final String ratings = _ratingsController.text;
+                    final fileName =
+                        "$resourceName-$subjectCode-${DateTime.now().millisecondsSinceEpoch}";
 
                     await _resources.add({
                       'resourceName': resourceName,
                       'subjectCode': subjectCode,
                       'description': description,
-                      'Ratings': ratings,
+                      'fileName': fileName,
                     });
                     _resourceNameController.text = "";
                     _subjectCodeController.text = "";
                     _descriptionController.text = "";
-                    _ratingsController.text = "";
 
-                    pickFileAndUpload();
+                    pickFileAndUpload(fileName);
 
                     Navigator.of(context).pop();
                   },
@@ -206,7 +192,6 @@ class MywidgetState extends State<Resourceoperations> {
           documentSnapshot['resourceName'].toString();
       _subjectCodeController.text = documentSnapshot['subjectCode'].toString();
       _descriptionController.text = documentSnapshot['description'].toString();
-      _ratingsController.text = documentSnapshot['Ratings'].toString();
     }
     await showModalBottomSheet(
         isScrollControlled: true,
@@ -232,7 +217,7 @@ class MywidgetState extends State<Resourceoperations> {
                 TextFormField(
                   controller: _resourceNameController,
                   decoration: const InputDecoration(
-                    labelText: "Resource Name",
+                    labelText: "Module Name",
                     border: OutlineInputBorder(),
                     filled: true,
                     prefixIcon: Icon(Icons.schema_outlined),
@@ -258,16 +243,6 @@ class MywidgetState extends State<Resourceoperations> {
                     prefixIcon: Icon(Icons.description),
                   ),
                 ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _ratingsController,
-                  decoration: const InputDecoration(
-                    labelText: "File Name",
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    prefixIcon: Icon(Icons.file_copy),
-                  ),
-                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -276,18 +251,17 @@ class MywidgetState extends State<Resourceoperations> {
                     final String resourceName = _resourceNameController.text;
                     final String subjectCode = _subjectCodeController.text;
                     final String description = _descriptionController.text;
-                    final String ratings = _ratingsController.text;
+                    final fileName =
+                        "$resourceName-$subjectCode-${DateTime.now().millisecondsSinceEpoch}";
 
                     await _resources.doc(documentSnapshot!.id).update({
                       'resourceName': resourceName,
                       'subjectCode': subjectCode,
                       'description': description,
-                      'Ratings': ratings,
                     });
                     _resourceNameController.text = "";
                     _subjectCodeController.text = "";
                     _descriptionController.text = "";
-                    _ratingsController.text = "";
 
                     Navigator.of(context).pop();
                   },
@@ -376,7 +350,27 @@ class MywidgetState extends State<Resourceoperations> {
             ),
             TextButton(
               onPressed: () async {
+                // Get the filename from the 'resources' collection
+                final fileName = documentSnapshot?['fileName'].toString();
+
+                // Delete the associated PDF from Firebase Storage
+                final reference = FirebaseStorage.instance
+                    .ref()
+                    .child("ResourcePdfs/$fileName.pdf");
+                await reference.delete();
+
+                // Delete the document from the 'resources' collection
                 await _resources.doc(documentSnapshot!.id).delete();
+
+                // Delete the corresponding document from the 'resources_pdfs' collection
+                final QuerySnapshot querySnapshot = await _firebaseFirestore
+                    .collection("resources_pdfs")
+                    .where("fileName", isEqualTo: fileName)
+                    .get();
+                for (DocumentSnapshot doc in querySnapshot.docs) {
+                  await doc.reference.delete();
+                }
+
                 Navigator.of(context).pop(); // Close the dialog
               },
               child: Container(
@@ -498,7 +492,7 @@ class MywidgetState extends State<Resourceoperations> {
                                         ),
                                       ),
                                       subtitle: Text(
-                                        "${documentSnapshot['subjectCode'].toString()} \n ${documentSnapshot['Ratings'].toString()} \n ${documentSnapshot['description']}",
+                                        "${documentSnapshot['subjectCode'].toString()}\n${documentSnapshot['description']}",
                                         style: const TextStyle(
                                           color: Color.fromARGB(255, 2, 3, 8),
                                           fontSize: 16,
