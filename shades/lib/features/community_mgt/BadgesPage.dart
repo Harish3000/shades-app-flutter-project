@@ -2,33 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Badge {
-  final String imageAsset;
-  final String mainText;
-  final String subText;
-
-  Badge(
-      {required this.imageAsset,
-      required this.mainText,
-      required this.subText});
-}
-
 class BadgesPage extends StatelessWidget {
   final User? user = FirebaseAuth.instance.currentUser;
 
-  Future<List<Badge>> _getUserBadges() async {
-    // Fetch user badges from Firestore and return a list of Badge objects
-    // Example:
-    List<Badge> badges = [
-      Badge(
-        imageAsset: 'assets/community/profile images/verified.png',
-        mainText: 'VERIFIED BADGE',
-        subText:
-            'You have achieved this badge by upgrading your profile as a system administrator',
-      ),
-      // Add more badges here as needed
-    ];
-    return badges;
+  Future<String> _getUserRole() async {
+    if (user != null) {
+      DocumentSnapshot<Map<String, dynamic>> userDocument =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user!.uid)
+              .get();
+      return userDocument['role'] ?? 'user'; // Default role is 'user'
+    }
+    return 'user'; // Default role is 'user' if the user is not logged in
   }
 
   @override
@@ -39,50 +25,72 @@ class BadgesPage extends StatelessWidget {
         backgroundColor: const Color(0xFF146C94),
       ),
       body: Center(
-        child: FutureBuilder<List<Badge>>(
-          future: _getUserBadges(),
+        child: FutureBuilder<String>(
+          future: _getUserRole(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
+              return CircularProgressIndicator(); // Loading indicator while fetching data
             } else {
               if (snapshot.hasError) {
-                return Text('Error loading user badges.');
+                return Text('Error loading user role.'); // Handle error state
               } else {
-                List<Badge> badges = snapshot.data ?? [];
-                if (badges.isEmpty) {
-                  return Text(
-                      'Try upgrading your profile to get started with badges and achievements',
-                      textAlign: TextAlign.center);
+                String userRole =
+                    snapshot.data ?? 'user'; // Default role is 'user'
+                if (userRole == 'leader') {
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/community/profile images/verified.png',
+                            width: 100, // Set width of the image
+                            height: 100, // Set height of the image
+                          ),
+                          SizedBox(
+                              height: 20), // Add spacing between image and text
+                          Text(
+                            'VERIFIED BADGE',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'You have achieved this badge by upgrading your profile as a system administrative',
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
                 } else {
-                  return ListView.builder(
-                    itemCount: badges.length,
-                    itemBuilder: (context, index) {
-                      Badge badge = badges[index];
-                      return Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              badge.imageAsset,
-                              width: 100,
-                              height: 100,
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/community/community images/badges/info.png',
+                            width: 50, // Set width of the image
+                            height: 50, // Set height of the image
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            'Try upgrading your profile to get started with badges and achievements',
+                            style: TextStyle(
+                              fontSize: 20,
                             ),
-                            SizedBox(height: 20),
-                            Text(
-                              badge.mainText,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20),
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                              badge.subText,
-                              style: TextStyle(fontSize: 16),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 }
               }
@@ -93,5 +101,3 @@ class BadgesPage extends StatelessWidget {
     );
   }
 }
-
-void main() => runApp(MaterialApp(home: BadgesPage()));
