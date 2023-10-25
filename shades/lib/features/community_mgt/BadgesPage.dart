@@ -37,43 +37,42 @@ class BadgesPage extends StatelessWidget {
                 String userRole =
                     snapshot.data ?? 'user'; // Default role is 'user'
                 if (userRole == 'leader') {
+                  // Content for leader
                   return Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/community/profile images/verified.png',
-                            width: 100, // Set width of the image
-                            height: 100, // Set height of the image
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/community/profile images/verified.png',
+                          width: 100, // Set width of the image
+                          height: 100, // Set height of the image
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          'VERIFIED BADGE',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
                           ),
-                          SizedBox(
-                              height: 20), // Add spacing between image and text
-                          Text(
-                            'VERIFIED BADGE',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            'You have achieved this badge by upgrading your profile as a system administrative',
-                            style: TextStyle(fontSize: 16),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          'You have achieved this badge by upgrading your profile as a system administrative',
+                          style: TextStyle(fontSize: 16),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
                   );
                 } else {
+                  // Content for non-leader, centered both horizontally and vertically
                   return Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Center(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
                             'assets/community/community images/badges/info.png',
