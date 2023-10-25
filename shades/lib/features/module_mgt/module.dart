@@ -289,24 +289,17 @@ class MywidgetState extends State<Moduleoperations> {
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Icon(
-                Icons.warning,
-                size: 64,
-                color: Colors.red,
-              ),
-              SizedBox(height: 20),
-              Text(
-                'Confirm Deletion',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+            children: [
+              Image.asset(
+                'assets/module/shrug.png',
+                width: 140,
+                height: 140,
               ),
               SizedBox(height: 10),
               Text(
                 'Are you sure you want to delete this module?',
                 style: TextStyle(
+                  fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
               ),
@@ -320,23 +313,26 @@ class MywidgetState extends State<Moduleoperations> {
               child: Text(
                 'Cancel',
                 style: TextStyle(
-                  color: const Color.fromARGB(255, 0, 0, 0),
+                  color: const Color.fromARGB(
+                      255, 0, 0, 0), // You can customize the color here
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            TextButton(
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor:
+                    const Color.fromARGB(255, 243, 82, 70), // Text color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18),
+                ),
+              ),
               onPressed: () async {
                 await _modules.doc(documentSnapshot!.id).delete();
                 Navigator.of(context).pop();
               },
-              child: Text(
-                'Delete',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              child: Text('Delete'),
             ),
           ],
         );
