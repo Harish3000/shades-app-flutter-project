@@ -39,7 +39,7 @@ class BadgesPage extends StatelessWidget {
                 if (userRole == 'leader') {
                   return Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Column(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
@@ -48,19 +48,23 @@ class BadgesPage extends StatelessWidget {
                           height: 100, // Set height of the image
                         ),
                         SizedBox(
-                            height: 20), // Add spacing between image and text
-                        Text(
-                          'VERIFIED BADGE',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          'You have achieved this badge by upgrading your profile as a system administrative',
-                          style: TextStyle(fontSize: 16),
-                          textAlign: TextAlign.center,
+                            width: 20), // Add spacing between image and text
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'VERIFIED BADGE',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              'You have achieved this badge by upgrading your profile as a system administrative',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
                         ),
                       ],
                     ),
