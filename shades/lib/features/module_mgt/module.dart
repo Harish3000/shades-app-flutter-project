@@ -241,8 +241,10 @@ class MywidgetState extends State<Moduleoperations> {
                 allowHalfRating: false,
                 itemCount: 5,
                 itemSize: 30.0,
-                itemBuilder: (context, _) => Icon(
-                  Icons.star,
+                itemBuilder: (context, _) => Image.asset(
+                  'assets/module/star.png',
+                  width: 30.0,
+                  height: 30.0,
                   color: Color.fromARGB(255, 248, 162, 3),
                 ),
                 onRatingUpdate: (rating) {
