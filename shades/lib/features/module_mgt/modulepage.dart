@@ -115,16 +115,13 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
                         Row(
                           children: [
                             for (int i = 0; i < filledStars; i++)
-                              Icon(Icons.star,
-                                  color: Color.fromARGB(255, 248, 158, 40),
-                                  size: 30),
-                            for (int i = 0; i < emptyStars; i++)
-                              Icon(Icons.star_border,
-                                  color: Colors.orange, size: 30),
+                              Image.asset('assets/module/star.png',
+                                  width: 30, height: 30),
                           ],
                         ),
+                        SizedBox(height: 10),
                         Text(
-                          'Average Rating: $ratingValue',
+                          'Average Ratings - $ratingValue',
                           style: TextStyle(fontSize: 16),
                         ),
                       ],
