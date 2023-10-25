@@ -283,9 +283,9 @@ class MywidgetState extends State<Moduleoperations> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          contentPadding: EdgeInsets.all(20),
+          contentPadding: EdgeInsets.all(35),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(28),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
