@@ -455,7 +455,7 @@ class MywidgetState extends State<Resourceoperations> {
                                 );
                               },
                               child: SizedBox(
-                                height: 170,
+                                height: 190,
                                 child: Card(
                                   shadowColor: Colors.black,
                                   color:
@@ -466,10 +466,10 @@ class MywidgetState extends State<Resourceoperations> {
                                   elevation: 8,
                                   child: Padding(
                                     padding: const EdgeInsets.only(
-                                      top: 20,
-                                      bottom: 10,
-                                      left: 10,
-                                      right: 10,
+                                      top: 40,
+                                      bottom: 0,
+                                      left: 0,
+                                      right: 0,
                                     ),
                                     child: ListTile(
                                       leading: Column(
@@ -477,18 +477,21 @@ class MywidgetState extends State<Resourceoperations> {
                                         children: [
                                           Image.asset(
                                             'assets/resource/PDF.jpg',
-                                            width: 80,
+                                            width: 60,
                                             height: 50,
                                           ),
                                         ],
                                       ),
-                                      title: Text(
-                                        documentSnapshot['resourceName']
-                                            .toString(),
-                                        style: const TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color.fromARGB(255, 2, 3, 8),
+                                      title: SizedBox(
+                                        width: 200,
+                                        child: Text(
+                                          documentSnapshot['resourceName']
+                                              .toString(),
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(255, 2, 3, 8),
+                                          ),
                                         ),
                                       ),
                                       subtitle: Text(
@@ -503,20 +506,20 @@ class MywidgetState extends State<Resourceoperations> {
                                         children: [
                                           // if (userRole == 'leader')
                                           IconButton(
-                                            iconSize: 30,
+                                            iconSize: 28,
                                             icon: const Icon(Icons.edit),
                                             onPressed: () =>
                                                 _update(documentSnapshot),
                                           ),
                                           // if (userRole == 'leader')
                                           IconButton(
-                                            iconSize: 30,
+                                            iconSize: 28,
                                             icon: const Icon(Icons.delete),
                                             onPressed: () =>
                                                 _delete(documentSnapshot),
                                           ),
                                           IconButton(
-                                            iconSize: 30,
+                                            iconSize: 28,
                                             icon:
                                                 const Icon(Icons.report_sharp),
                                             onPressed: () {
