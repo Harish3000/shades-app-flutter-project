@@ -486,19 +486,21 @@ class MywidgetState extends State<Moduleoperations> {
                                     itemCount: 5,
                                     itemPadding:
                                         EdgeInsets.symmetric(horizontal: 4.0),
-                                    itemBuilder: (context, _) => Icon(
-                                      Icons.star,
-                                      color: Colors.orange,
+                                    itemBuilder: (context, _) => Image.asset(
+                                      'assets/module/star.png',
+                                      width: 15,
+                                      height: 15,
                                     ),
                                     onRatingUpdate: (rating) {},
-                                  ),
+                                  )
                                 ],
                               ),
                               SizedBox(height: 8),
                               Text(
                                 "Subject Code: ${documentSnapshot['subjectCode'].toString()}",
                                 style: TextStyle(
-                                  color: Colors.grey,
+                                  color:
+                                      const Color.fromARGB(255, 173, 172, 172),
                                   fontSize: 13,
                                 ),
                               ),
