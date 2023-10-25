@@ -9,10 +9,19 @@ class ContributorPage extends StatefulWidget {
 
 class _ContributorPageState extends State<ContributorPage> {
   String _selectedCommunity = 'MS CLUB';
+  String _selectedFaculty = 'Faculty of Computing';
   final _formKey = GlobalKey<FormState>();
   TextEditingController _realNameController = TextEditingController();
   TextEditingController _designationController = TextEditingController();
   TextEditingController _communityIdController = TextEditingController();
+  TextEditingController _batchController = TextEditingController();
+
+  List<String> _facultyList = [
+    'Faculty of Computing',
+    'Faculty of Engineering',
+    'Faculty of Business',
+    'Faculty of Humanities and Sciences'
+  ];
 
   Future<void> _upgradeProfile() async {
     var user = FirebaseAuth.instance.currentUser;
@@ -24,6 +33,8 @@ class _ContributorPageState extends State<ContributorPage> {
       String communityName = _selectedCommunity;
       String designation = _designationController.text;
       String userRole = 'leader';
+      String batch = _batchController.text;
+      String faculty = _selectedFaculty;
 
       // Update user's profile in Firestore
       await FirebaseFirestore.instance.collection('users').doc(userId).update({
@@ -32,6 +43,8 @@ class _ContributorPageState extends State<ContributorPage> {
         'communityName': communityName,
         'designation': designation,
         'role': userRole,
+        'batch': batch,
+        'faculty': faculty,
       });
 
       // Show popup dialog
@@ -39,10 +52,24 @@ class _ContributorPageState extends State<ContributorPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Profile Upgraded Successfully!'),
+            title: Center(
+                child: Text('Your profie has been successfully upgraded!',
+                    style: TextStyle(fontSize: 22))),
             actions: <Widget>[
               TextButton(
-                child: Text('Login as a Community Leader'),
+                child: Container(
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Color(0xFF146C94)),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Login as a Moderator',
+                      style: TextStyle(fontSize: 20, color: Color(0xFF146C94)),
+                    ),
+                  ),
+                ),
                 onPressed: () {
                   // Close the dialog
                   Navigator.of(context).pop();
@@ -63,131 +90,173 @@ class _ContributorPageState extends State<ContributorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Upgrade Your Profile'),
-        backgroundColor: const Color(0xFF146C94),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Color(0xFF19A7CE), width: 2),
-              borderRadius: BorderRadius.circular(16),
-            ),
+        appBar: AppBar(
+          title: Text('Upgrade Your Profile'),
+          backgroundColor: const Color(0xFF146C94),
+        ),
+        body: SingleChildScrollView(
+          // Wrap your Column with SingleChildScrollView
+          child: Center(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextFormField(
-                      controller: _realNameController,
-                      style: TextStyle(fontSize: 18),
-                      decoration: InputDecoration(
-                        labelText: 'User\'s Real Name',
-                        labelStyle: TextStyle(fontSize: 18),
-                        fillColor: Colors.white,
-                        filled: true,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your real name';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 16),
-                    DropdownButtonFormField<String>(
-                      value: _selectedCommunity,
-                      onChanged: (newValue) {
-                        setState(() {
-                          _selectedCommunity = newValue!;
-                        });
-                      },
-                      items: [
-                        'MS CLUB',
-                        'MOZILLA CLUB',
-                        'MEDIA CLUB',
-                        'FOSS CLUB',
-                        'LEO CLUB',
-                        'ROTARACT CLUB'
-                      ].map((community) {
-                        return DropdownMenuItem(
-                          value: community,
-                          child: Text(
-                            community,
-                            style: TextStyle(fontSize: 18),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Color(0xFF19A7CE), width: 2),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextFormField(
+                          controller: _realNameController,
+                          style: TextStyle(fontSize: 18),
+                          decoration: InputDecoration(
+                            labelText: 'User\'s Real Name',
+                            labelStyle: TextStyle(fontSize: 18),
+                            fillColor: Colors.white,
+                            filled: true,
                           ),
-                        );
-                      }).toList(),
-                      decoration: InputDecoration(
-                        labelText: 'Community Name',
-                        labelStyle: TextStyle(fontSize: 18),
-                        fillColor: Colors.white,
-                        filled: true,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    TextFormField(
-                      controller: _designationController,
-                      style: TextStyle(fontSize: 18),
-                      decoration: InputDecoration(
-                        labelText: 'Designation',
-                        labelStyle: TextStyle(fontSize: 18),
-                        fillColor: Colors.white,
-                        filled: true,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your designation';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 16),
-                    TextFormField(
-                      controller: _communityIdController,
-                      style: TextStyle(fontSize: 18),
-                      decoration: InputDecoration(
-                        labelText: 'Community ID Number',
-                        labelStyle: TextStyle(fontSize: 18),
-                        fillColor: Colors.white,
-                        filled: true,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your community ID number';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 32),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _upgradeProfile,
-                        child: Text(
-                          'Request for Upgrade',
-                          style: TextStyle(fontSize: 20),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your real name';
+                            }
+                            return null;
+                          },
                         ),
-                        style: ElevatedButton.styleFrom(
-                          primary: const Color(0xFF19A7CE),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+                        TextFormField(
+                          controller: _batchController,
+                          style: TextStyle(fontSize: 18),
+                          decoration: InputDecoration(
+                            labelText: 'Batch',
+                            labelStyle: TextStyle(fontSize: 18),
+                            fillColor: Colors.white,
+                            filled: true,
                           ),
-                          padding: EdgeInsets.symmetric(vertical: 16),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your batch';
+                            }
+                            return null;
+                          },
                         ),
-                      ),
+                        SizedBox(height: 16),
+                        DropdownButtonFormField<String>(
+                          value: _selectedFaculty,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectedFaculty = newValue!;
+                            });
+                          },
+                          items: _facultyList.map((faculty) {
+                            return DropdownMenuItem(
+                              value: faculty,
+                              child: Text(
+                                faculty,
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            );
+                          }).toList(),
+                          decoration: InputDecoration(
+                            labelText: 'Faculty',
+                            labelStyle: TextStyle(fontSize: 18),
+                            fillColor: Colors.white,
+                            filled: true,
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        DropdownButtonFormField<String>(
+                          value: _selectedCommunity,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectedCommunity = newValue!;
+                            });
+                          },
+                          items: [
+                            'MS CLUB',
+                            'MOZILLA CLUB',
+                            'MEDIA CLUB',
+                            'FOSS CLUB',
+                            'LEO CLUB',
+                            'ROTARACT CLUB'
+                          ].map((community) {
+                            return DropdownMenuItem(
+                              value: community,
+                              child: Text(
+                                community,
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            );
+                          }).toList(),
+                          decoration: InputDecoration(
+                            labelText: 'Community Name',
+                            labelStyle: TextStyle(fontSize: 18),
+                            fillColor: Colors.white,
+                            filled: true,
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        TextFormField(
+                          controller: _designationController,
+                          style: TextStyle(fontSize: 18),
+                          decoration: InputDecoration(
+                            labelText: 'Designation',
+                            labelStyle: TextStyle(fontSize: 18),
+                            fillColor: Colors.white,
+                            filled: true,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your designation';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        TextFormField(
+                          controller: _communityIdController,
+                          style: TextStyle(fontSize: 18),
+                          decoration: InputDecoration(
+                            labelText: 'Community ID Number',
+                            labelStyle: TextStyle(fontSize: 18),
+                            fillColor: Colors.white,
+                            filled: true,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your community ID number';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 32),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _upgradeProfile,
+                            child: Text(
+                              'Request for Upgrade',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: const Color(0xFF19A7CE),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
