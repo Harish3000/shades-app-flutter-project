@@ -120,9 +120,10 @@ class MywidgetState extends State<Moduleoperations> {
                 allowHalfRating: false,
                 itemCount: 5,
                 itemSize: 30.0,
-                itemBuilder: (context, _) => Icon(
-                  Icons.star,
-                  color: Colors.orange,
+                itemBuilder: (context, _) => Image.asset(
+                  'assets/module/star.png',
+                  width: 30.0,
+                  height: 30.0,
                 ),
                 onRatingUpdate: (rating) {
                   selectedRating = rating;
