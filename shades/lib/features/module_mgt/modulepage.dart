@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ModuleDetailPage extends StatefulWidget {
@@ -20,6 +21,25 @@ class ModuleDetailPage extends StatefulWidget {
 
 class _ModuleDetailPageState extends State<ModuleDetailPage> {
   bool isAddingReview = false;
+
+  String getCurrentUserId() {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String userId = user?.uid ?? '';
+    return userId;
+  }
+
+  Future<String> getCurrentUsername() async {
+    final String userId = getCurrentUserId();
+    if (userId.isNotEmpty) {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      final String username = userDoc['username'];
+      return username;
+    }
+    return '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +88,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.asset(
-                      'assets/module/module.jpg',
+                      'assets/module/gg.gif',
                       width: 500,
                       height: 200,
                       fit: BoxFit.cover,
@@ -269,54 +289,54 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
                         ),
                       ),
                       ElevatedButton(
-                          onPressed: () {
-                            final String review = reviewController.text;
-                            final double rating =
-                                double.tryParse(ratingController.text) ?? 0.0;
+                        onPressed: () async {
+                          final String review = reviewController.text;
+                          final double rating =
+                              double.tryParse(ratingController.text) ?? 0.0;
+                          final String username = await getCurrentUsername();
 
-                            if (review.isNotEmpty &&
-                                rating >= 1 &&
-                                rating <= 5) {
-                              FirebaseFirestore.instance
-                                  .collection('module_reviews')
-                                  .add({
-                                'moduleName': widget.moduleName,
-                                'subjectCode': widget.subjectCode,
-                                'userName': 'Anonymous',
-                                'rating': rating,
-                                'reviews': review,
-                                'likes': 0,
-                                'dislikes': 0,
-                              });
+                          if (review.isNotEmpty && rating >= 1 && rating <= 5) {
+                            FirebaseFirestore.instance
+                                .collection('module_reviews')
+                                .add({
+                              'moduleName': widget.moduleName,
+                              'subjectCode': widget.subjectCode,
+                              'userName': username,
+                              'rating': rating,
+                              'reviews': review,
+                              'likes': 0,
+                              'dislikes': 0,
+                            });
 
-                              reviewController.clear();
-                              ratingController.clear();
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                      'Please enter a valid review and rating.'),
-                                ),
-                              );
-                            }
-                          },
-                          child: Text(
-                            'Submit Review',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 235, 235, 235),
+                            reviewController.clear();
+                            ratingController.clear();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    'Please enter a valid review and rating.'),
+                              ),
+                            );
+                          }
+                        },
+                        child: Text(
+                          'Submit Review',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 235, 235, 235),
+                          ),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                            Color.fromRGBO(20, 108, 148, 1),
+                          ),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
                           ),
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                              Color.fromRGBO(20, 108, 148, 1),
-                            ),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                          )),
+                        ),
+                      ),
                     ],
                   ),
                 ),
