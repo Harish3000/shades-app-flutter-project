@@ -369,6 +369,8 @@ class MyWidgetState extends State<QueryOperations> {
                                 elevation: 5,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15),
+                                  side:
+                                      BorderSide(width: 3, color: Colors.black),
                                 ),
                                 child: ListTile(
                                   contentPadding: EdgeInsets.all(16),
@@ -418,11 +420,15 @@ class MyWidgetState extends State<QueryOperations> {
                                             IconButton(
                                               icon: Icon(
                                                   Icons.delete_forever_rounded),
+                                              iconSize: 30,
+                                              color: Colors.red,
                                               onPressed: () =>
                                                   _delete(documentSnapshot),
                                             ),
                                             IconButton(
                                               icon: Icon(Icons.edit_square),
+                                              iconSize: 25,
+                                              color: Colors.blue,
                                               onPressed: () =>
                                                   _update(documentSnapshot),
                                             ),
