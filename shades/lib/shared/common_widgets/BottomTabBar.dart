@@ -87,7 +87,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
         },
         items: [
           BottomNavigationBarItem(
-            backgroundColor: Colors.pink,
+            backgroundColor: Color(0xFF146C94),
             icon: Icon(Icons.question_answer),
             label: 'Query',
           ),
