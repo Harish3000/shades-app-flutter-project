@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shades/features/resource_mgt/view_all_pdf.dart';
 
-class Upload extends StatelessWidget {
-  const Upload({super.key});
+class DownloadSuccess extends StatelessWidget {
+  const DownloadSuccess({super.key});
 
   @override
   Widget build(BuildContext context) {

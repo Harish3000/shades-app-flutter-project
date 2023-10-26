@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 
+import 'package:shades/features/resource_mgt/view_all_pdf.dart';
 import 'package:shades/features/resource_mgt/report_resource.dart';
 import 'package:shades/features/resource_mgt/upload_success.dart';
-import 'package:shades/features/resource_mgt/view_all_pdf.dart';
+import 'package:easy_pdf_viewer/easy_pdf_viewer.dart';
 
 class Resourceoperations extends StatefulWidget {
   const Resourceoperations({super.key});
@@ -153,7 +155,7 @@ class MywidgetState extends State<Resourceoperations> {
                     final String description = _descriptionController.text;
                     final fileName =
                         "$resourceName-$subjectCode-${DateTime.now().millisecondsSinceEpoch}";
-
+                    pickFileAndUpload(fileName);
                     await _resources.add({
                       'resourceName': resourceName,
                       'subjectCode': subjectCode,
@@ -163,8 +165,6 @@ class MywidgetState extends State<Resourceoperations> {
                     _resourceNameController.text = "";
                     _subjectCodeController.text = "";
                     _descriptionController.text = "";
-
-                    pickFileAndUpload(fileName);
 
                     Navigator.of(context).pop();
                   },
@@ -249,8 +249,6 @@ class MywidgetState extends State<Resourceoperations> {
                     final String resourceName = _resourceNameController.text;
                     final String subjectCode = _subjectCodeController.text;
                     final String description = _descriptionController.text;
-                    final fileName =
-                        "$resourceName-$subjectCode-${DateTime.now().millisecondsSinceEpoch}";
 
                     await _resources.doc(documentSnapshot!.id).update({
                       'resourceName': resourceName,
@@ -277,11 +275,6 @@ class MywidgetState extends State<Resourceoperations> {
           );
         });
   }
-
-  //delete operation
-  // Future<void> _delete([DocumentSnapshot? documentSnapshot]) async {
-  //   await _resources.doc(documentSnapshot!.id).delete();
-  // }
 
   Future<void> _delete([DocumentSnapshot? documentSnapshot]) async {
     showDialog(
@@ -447,7 +440,7 @@ class MywidgetState extends State<Resourceoperations> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const Upload(),
+                                    builder: (context) => const ViewPdfForm(),
                                   ),
                                 );
                               },
@@ -525,16 +518,7 @@ class MywidgetState extends State<Resourceoperations> {
                                                   iconSize: 28,
                                                   icon: const Icon(
                                                       Icons.download_sharp),
-                                                  onPressed: () {
-                                                    // Pass the file name to ViewPdfForm when "Download" is pressed
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            const Upload(),
-                                                      ),
-                                                    );
-                                                  },
+                                                  onPressed: () {},
                                                 ),
                                                 IconButton(
                                                   iconSize: 28,

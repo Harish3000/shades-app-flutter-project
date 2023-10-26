@@ -10,6 +10,7 @@ class Upload extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Upload Resources'),
+          backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
         ),
         body: Center(
           child: Padding(
