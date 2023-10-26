@@ -433,25 +433,36 @@ class MyWidgetState extends State<QueryOperations> {
                                     ],
                                   ),
                                   trailing: canEditDelete
-                                      ? Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            IconButton(
-                                              icon: Icon(Icons.edit_square),
-                                              iconSize: 25,
-                                              color: Colors.blue,
-                                              onPressed: () =>
-                                                  _update(documentSnapshot),
+                                      ? PopupMenuButton<String>(
+                                          icon: Icon(Icons.more_vert,
+                                              size: 30,
+                                              color: Color(0xFF146C94)),
+                                          itemBuilder: (BuildContext context) =>
+                                              <PopupMenuEntry<String>>[
+                                            PopupMenuItem<String>(
+                                              value: 'edit',
+                                              child: ListTile(
+                                                title: Text('Edit',
+                                                    style: TextStyle(
+                                                        fontSize: 20)),
+                                              ),
                                             ),
-                                            IconButton(
-                                              icon: Icon(
-                                                  Icons.delete_forever_rounded),
-                                              iconSize: 30,
-                                              color: Colors.red,
-                                              onPressed: () =>
-                                                  _delete(documentSnapshot),
+                                            PopupMenuItem<String>(
+                                              value: 'delete',
+                                              child: ListTile(
+                                                title: Text('Delete',
+                                                    style: TextStyle(
+                                                        fontSize: 20)),
+                                              ),
                                             ),
                                           ],
+                                          onSelected: (String value) {
+                                            if (value == 'edit') {
+                                              _update(documentSnapshot);
+                                            } else if (value == 'delete') {
+                                              _delete(documentSnapshot);
+                                            }
+                                          },
                                         )
                                       : null,
                                   onTap: () {
