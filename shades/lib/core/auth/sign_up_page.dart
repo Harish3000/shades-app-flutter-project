@@ -50,7 +50,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               FormContainerWidget(
                 controller: _usernameController,
-                hintText: "Username",
+                hintText: "Username - (visible to others)",
                 isPasswordField: false,
               ),
               SizedBox(
@@ -58,7 +58,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               FormContainerWidget(
                 controller: _emailController,
-                hintText: "Email",
+                hintText: "Email - (use your university email)",
                 isPasswordField: false,
               ),
               SizedBox(
@@ -89,7 +89,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               CircularProgressIndicator(),
                               SizedBox(width: 10),
                               Text(
-                                "Creating user...",
+                                "Creating user..",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -149,6 +149,11 @@ class _SignUpPageState extends State<SignUpPage> {
 
     if (!_isEmailValid(email) || !_isEmailAndPasswordFilled(email, password)) {
       _showErrorSnackBar("Invalid email address or empty fields");
+      return;
+    }
+
+    if (!email.endsWith('@my.sliit.lk')) {
+      _showErrorSnackBar("Please use your university Email !");
       return;
     }
 
