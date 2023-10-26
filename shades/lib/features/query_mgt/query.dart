@@ -391,23 +391,16 @@ class MyWidgetState extends State<QueryOperations> {
                                     width: 48,
                                     height: 48,
                                   ),
-                                  title: Text(
-                                    documentSnapshot['queryName'].toString(),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                  subtitle: Column(
+                                  title: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "@${_formatDate(documentSnapshot['queryCode'].toString())}",
+                                        documentSnapshot['queryName']
+                                            .toString(),
                                         style: TextStyle(
-                                          color: Color.fromARGB(
-                                              202, 178, 178, 178),
-                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 19,
                                         ),
                                       ),
                                       FutureBuilder(
@@ -427,11 +420,11 @@ class MyWidgetState extends State<QueryOperations> {
                                             final String username =
                                                 userData['username'] ?? '';
                                             return Text(
-                                              username,
+                                              "@ $username", // Add '@' in front of the username
                                               style: TextStyle(
-                                                color: Color.fromARGB(
-                                                    201, 0, 0, 0),
-                                                fontSize: 12,
+                                                color: Color(0xFF146C94),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
                                               ),
                                             );
                                           } else {
@@ -439,13 +432,22 @@ class MyWidgetState extends State<QueryOperations> {
                                           }
                                         },
                                       ),
+                                      SizedBox(height: 20),
                                       Text(
                                         "# ${documentSnapshot['tags'].toString()}",
                                         style: TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 79, 108, 251),
-                                          fontSize: 12,
+                                          color: Color.fromARGB(
+                                              255, 122, 143, 247),
+                                          fontSize: 13,
                                           fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        "- posted on : ${_formatDate(documentSnapshot['queryCode'].toString())} -",
+                                        style: TextStyle(
+                                          color: Color.fromARGB(
+                                              201, 107, 107, 107),
+                                          fontSize: 11,
                                         ),
                                       ),
                                     ],
