@@ -388,8 +388,8 @@ class MyWidgetState extends State<QueryOperations> {
                                   contentPadding: EdgeInsets.all(16),
                                   leading: Image.asset(
                                     'assets/query/query2.png',
-                                    width: 48,
-                                    height: 48,
+                                    width: 60,
+                                    height: 60,
                                   ),
                                   title: Column(
                                     crossAxisAlignment:
@@ -432,7 +432,7 @@ class MyWidgetState extends State<QueryOperations> {
                                           }
                                         },
                                       ),
-                                      SizedBox(height: 20),
+                                      SizedBox(height: 30),
                                       Text(
                                         "# ${documentSnapshot['tags'].toString()}",
                                         style: TextStyle(
