@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:shades/features/resource_mgt/view_all_pdf.dart';
 import 'package:shades/features/resource_mgt/report_resource.dart';
-import 'package:shades/features/resource_mgt/upload_success.dart';
 
 class Resourceoperations extends StatefulWidget {
   const Resourceoperations({super.key});
@@ -17,44 +16,36 @@ class Resourceoperations extends StatefulWidget {
 }
 
 class MywidgetState extends State<Resourceoperations> {
-  //tetx field conrtoller
   final TextEditingController _resourceNameController = TextEditingController();
   final TextEditingController _subjectCodeController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
   final CollectionReference _resources =
       FirebaseFirestore.instance.collection('resources');
-  bool filePicked = false; // Flag to check if a file has been picked
+  bool filePicked = false;
 
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> pdfList = [];
 
-  // Inside your State class, add a method to get the current user ID
   String getCurrentUserId() {
-    // Use FirebaseAuth to get the current user
     final User? user = FirebaseAuth.instance.currentUser;
-    // Get the user ID
     final String userId = user?.uid ?? '';
     return userId;
   }
 
-//get user roles
   Future<String> getUserRole(String userId) async {
-    // Replace 'users' with your actual collection name
     final DocumentSnapshot userSnapshot =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
-    // Check if the user exists and has a role field
     if (userSnapshot.exists && userSnapshot.data() != null) {
       final Map<String, dynamic> userData =
           userSnapshot.data() as Map<String, dynamic>;
-      return userData['role'] ?? ''; // Assuming 'role' is a String field
+      return userData['role'] ?? '';
     } else {
-      return ''; // Default to an empty string or another default value
+      return '';
     }
   }
 
-//upload pdf
   Future<String?> uploadPdf(String fileName, File file) async {
     final reference =
         FirebaseStorage.instance.ref().child("ResourcePdfs/$fileName.pdf");
@@ -69,121 +60,142 @@ class MywidgetState extends State<Resourceoperations> {
         .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
 
     if (pickedFile != null) {
-      // String fileName = pickedFile.files[0].name;
       File file = File(pickedFile.files[0].path!);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(
+                  strokeWidth: 6,
+                  backgroundColor: Colors.grey,
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Uploading...',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+
       final downloadLink = await uploadPdf(fileName, file);
       await _firebaseFirestore.collection("resources_pdfs").add({
         'fileName': fileName,
         'url': downloadLink,
       });
       print("Resource Uploaded successfully!");
+      Navigator.of(context).pop(); // Close the uploading popup
+
       setState(() {
-        filePicked =
-            true; // Set the flag to indicate that the file has been picked
+        filePicked = true;
       });
 
-      // After uploading the file, navigate to the Upload page if the flag is set
       if (filePicked) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Upload()),
-        );
+        _showSuccessPopup();
       }
     }
   }
 
-  // Create operation
   Future<void> _create() async {
     await showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext ctx) {
-          return Padding(
-            padding: EdgeInsets.only(
-              top: 10,
-              left: 20,
-              right: 20,
-              bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Center(
-                  child: Text("Insert Resource Details",
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext ctx) {
+        return Padding(
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 20,
+            right: 20,
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Center(
+                child: Text(
+                  "Insert Resource Details",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: _resourceNameController,
-                  decoration: const InputDecoration(
-                      labelText: "Module Name",
-                      border: OutlineInputBorder(),
-                      filled: true,
-                      prefixIcon: Icon(Icons.book)),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _subjectCodeController,
-                  decoration: const InputDecoration(
-                    labelText: "Subject Code",
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _resourceNameController,
+                decoration: const InputDecoration(
+                    labelText: "Module Name",
                     border: OutlineInputBorder(),
                     filled: true,
-                    prefixIcon: Icon(Icons.code),
-                  ),
+                    prefixIcon: Icon(Icons.book)),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: _subjectCodeController,
+                decoration: const InputDecoration(
+                  labelText: "Subject Code",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.code),
                 ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: "Description",
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    prefixIcon: Icon(Icons.description),
-                  ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(
+                  labelText: "Description",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.description),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final String resourceName = _resourceNameController.text;
-                      final String subjectCode = _subjectCodeController.text;
-                      final String description = _descriptionController.text;
-                      final fileName =
-                          "$resourceName-$subjectCode-${DateTime.now().millisecondsSinceEpoch}";
-                      pickFileAndUpload(fileName);
-                      await _resources.add({
-                        'resourceName': resourceName,
-                        'subjectCode': subjectCode,
-                        'description': description,
-                        'fileName': fileName,
-                      });
-                      _resourceNameController.text = "";
-                      _subjectCodeController.text = "";
-                      _descriptionController.text = "";
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final String resourceName = _resourceNameController.text;
+                    final String subjectCode = _subjectCodeController.text;
+                    final String description = _descriptionController.text;
+                    final fileName =
+                        "$resourceName-$subjectCode-${DateTime.now().millisecondsSinceEpoch}";
+                    pickFileAndUpload(fileName);
+                    await _resources.add({
+                      'resourceName': resourceName,
+                      'subjectCode': subjectCode,
+                      'description': description,
+                      'fileName': fileName,
+                    });
+                    _resourceNameController.text = "";
+                    _subjectCodeController.text = "";
+                    _descriptionController.text = "";
 
-                      Navigator.of(context).pop();
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Center(
-                          widthFactor: 2.5,
-                          child: Text("Create",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold))),
-                    ),
+                    Navigator.of(context).pop(); // Close the create modal
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Center(
+                        widthFactor: 2.5,
+                        child: Text("Create",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold))),
                   ),
-                )
-              ],
-            ),
-          );
-        });
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
-//update operation
   Future<void> _update([DocumentSnapshot? documentSnapshot]) async {
     if (documentSnapshot != null) {
       _resourceNameController.text =
@@ -192,95 +204,97 @@ class MywidgetState extends State<Resourceoperations> {
       _descriptionController.text = documentSnapshot['description'].toString();
     }
     await showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext ctx) {
-          return Padding(
-            padding: EdgeInsets.only(
-              top: 10,
-              left: 20,
-              right: 20,
-              bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Center(
-                  child: Text("Update Resource Details",
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext ctx) {
+        return Padding(
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 20,
+            right: 20,
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Center(
+                child: Text(
+                  "Update Resource Details",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: _resourceNameController,
-                  decoration: const InputDecoration(
-                    labelText: "Module Name",
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    prefixIcon: Icon(Icons.schema_outlined),
-                  ),
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _resourceNameController,
+                decoration: const InputDecoration(
+                  labelText: "Module Name",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.schema_outlined),
                 ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _subjectCodeController,
-                  decoration: const InputDecoration(
-                    labelText: "Subject Code",
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    prefixIcon: Icon(Icons.code),
-                  ),
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _subjectCodeController,
+                decoration: const InputDecoration(
+                  labelText: "Subject Code",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.code),
                 ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: "Description",
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    prefixIcon: Icon(Icons.description),
-                  ),
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(
+                  labelText: "Description",
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.description),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final String resourceName = _resourceNameController.text;
-                      final String subjectCode = _subjectCodeController.text;
-                      final String description = _descriptionController.text;
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final String resourceName = _resourceNameController.text;
+                    final String subjectCode = _subjectCodeController.text;
+                    final String description = _descriptionController.text;
 
-                      if (documentSnapshot != null) {
-                        await _resources.doc(documentSnapshot.id).update({
-                          'resourceName': resourceName,
-                          'subjectCode': subjectCode,
-                          'description': description,
-                        });
-                      } else {
-                        // Handle the case where documentSnapshot or its id is null
-                      }
+                    if (documentSnapshot != null) {
+                      await _resources.doc(documentSnapshot.id).update({
+                        'resourceName': resourceName,
+                        'subjectCode': subjectCode,
+                        'description': description,
+                      });
+                    } else {
+                      // Handle the case where documentSnapshot or its id is null
+                    }
 
-                      _resourceNameController.text = "";
-                      _subjectCodeController.text = "";
-                      _descriptionController.text = "";
+                    _resourceNameController.text = "";
+                    _subjectCodeController.text = "";
+                    _descriptionController.text = "";
 
-                      Navigator.of(context).pop();
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Center(
-                          widthFactor: 2.5,
-                          child: Text("Update",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold))),
-                    ),
+                    Navigator.of(context).pop();
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Center(
+                        widthFactor: 2.5,
+                        child: Text("Update",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold))),
                   ),
-                )
-              ],
-            ),
-          );
-        });
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _delete([DocumentSnapshot? documentSnapshot]) async {
@@ -348,19 +362,14 @@ class MywidgetState extends State<Resourceoperations> {
             ),
             TextButton(
               onPressed: () async {
-                // Get the filename from the 'resources' collection
                 final fileName = documentSnapshot?['fileName'].toString();
-
-                // Delete the associated PDF from Firebase Storage
                 final reference = FirebaseStorage.instance
                     .ref()
                     .child("ResourcePdfs/$fileName.pdf");
                 await reference.delete();
 
-                // Delete the document from the 'resources' collection
                 await _resources.doc(documentSnapshot!.id).delete();
 
-                // Delete the corresponding document from the 'resources_pdfs' collection
                 final QuerySnapshot querySnapshot = await _firebaseFirestore
                     .collection("resources_pdfs")
                     .where("fileName", isEqualTo: fileName)
@@ -401,12 +410,43 @@ class MywidgetState extends State<Resourceoperations> {
     );
   }
 
+  void _showSuccessPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.check_circle_outline,
+                color: Colors.green,
+                size: 48,
+              ),
+              SizedBox(height: 16),
+              Text(
+                'File uploaded',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.of(context).pop();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
+      // ),
       body: StreamBuilder(
         stream: _resources.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
@@ -447,7 +487,10 @@ class MywidgetState extends State<Resourceoperations> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const ViewPdfForm(),
+                                    builder: (context) => ViewPdfForm(
+                                      fileName: documentSnapshot['fileName']
+                                          .toString(),
+                                    ),
                                   ),
                                 );
                               },
@@ -522,15 +565,10 @@ class MywidgetState extends State<Resourceoperations> {
                                             Row(
                                               children: [
                                                 IconButton(
-                                                  iconSize: 28,
+                                                  iconSize: 35,
+                                                  color: Colors.red,
                                                   icon: const Icon(
-                                                      Icons.download_sharp),
-                                                  onPressed: () {},
-                                                ),
-                                                IconButton(
-                                                  iconSize: 28,
-                                                  icon: const Icon(
-                                                      Icons.report_sharp),
+                                                      Icons.flag_circle_sharp),
                                                   onPressed: () {
                                                     Navigator.push(
                                                       context,

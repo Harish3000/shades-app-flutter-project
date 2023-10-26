@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shades/features/resource_mgt/resource.dart';
-// import 'package:shades/features/resource_mgt/view_all_pdf.dart';
 import 'package:shades/features/resource_mgt/report_success.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -174,15 +173,7 @@ class _ResourceReportFormState extends State<ResourceReportForm> {
                               'reason': _reason,
                               'level': _selectedLevel,
                             });
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const Scaffold(
-                                  body: Upload(),
-                                ),
-                              ),
-                            ); // This line will navigate back to the previous screen.
+                            _showSuccessPopup();
                           } catch (e) {
                             // Handle errors here (e.g., show an error message)
                             print('Error: $e');
@@ -233,5 +224,36 @@ class _ResourceReportFormState extends State<ResourceReportForm> {
         ),
       ),
     );
+  }
+
+  void _showSuccessPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.check_circle_outline,
+                color: Colors.green,
+                size: 48,
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Report Submitted',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.of(context).pop();
+    });
   }
 }

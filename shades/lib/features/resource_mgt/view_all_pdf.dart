@@ -10,7 +10,9 @@ import 'package:shades/features/resource_mgt/download_success.dart';
 import 'package:shades/features/resource_mgt/resource.dart';
 
 class ViewPdfForm extends StatefulWidget {
-  const ViewPdfForm({super.key});
+  final String? fileName;
+
+  const ViewPdfForm({Key? key, this.fileName}) : super(key: key);
 
   @override
   State<ViewPdfForm> createState() => _ViewPdfFormState();
@@ -20,6 +22,7 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> pdfList = [];
   bool downloading = false;
+  bool showFirstPdf = false;
 
   void getAllPdf() async {
     final allPdfs = await _firebaseFirestore.collection("resources_pdfs").get();
@@ -31,91 +34,204 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
   void initState() {
     super.initState();
     getAllPdf();
+    showFirstPdfDelayed();
+  }
+
+  void showFirstPdfDelayed() async {
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
+      showFirstPdf = true;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
-          title: const Text('View PDF'),
-        ),
-        body: GridView.builder(
-            itemCount: pdfList.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2),
-            itemBuilder: (context, index) {
-              return Padding(
-                  padding: const EdgeInsets.only(
-                      left: 8.0, right: 8, top: 0, bottom: 0),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => PdfViewerScreen(
-                                pdfurl: pdfList[index]['url'],
-                              )));
-                    },
-                    child: Card(
-                      elevation: 10,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          side: const BorderSide(
-                              color: Color.fromARGB(255, 177, 177, 177),
-                              width: 1)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Image.asset(
-                            "assets/resource/PDF.jpg",
-                            height: 70,
-                            width: 100,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8.0, right: 8, top: 5),
-                            child: Center(
-                              child: Text(
-                                pdfList[index]['fileName'] ??
-                                    'Unknown', // Use a default value if 'name' is null
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    fontStyle: FontStyle.normal,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.cloud_download_sharp,
-                                size: 35),
-                            onPressed: () {
-                              downloadAndOpenPdf(pdfList[index]['url'],
-                                  pdfList[index]['fileName']);
-                            },
-                          ),
-                        ],
+      appBar: AppBar(
+        backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
+        title: const Text('View PDF'),
+      ),
+      body: Column(
+        children: [
+          if (widget.fileName != null && pdfList.isNotEmpty) ...[
+            const SizedBox(height: 20),
+            const Text('Your PDF is Ready'),
+            const SizedBox(height: 20),
+            if (showFirstPdf) ...[
+              Center(
+                child: AnimatedContainer(
+                  duration: const Duration(seconds: 1),
+                  height: 200,
+                  width: 200,
+                  child: Card(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: const BorderSide(
+                        color: Color.fromARGB(255, 177, 177, 177),
+                        width: 1,
                       ),
                     ),
-                  ));
-            }),
-        floatingActionButton: FloatingActionButton(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => PdfViewerScreen(
+                              pdfurl: pdfList[getIndexForFileName()]['url'],
+                            ),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: buildCardContents(getIndexForFileName()),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+            ] else ...[
+              const SizedBox(height: 80),
+              const CircularProgressIndicator(),
+              const SizedBox(height: 80),
+            ],
+            const Text('Similar PDFs'),
+            const SizedBox(height: 20),
+            buildGrid(),
+          ],
+        ],
+      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // Start download animation when the button is clicked
+      //     downloadAndOpenPdf(pdfList[getIndexForFileName()]['url'],
+      //         pdfList[getIndexForFileName()]['fileName']);
+      //   },
+      //   backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
+      //   child: const Icon(Icons.cloud_download_sharp, size: 35),
+      // ),
+    );
+  }
+
+  Widget buildGrid() {
+    List<Widget> gridCards = [];
+    for (int index = 0; index < pdfList.length; index++) {
+      if (widget.fileName == null ||
+          pdfList[index]['fileName'] != widget.fileName) {
+        gridCards.add(
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => PdfViewerScreen(
+                    pdfurl: pdfList[index]['url'],
+                  ),
+                ),
+              );
+            },
+            child: Card(
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: const BorderSide(
+                  color: Color.fromARGB(255, 177, 177, 177),
+                  width: 1,
+                ),
+              ),
+              child: buildCardContents(index),
+            ),
+          ),
+        );
+      }
+    }
+    return Expanded(
+      child: GridView.count(
+        crossAxisCount: 2,
+        crossAxisSpacing: 8.0,
+        mainAxisSpacing: 8.0,
+        children: gridCards,
+      ),
+    );
+  }
+
+  int getIndexForFileName() {
+    for (int i = 0; i < pdfList.length; i++) {
+      if (pdfList[i]['fileName'] == widget.fileName) {
+        return i;
+      }
+    }
+    return 0;
+  }
+
+  Widget buildCardContents(int index) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Image.asset(
+          "assets/resource/PDF.jpg",
+          height: 70,
+          width: 100,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0, right: 8, top: 5),
+          child: Center(
+            child: Text(
+              pdfList[index]['fileName'] ?? 'Unknown',
+              style: const TextStyle(
+                fontSize: 16,
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.cloud_download_sharp, size: 35),
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) =>
-                  const Resourceoperations(), // Navigate to Resourceoperations
-            ));
+            // Start download animation when the button is clicked
+            downloadAndOpenPdf(
+                pdfList[index]['url'], pdfList[index]['fileName']);
           },
-          backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
-          child: const Icon(Icons.home),
-        ));
+        ),
+      ],
+    );
   }
 
   void downloadAndOpenPdf(String pdfUrl, String fileName) async {
     try {
       setState(() {
-        // Set a flag to indicate that download is in progress
         downloading = true;
       });
+
+      // Replace with loading popup
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(
+                  strokeWidth: 6,
+                  backgroundColor: Colors.grey,
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Downloading...',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+
       var response = await http.get(Uri.parse(pdfUrl));
+
       if (response.statusCode == 200) {
         var time = DateTime.now().millisecondsSinceEpoch;
         var path = '/storage/emulated/0/Download/$fileName-$time.pdf';
@@ -123,10 +239,11 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
         await file.writeAsBytes(response.bodyBytes);
         print('File downloaded to: $path');
 
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const DownloadSuccess(),
-        ));
-        // });
+        // Replace with success popup
+        await Future.delayed(
+            const Duration(seconds: 1)); // Simulating download time
+        Navigator.of(context).pop(); // Close loading popup
+        _showSuccessPopup();
       } else {
         print(
             'Failed to download the file. Status code: ${response.statusCode}');
@@ -135,16 +252,47 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
       print('Error: $e');
     } finally {
       setState(() {
-        // Set the flag to indicate that download is complete
         downloading = false;
       });
     }
+  }
+
+  void _showSuccessPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.check_circle_outline,
+                color: Colors.green,
+                size: 48,
+              ),
+              SizedBox(height: 16),
+              Text(
+                'File downloaded',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+    // Close success popup after 3 seconds
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.of(context).pop();
+    });
   }
 }
 
 class PdfViewerScreen extends StatefulWidget {
   final String pdfurl;
-  const PdfViewerScreen({super.key, required this.pdfurl});
+  const PdfViewerScreen({Key? key, required this.pdfurl}) : super(key: key);
 
   @override
   State<PdfViewerScreen> createState() => _PdfViewerScreenState();
@@ -173,9 +321,10 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
             )
           : const Center(
               child: CircularProgressIndicator(
-              strokeWidth: 6,
-              backgroundColor: Colors.grey,
-            )),
+                strokeWidth: 6,
+                backgroundColor: Colors.grey,
+              ),
+            ),
     );
   }
 }
