@@ -106,13 +106,13 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
             Stack(
               children: [
                 Image.asset(
-                  'assets/query/test4.gif',
+                  'assets/query/test3.gif',
                   width: double.infinity,
                   height: 400,
                   fit: BoxFit.cover,
                 ),
                 Positioned(
-                  top: 250,
+                  top: 200,
                   left: 2,
                   right: 2,
                   child: Card(
@@ -131,19 +131,19 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '🎯${widget.queryName}',
+                                '${widget.queryName}',
                                 style: TextStyle(
                                   fontSize: 25,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               Text(
-                                '             time: ${widget.queryCode}\n',
+                                'posted on: ${widget.queryCode}\n',
                                 style:
                                     TextStyle(fontSize: 10, color: Colors.grey),
                               ),
                               Text(
-                                'Description:\n ${widget.description}',
+                                '${widget.description}\n',
                                 style: TextStyle(fontSize: 15),
                               ),
                               Text(
