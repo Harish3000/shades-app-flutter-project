@@ -312,7 +312,11 @@ class MyWidgetState extends State<QueryOperations> {
                 borderRadius: BorderRadius.circular(25),
               ),
               child: ListTile(
-                leading: Icon(Icons.search),
+                leading: Image.asset(
+                  'assets/module/logo.png', // Replace with the actual path to your image
+                  width: 30, // Set the width of the image
+                  height: 30, // Set the height of the image
+                ),
                 title: Container(
                   // Wrap the TextField in a Container
                   constraints:
@@ -323,7 +327,7 @@ class MyWidgetState extends State<QueryOperations> {
                       setState(() {}); // Trigger a rebuild when the user types
                     },
                     decoration: InputDecoration(
-                      hintText: 'Search Query...',
+                      hintText: ' Search Query...',
                       border: InputBorder.none,
                     ),
                   ),
