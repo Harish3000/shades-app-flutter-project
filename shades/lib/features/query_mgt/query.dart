@@ -374,8 +374,11 @@ class MyWidgetState extends State<QueryOperations> {
                                 ),
                                 child: ListTile(
                                   contentPadding: EdgeInsets.all(16),
-                                  leading: Icon(Icons.my_library_books_rounded,
-                                      size: 40),
+                                  leading: Image.asset(
+                                    'assets/query/query2.png',
+                                    width: 48,
+                                    height: 48,
+                                  ),
                                   title: Text(
                                     documentSnapshot['queryName'].toString(),
                                     style: TextStyle(
