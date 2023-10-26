@@ -66,6 +66,17 @@ flutter:
   assets:
     - assets/module/
     - assets/query/
+    - assets/community/
+    - assets/community/community images/
+    - assets/community/profile images/
+    - assets/community/community images/badges/LEO.jpg
+    - assets/community/community images/badges/FOSS.jpg
+    - assets/community/community images/badges/MS.png
+    - assets/community/community images/badges/MOZILLA.jpg
+    - assets/community/community images/badges/MEDIA.jpg
+    - assets/community/community images/badges/ROTTRACT.jpg
+    - assets/community/community images/badges/info.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
