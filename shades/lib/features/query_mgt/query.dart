@@ -304,18 +304,29 @@ class MyWidgetState extends State<QueryOperations> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchController,
-              onChanged: (value) {
-                setState(() {}); // Trigger a rebuild when the user types
-              },
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: '  Search Query...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
+            padding: const EdgeInsets.symmetric(
+                horizontal: 16.0), // Adjust horizontal padding
+            child: Card(
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: ListTile(
+                leading: Icon(Icons.search),
+                title: Container(
+                  // Wrap the TextField in a Container
+                  constraints:
+                      BoxConstraints(maxWidth: 200), // Set the maximum width
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: (value) {
+                      setState(() {}); // Trigger a rebuild when the user types
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Search Query...',
+                      border: InputBorder.none,
+                    ),
+                  ),
                 ),
               ),
             ),
