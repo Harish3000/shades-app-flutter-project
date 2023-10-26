@@ -113,11 +113,15 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                 ),
                 Positioned(
                   top: 250,
-                  left: 5,
-                  right: 5,
+                  left: 2,
+                  right: 2,
                   child: Card(
-                    elevation: 4,
+                    elevation: 8,
                     color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.black, width: 2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -284,9 +288,13 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
 
               return Card(
                 key: ValueKey<String>(answerId),
-                elevation: 2,
+                elevation: 4,
                 color: Colors.white,
                 margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.black, width: 0.5),
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 child: Column(
                   children: [
                     ListTile(
