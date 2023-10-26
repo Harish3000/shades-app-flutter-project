@@ -106,7 +106,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
             Stack(
               children: [
                 Image.asset(
-                  'assets/query/test3.gif',
+                  'assets/query/test4.gif',
                   width: double.infinity,
                   height: 400,
                   fit: BoxFit.cover,

@@ -424,7 +424,6 @@ class MyWidgetState extends State<QueryOperations> {
                                               style: TextStyle(
                                                 color: Color(0xFF146C94),
                                                 fontSize: 14,
-                                                fontWeight: FontWeight.bold,
                                               ),
                                             );
                                           } else {
@@ -434,7 +433,7 @@ class MyWidgetState extends State<QueryOperations> {
                                       ),
                                       SizedBox(height: 30),
                                       Text(
-                                        "# ${documentSnapshot['tags'].toString()}",
+                                        "${documentSnapshot['tags'].toString()}",
                                         style: TextStyle(
                                           color: Color.fromARGB(
                                               255, 122, 143, 247),
