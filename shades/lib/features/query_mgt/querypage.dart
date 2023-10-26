@@ -180,9 +180,16 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                       style: TextStyle(fontSize: 16),
                     ),
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          const Color.fromARGB(255, 12, 13, 14)),
+                      backgroundColor:
+                          MaterialStateProperty.all(Color(0xFF146C94)),
                       minimumSize: MaterialStateProperty.all(Size(120, 40)),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side: BorderSide(
+                              color: Color(0xFF146C94)), // Border color
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -203,6 +210,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                       children: <Widget>[
                         TextFormField(
                           controller: answerController,
+                          maxLines: null,
                           decoration: InputDecoration(
                             labelText: 'Answer',
                             prefixIcon: Icon(Icons.comment),
@@ -233,8 +241,8 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                             ),
                           ),
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                const Color.fromARGB(255, 12, 13, 14)),
+                            backgroundColor:
+                                MaterialStateProperty.all(Color(0xFF146C94)),
                           ),
                         ),
                       ],
