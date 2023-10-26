@@ -322,19 +322,26 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                               color: Colors.grey,
                             ),
                           ),
+                          SizedBox(height: 20),
                           Row(
                             children: [
-                              IconButton(
-                                icon: Icon(Icons.favorite,
-                                    color: Color.fromARGB(255, 177, 177, 177)),
-                                onPressed: () {
+                              GestureDetector(
+                                onTap: () {
                                   _updateLikes(answerId, likes + 1);
                                 },
+                                child: Image.asset(
+                                  'assets/query/like.png', // Replace with the correct path to your image
+                                  width:
+                                      25, // Set the width according to your design
+                                  height:
+                                      25, // Set the height according to your design
+                                ),
                               ),
-                              Text('$likes      '),
+                              Text('  $likes      '),
                               IconButton(
                                 icon: Icon(Icons.flag_circle_rounded,
-                                    color: Color.fromARGB(255, 124, 117, 117)),
+                                    size: 30,
+                                    color: Color.fromARGB(255, 255, 122, 122)),
                                 onPressed: () {
                                   _reportAnswer(answerId);
                                 },
@@ -382,7 +389,8 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
 
     return canDelete
         ? IconButton(
-            icon: Icon(Icons.delete_forever_rounded),
+            icon:
+                Icon(Icons.delete_forever_rounded, color: Colors.red, size: 30),
             onPressed: () => _deleteAnswer(answerId),
           )
         : null;
