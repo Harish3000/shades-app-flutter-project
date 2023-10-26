@@ -304,8 +304,7 @@ class MyWidgetState extends State<QueryOperations> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 16.0), // Adjust horizontal padding
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Card(
               elevation: 10,
               shape: RoundedRectangleBorder(
@@ -313,18 +312,16 @@ class MyWidgetState extends State<QueryOperations> {
               ),
               child: ListTile(
                 leading: Image.asset(
-                  'assets/module/logo.png', // Replace with the actual path to your image
-                  width: 30, // Set the width of the image
-                  height: 30, // Set the height of the image
+                  'assets/module/logo.png',
+                  width: 30,
+                  height: 30,
                 ),
                 title: Container(
-                  // Wrap the TextField in a Container
-                  constraints:
-                      BoxConstraints(maxWidth: 200), // Set the maximum width
+                  constraints: BoxConstraints(maxWidth: 200),
                   child: TextField(
                     controller: _searchController,
                     onChanged: (value) {
-                      setState(() {}); // Trigger a rebuild when the user types
+                      setState(() {});
                     },
                     decoration: InputDecoration(
                       hintText: ' Search Query...',
@@ -413,13 +410,34 @@ class MyWidgetState extends State<QueryOperations> {
                                           fontSize: 10,
                                         ),
                                       ),
-                                      Text(
-                                        "${documentSnapshot['userID'].toString().substring(0, 4)}",
-                                        style: TextStyle(
-                                          color: Color.fromARGB(
-                                              202, 178, 178, 178),
-                                          fontSize: 10,
-                                        ),
+                                      FutureBuilder(
+                                        future: FirebaseFirestore.instance
+                                            .collection('users')
+                                            .doc(documentSnapshot['userID'])
+                                            .get(),
+                                        builder: (context,
+                                            AsyncSnapshot<DocumentSnapshot>
+                                                userSnapshot) {
+                                          if (userSnapshot.hasData &&
+                                              userSnapshot.data != null) {
+                                            final Map<String, dynamic>
+                                                userData =
+                                                userSnapshot.data!.data()
+                                                    as Map<String, dynamic>;
+                                            final String username =
+                                                userData['username'] ?? '';
+                                            return Text(
+                                              username,
+                                              style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    201, 0, 0, 0),
+                                                fontSize: 12,
+                                              ),
+                                            );
+                                          } else {
+                                            return Container();
+                                          }
+                                        },
                                       ),
                                       Text(
                                         "# ${documentSnapshot['tags'].toString()}",
