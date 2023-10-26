@@ -76,7 +76,7 @@ class MywidgetState extends State<Resourceoperations> {
                 Text(
                   'Uploading...',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -302,6 +302,7 @@ class MywidgetState extends State<Resourceoperations> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: const Color.fromARGB(198, 163, 43, 43),
           contentPadding: const EdgeInsets.all(20),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -310,14 +311,15 @@ class MywidgetState extends State<Resourceoperations> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Icon(
-                Icons.warning,
+                Icons.warning_amber,
                 size: 64,
-                color: Colors.red,
+                color: Color.fromARGB(255, 241, 249, 3),
               ),
               SizedBox(height: 20),
               Text(
                 'Confirm Deletion',
                 style: TextStyle(
+                  color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -326,6 +328,7 @@ class MywidgetState extends State<Resourceoperations> {
               Text(
                 'Are you sure you want to delete this Resource?',
                 style: TextStyle(
+                  color: Colors.white,
                   fontSize: 16,
                 ),
               ),
@@ -337,12 +340,12 @@ class MywidgetState extends State<Resourceoperations> {
                 Navigator.of(context).pop(); // Close the dialog
               },
               child: Container(
-                width: 100,
+                width: 120,
                 height: 50,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 119, 156, 168),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(100),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.2),
@@ -381,12 +384,12 @@ class MywidgetState extends State<Resourceoperations> {
                 Navigator.of(context).pop(); // Close the dialog
               },
               child: Container(
-                width: 100,
+                width: 120,
                 height: 50,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: Colors.red[100],
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(100),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.2),
@@ -421,13 +424,13 @@ class MywidgetState extends State<Resourceoperations> {
               Icon(
                 Icons.check_circle_outline,
                 color: Colors.green,
-                size: 48,
+                size: 60,
               ),
               SizedBox(height: 16),
               Text(
                 'File uploaded',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 25,
                   fontWeight: FontWeight.bold,
                 ),
               ),

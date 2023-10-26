@@ -49,26 +49,31 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
-        title: const Text('View PDF'),
+        title: const Text('View Resource PDF'),
       ),
       body: Column(
         children: [
           if (widget.fileName != null && pdfList.isNotEmpty) ...[
             const SizedBox(height: 20),
-            const Text('Your PDF is Ready'),
+            const Text('Your PDF is Ready...',
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Color.fromRGBO(20, 108, 148, 1.000),
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic)),
             const SizedBox(height: 20),
             if (showFirstPdf) ...[
               Center(
                 child: AnimatedContainer(
                   duration: const Duration(seconds: 1),
                   height: 200,
-                  width: 200,
+                  width: 300,
                   child: Card(
                     elevation: 10,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                       side: const BorderSide(
-                        color: Color.fromARGB(255, 177, 177, 177),
+                        color: Color.fromARGB(151, 186, 187, 189),
                         width: 1,
                       ),
                     ),
@@ -96,7 +101,12 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
               const CircularProgressIndicator(),
               const SizedBox(height: 80),
             ],
-            const Text('Similar PDFs'),
+            const Text('---------------- Similar PDFs ----------------',
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Color.fromRGBO(20, 108, 148, 1.000),
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic)),
             const SizedBox(height: 20),
             buildGrid(),
           ],
@@ -130,16 +140,20 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
                 ),
               );
             },
-            child: Card(
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-                side: const BorderSide(
-                  color: Color.fromARGB(255, 177, 177, 177),
-                  width: 1,
+            child: SizedBox(
+              height: 200,
+              width: 300,
+              child: Card(
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: const BorderSide(
+                    color: Color.fromARGB(151, 186, 187, 189),
+                    width: 1,
+                  ),
                 ),
+                child: buildCardContents(index),
               ),
-              child: buildCardContents(index),
             ),
           ),
         );
@@ -148,8 +162,8 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
     return Expanded(
       child: GridView.count(
         crossAxisCount: 2,
-        crossAxisSpacing: 8.0,
-        mainAxisSpacing: 8.0,
+        crossAxisSpacing: 5.0,
+        mainAxisSpacing: 5.0,
         children: gridCards,
       ),
     );
@@ -187,7 +201,8 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
           ),
         ),
         IconButton(
-          icon: const Icon(Icons.cloud_download_sharp, size: 35),
+          icon: const Icon(Icons.cloud_download_sharp,
+              color: Color.fromARGB(255, 54, 154, 99), size: 40),
           onPressed: () {
             // Start download animation when the button is clicked
             downloadAndOpenPdf(
@@ -209,18 +224,20 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
         context: context,
         builder: (BuildContext context) {
           return const AlertDialog(
+            backgroundColor: Color.fromARGB(157, 31, 34, 35),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 CircularProgressIndicator(
                   strokeWidth: 6,
-                  backgroundColor: Colors.grey,
+                  backgroundColor: Color.fromARGB(255, 255, 255, 255),
                 ),
                 SizedBox(height: 16),
                 Text(
                   'Downloading...',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 25,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -262,19 +279,21 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
       context: context,
       builder: (BuildContext context) {
         return const AlertDialog(
+          backgroundColor: Color.fromARGB(157, 31, 34, 35),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 Icons.check_circle_outline,
-                color: Colors.green,
-                size: 48,
+                color: Color.fromARGB(255, 12, 223, 19),
+                size: 60,
               ),
               SizedBox(height: 16),
               Text(
                 'File downloaded',
                 style: TextStyle(
-                  fontSize: 20,
+                  color: Colors.white,
+                  fontSize: 25,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -284,7 +303,7 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
       },
     );
     // Close success popup after 3 seconds
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.of(context).pop();
     });
   }

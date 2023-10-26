@@ -231,19 +231,21 @@ class _ResourceReportFormState extends State<ResourceReportForm> {
       context: context,
       builder: (BuildContext context) {
         return const AlertDialog(
+          backgroundColor: Color.fromARGB(157, 31, 34, 35),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 Icons.check_circle_outline,
-                color: Colors.green,
-                size: 48,
+                color: Color.fromARGB(255, 12, 223, 19),
+                size: 60,
               ),
               SizedBox(height: 16),
               Text(
                 'Report Submitted',
                 style: TextStyle(
-                  fontSize: 20,
+                  color: Colors.white,
+                  fontSize: 25,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -252,8 +254,23 @@ class _ResourceReportFormState extends State<ResourceReportForm> {
         );
       },
     );
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.of(context).pop();
+      // Reset the form
+      _formKey.currentState?.reset();
+      // You can also reset the selectedLevel to the initial value if needed.
+      setState(() {
+        _selectedLevel = 'Low';
+      });
+      // Navigate to the ResourceOperations page
+      Navigator.pop(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Scaffold(
+            body: Resourceoperations(),
+          ),
+        ),
+      );
     });
   }
 }
