@@ -84,7 +84,8 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.download_sharp),
+                            icon: const Icon(Icons.cloud_download_sharp,
+                                size: 35),
                             onPressed: () {
                               downloadAndOpenPdf(pdfList[index]['url']);
                             },
@@ -102,7 +103,7 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
             ));
           },
           backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
-          child: const Icon(Icons.upload_file),
+          child: const Icon(Icons.home),
         ));
   }
 
