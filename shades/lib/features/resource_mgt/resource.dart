@@ -250,11 +250,16 @@ class MywidgetState extends State<Resourceoperations> {
                     final String subjectCode = _subjectCodeController.text;
                     final String description = _descriptionController.text;
 
-                    await _resources.doc(documentSnapshot!.id).update({
-                      'resourceName': resourceName,
-                      'subjectCode': subjectCode,
-                      'description': description,
-                    });
+                    if (documentSnapshot != null) {
+                      await _resources.doc(documentSnapshot.id).update({
+                        'resourceName': resourceName,
+                        'subjectCode': subjectCode,
+                        'description': description,
+                      });
+                    } else {
+                      // Handle the case where documentSnapshot or its id is null
+                    }
+
                     _resourceNameController.text = "";
                     _subjectCodeController.text = "";
                     _descriptionController.text = "";
