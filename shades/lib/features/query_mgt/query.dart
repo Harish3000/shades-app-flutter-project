@@ -471,8 +471,8 @@ class MyWidgetState extends State<QueryOperations> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _create(),
-        backgroundColor: const Color.fromARGB(255, 88, 168, 243),
-        child: const Icon(Icons.add),
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+        child: Image.asset('assets/module/plus.png'),
       ),
     );
   }
