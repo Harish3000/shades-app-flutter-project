@@ -409,6 +409,7 @@ class MyWidgetState extends State<QueryOperations> {
                                           color:
                                               Color.fromARGB(255, 79, 108, 251),
                                           fontSize: 12,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ],
@@ -418,19 +419,19 @@ class MyWidgetState extends State<QueryOperations> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             IconButton(
+                                              icon: Icon(Icons.edit_square),
+                                              iconSize: 25,
+                                              color: Colors.blue,
+                                              onPressed: () =>
+                                                  _update(documentSnapshot),
+                                            ),
+                                            IconButton(
                                               icon: Icon(
                                                   Icons.delete_forever_rounded),
                                               iconSize: 30,
                                               color: Colors.red,
                                               onPressed: () =>
                                                   _delete(documentSnapshot),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(Icons.edit_square),
-                                              iconSize: 25,
-                                              color: Colors.blue,
-                                              onPressed: () =>
-                                                  _update(documentSnapshot),
                                             ),
                                           ],
                                         )
