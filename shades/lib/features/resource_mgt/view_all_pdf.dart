@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:shades/features/resource_mgt/download_success.dart';
 import 'package:shades/features/resource_mgt/resource.dart';
 
@@ -87,7 +88,8 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
                             icon: const Icon(Icons.cloud_download_sharp,
                                 size: 35),
                             onPressed: () {
-                              downloadAndOpenPdf(pdfList[index]['url']);
+                              downloadAndOpenPdf(pdfList[index]['url'],
+                                  pdfList[index]['fileName']);
                             },
                           ),
                         ],
@@ -107,7 +109,7 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
         ));
   }
 
-  void downloadAndOpenPdf(String pdfUrl) async {
+  void downloadAndOpenPdf(String pdfUrl, String fileName) async {
     try {
       setState(() {
         // Set a flag to indicate that download is in progress
@@ -116,17 +118,15 @@ class _ViewPdfFormState extends State<ViewPdfForm> {
       var response = await http.get(Uri.parse(pdfUrl));
       if (response.statusCode == 200) {
         var time = DateTime.now().millisecondsSinceEpoch;
-        var path = '/storage/emulated/0/Download/pdf-$time.pdf';
+        var path = '/storage/emulated/0/Download/$fileName-$time.pdf';
         var file = File(path);
         await file.writeAsBytes(response.bodyBytes);
         print('File downloaded to: $path');
 
-        // Open the downloaded PDF
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const DownloadSuccess(
-              // pdfurl: path,
-              ),
+          builder: (context) => const DownloadSuccess(),
         ));
+        // });
       } else {
         print(
             'Failed to download the file. Status code: ${response.statusCode}');

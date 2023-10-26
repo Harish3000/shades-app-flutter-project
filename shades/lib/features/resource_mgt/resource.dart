@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 
 import 'package:shades/features/resource_mgt/view_all_pdf.dart';
 import 'package:shades/features/resource_mgt/report_resource.dart';
 import 'package:shades/features/resource_mgt/upload_success.dart';
-import 'package:easy_pdf_viewer/easy_pdf_viewer.dart';
 
 class Resourceoperations extends StatefulWidget {
   const Resourceoperations({super.key});
@@ -148,33 +146,35 @@ class MywidgetState extends State<Resourceoperations> {
                 const SizedBox(
                   height: 20,
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    final String resourceName = _resourceNameController.text;
-                    final String subjectCode = _subjectCodeController.text;
-                    final String description = _descriptionController.text;
-                    final fileName =
-                        "$resourceName-$subjectCode-${DateTime.now().millisecondsSinceEpoch}";
-                    pickFileAndUpload(fileName);
-                    await _resources.add({
-                      'resourceName': resourceName,
-                      'subjectCode': subjectCode,
-                      'description': description,
-                      'fileName': fileName,
-                    });
-                    _resourceNameController.text = "";
-                    _subjectCodeController.text = "";
-                    _descriptionController.text = "";
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final String resourceName = _resourceNameController.text;
+                      final String subjectCode = _subjectCodeController.text;
+                      final String description = _descriptionController.text;
+                      final fileName =
+                          "$resourceName-$subjectCode-${DateTime.now().millisecondsSinceEpoch}";
+                      pickFileAndUpload(fileName);
+                      await _resources.add({
+                        'resourceName': resourceName,
+                        'subjectCode': subjectCode,
+                        'description': description,
+                        'fileName': fileName,
+                      });
+                      _resourceNameController.text = "";
+                      _subjectCodeController.text = "";
+                      _descriptionController.text = "";
 
-                    Navigator.of(context).pop();
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Center(
-                        widthFactor: 2.5,
-                        child: Text("Create",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold))),
+                      Navigator.of(context).pop();
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Center(
+                          widthFactor: 2.5,
+                          child: Text("Create",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold))),
+                    ),
                   ),
                 )
               ],
@@ -244,35 +244,37 @@ class MywidgetState extends State<Resourceoperations> {
                 const SizedBox(
                   height: 20,
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    final String resourceName = _resourceNameController.text;
-                    final String subjectCode = _subjectCodeController.text;
-                    final String description = _descriptionController.text;
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final String resourceName = _resourceNameController.text;
+                      final String subjectCode = _subjectCodeController.text;
+                      final String description = _descriptionController.text;
 
-                    if (documentSnapshot != null) {
-                      await _resources.doc(documentSnapshot.id).update({
-                        'resourceName': resourceName,
-                        'subjectCode': subjectCode,
-                        'description': description,
-                      });
-                    } else {
-                      // Handle the case where documentSnapshot or its id is null
-                    }
+                      if (documentSnapshot != null) {
+                        await _resources.doc(documentSnapshot.id).update({
+                          'resourceName': resourceName,
+                          'subjectCode': subjectCode,
+                          'description': description,
+                        });
+                      } else {
+                        // Handle the case where documentSnapshot or its id is null
+                      }
 
-                    _resourceNameController.text = "";
-                    _subjectCodeController.text = "";
-                    _descriptionController.text = "";
+                      _resourceNameController.text = "";
+                      _subjectCodeController.text = "";
+                      _descriptionController.text = "";
 
-                    Navigator.of(context).pop();
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Center(
-                        widthFactor: 2.5,
-                        child: Text("Update",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold))),
+                      Navigator.of(context).pop();
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Center(
+                          widthFactor: 2.5,
+                          child: Text("Update",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold))),
+                    ),
                   ),
                 )
               ],
