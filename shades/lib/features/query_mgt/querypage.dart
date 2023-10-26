@@ -314,13 +314,32 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '@ user_$displayUserID',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.grey,
-                            ),
+                          FutureBuilder(
+                            future: FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(
+                                    userID) // Assuming userID is accessible in this context
+                                .get(),
+                            builder: (context,
+                                AsyncSnapshot<DocumentSnapshot> userSnapshot) {
+                              if (userSnapshot.hasData &&
+                                  userSnapshot.data != null) {
+                                final Map<String, dynamic> userData =
+                                    userSnapshot.data!.data()
+                                        as Map<String, dynamic>;
+                                final String username =
+                                    userData['username'] ?? '';
+                                return Text(
+                                  "@ $username", // Add '@' in front of the username
+                                  style: TextStyle(
+                                    color: Color(0xFF146C94),
+                                    fontSize: 14,
+                                  ),
+                                );
+                              } else {
+                                return Container();
+                              }
+                            },
                           ),
                           SizedBox(height: 20),
                           Row(
