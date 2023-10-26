@@ -133,7 +133,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                               Text(
                                 '${widget.queryName}',
                                 style: TextStyle(
-                                  fontSize: 25,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -143,7 +143,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                                     TextStyle(fontSize: 10, color: Colors.grey),
                               ),
                               Text(
-                                '${widget.description}\n',
+                                '${widget.description}\n\n',
                                 style: TextStyle(fontSize: 15),
                               ),
                               Text(
@@ -162,7 +162,6 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                 ),
               ],
             ),
-            SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -195,7 +194,6 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                 ),
               ],
             ),
-            SizedBox(height: 16),
             Visibility(
               visible: showAddAnswerSection,
               child: FadeTransition(
