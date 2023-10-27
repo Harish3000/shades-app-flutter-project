@@ -369,7 +369,7 @@ class MywidgetState extends State<Moduleoperations> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Search'),
-        backgroundColor: Color.fromARGB(255, 220, 226, 228),
+        backgroundColor: Color.fromARGB(255, 235, 238, 240),
         leading: Image.asset('assets/module/logo.png', width: 15, height: 15),
         actions: [
           Padding(
