@@ -348,20 +348,32 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                                 },
                                 child: Image.asset(
                                   'assets/query/like.png',
-                                  width: 25,
-                                  height: 25,
+                                  width: 28,
+                                  height: 28,
                                 ),
                               ),
-                              Text('  $likes      '),
+                              Text(
+                                '  $likes       ',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                    color: Color(0xFF146C94)),
+                              ),
                               IconButton(
                                 icon: Icon(Icons.flag_circle_rounded,
-                                    size: 30,
+                                    size: 32,
                                     color: Color.fromARGB(255, 255, 122, 122)),
                                 onPressed: () {
                                   _reportAnswer(answerId);
                                 },
                               ),
-                              Text('Report'),
+                              Text(
+                                'Report',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                    color: Color(0xFF146C94)),
+                              ),
                             ],
                           ),
                           if (hasIssues)
