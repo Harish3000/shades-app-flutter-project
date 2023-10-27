@@ -347,7 +347,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                                   _updateLikes(answerId);
                                 },
                                 child: Image.asset(
-                                  'assets/query/like.png',
+                                  'assets/query/dislike.jpg',
                                   width: 25,
                                   height: 25,
                                 ),
