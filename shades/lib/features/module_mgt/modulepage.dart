@@ -41,6 +41,33 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
     return '';
   }
 
+  void showAdvertisementPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Advertisement"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Image.asset('assets/module/ads.jpg'),
+              Text(
+                  "Hard work, patience and just little bit of luck is all you need to win the day over!"),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final double ratingValue = double.tryParse(widget.ratings) ?? 0.0;
@@ -355,6 +382,13 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showAdvertisementPopup(context); // Show the advertisement popup
+        },
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+        child: Icon(Icons.card_giftcard),
       ),
     );
   }

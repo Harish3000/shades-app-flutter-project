@@ -47,7 +47,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
                 );
               },
               child: CircleAvatar(
-                radius: 25,
+                radius: 20,
                 backgroundImage:
                     AssetImage('assets/community/profile images/pp.png'),
               ),
