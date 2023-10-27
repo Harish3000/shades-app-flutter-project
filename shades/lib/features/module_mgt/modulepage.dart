@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ModuleDetailPage extends StatefulWidget {
@@ -21,10 +22,95 @@ class ModuleDetailPage extends StatefulWidget {
 class _ModuleDetailPageState extends State<ModuleDetailPage> {
   bool isAddingReview = false;
 
+  String getCurrentUserId() {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String userId = user?.uid ?? '';
+    return userId;
+  }
+
+  Future<String> getCurrentUsername() async {
+    final String userId = getCurrentUserId();
+    if (userId.isNotEmpty) {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      final String username = userDoc['username'];
+      return username;
+    }
+    return '';
+  }
+
+  void showAdvertisementPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          child: Stack(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Image.asset(
+                      'assets/module/ads.jpg',
+                      width: 400,
+                      height: 400,
+                    ),
+                    SizedBox(height: 8.0),
+                    Text(
+                      "Looking forward to studying together and exploring the depths of knowledge like the sea ",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 16.0),
+                  ],
+                ),
+              ),
+              Positioned(
+                right: 0.0,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: CircleAvatar(
+                      radius: 12.0,
+                      backgroundColor: const Color.fromARGB(255, 124, 123, 123),
+                      child: Icon(
+                        Icons.cancel,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final double ratingValue = double.tryParse(widget.ratings) ?? 0.0;
     final int filledStars = (ratingValue / 5 * 5).round();
+    // ignore: unused_local_variable
     final int emptyStars = 5 - filledStars;
 
     final TextEditingController reviewController = TextEditingController();
@@ -68,7 +154,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.asset(
-                      'assets/module/module.jpg',
+                      'assets/module/gg.gif',
                       width: 500,
                       height: 200,
                       fit: BoxFit.cover,
@@ -156,63 +242,73 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
                     final likes = reviewData['likes'] ?? 0;
                     final dislikes = reviewData['dislikes'] ?? 0;
 
-                    return Card(
-                      elevation: 2,
-                      color: Colors.white,
-                      margin: EdgeInsets.symmetric(vertical: 8),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            title: Text('Review by $userName'),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.star, color: Colors.orange),
-                                    Text('Rating: $rating'),
-                                  ],
-                                ),
-                                Text('Reviews: $comment'),
-                                Row(
-                                  children: [
-                                    InkWell(
-                                      child: Image.asset(
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Card(
+                        elevation: 4,
+                        color: Color.fromARGB(255, 238, 237, 237),
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        child: Column(
+                          children: [
+                            ListTile(
+                              title: Text('Review by $userName'),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        'assets/module/favourite.png',
+                                        width: 15.0,
+                                        height: 15.0,
+                                      ),
+                                      Text(' Rating: $rating'),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text('Reviews: $comment'),
+                                  Row(
+                                    children: [
+                                      InkWell(
+                                        child: Image.asset(
                                           'assets/module/heart.png',
                                           width: 16,
-                                          height: 16),
-                                      onTap: () {
-                                        FirebaseFirestore.instance
-                                            .collection('module_reviews')
-                                            .doc(reviewId)
-                                            .update({
-                                          'likes': likes + 1,
-                                        });
-                                      },
-                                    ),
-                                    Text(' Likes: $likes'),
-                                    IconButton(
-                                      icon: Image.asset(
-                                        'assets/module/broken-heart.png',
-                                        width: 19,
-                                        height: 16,
+                                          height: 16,
+                                        ),
+                                        onTap: () {
+                                          FirebaseFirestore.instance
+                                              .collection('module_reviews')
+                                              .doc(reviewId)
+                                              .update({
+                                            'likes': likes + 1,
+                                          });
+                                        },
                                       ),
-                                      onPressed: () {
-                                        FirebaseFirestore.instance
-                                            .collection('module_reviews')
-                                            .doc(reviewId)
-                                            .update({
-                                          'dislikes': dislikes + 1,
-                                        });
-                                      },
-                                    ),
-                                    Text('Dislikes: $dislikes'),
-                                  ],
-                                ),
-                              ],
+                                      Text(' Likes: $likes'),
+                                      IconButton(
+                                        icon: Image.asset(
+                                          'assets/module/broken-heart.png',
+                                          width: 19,
+                                          height: 16,
+                                        ),
+                                        onPressed: () {
+                                          FirebaseFirestore.instance
+                                              .collection('module_reviews')
+                                              .doc(reviewId)
+                                              .update({
+                                            'dislikes': dislikes + 1,
+                                          });
+                                        },
+                                      ),
+                                      Text('Dislikes: $dislikes'),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   }).toList(),
@@ -269,54 +365,54 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
                         ),
                       ),
                       ElevatedButton(
-                          onPressed: () {
-                            final String review = reviewController.text;
-                            final double rating =
-                                double.tryParse(ratingController.text) ?? 0.0;
+                        onPressed: () async {
+                          final String review = reviewController.text;
+                          final double rating =
+                              double.tryParse(ratingController.text) ?? 0.0;
+                          final String username = await getCurrentUsername();
 
-                            if (review.isNotEmpty &&
-                                rating >= 1 &&
-                                rating <= 5) {
-                              FirebaseFirestore.instance
-                                  .collection('module_reviews')
-                                  .add({
-                                'moduleName': widget.moduleName,
-                                'subjectCode': widget.subjectCode,
-                                'userName': 'Anonymous',
-                                'rating': rating,
-                                'reviews': review,
-                                'likes': 0,
-                                'dislikes': 0,
-                              });
+                          if (review.isNotEmpty && rating >= 1 && rating <= 5) {
+                            FirebaseFirestore.instance
+                                .collection('module_reviews')
+                                .add({
+                              'moduleName': widget.moduleName,
+                              'subjectCode': widget.subjectCode,
+                              'userName': username,
+                              'rating': rating,
+                              'reviews': review,
+                              'likes': 0,
+                              'dislikes': 0,
+                            });
 
-                              reviewController.clear();
-                              ratingController.clear();
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                      'Please enter a valid review and rating.'),
-                                ),
-                              );
-                            }
-                          },
-                          child: Text(
-                            'Submit Review',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 235, 235, 235),
+                            reviewController.clear();
+                            ratingController.clear();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    'Please enter a valid review and rating.'),
+                              ),
+                            );
+                          }
+                        },
+                        child: Text(
+                          'Submit Review',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 235, 235, 235),
+                          ),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                            Color.fromRGBO(20, 108, 148, 1),
+                          ),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
                           ),
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                              Color.fromRGBO(20, 108, 148, 1),
-                            ),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                          )),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -324,6 +420,13 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showAdvertisementPopup(context); // Show the advertisement popup
+        },
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+        child: Icon(Icons.card_giftcard),
       ),
     );
   }

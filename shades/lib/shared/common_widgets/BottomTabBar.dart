@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart'; // Add this import
 import 'package:shades/features/community_mgt/community.dart';
+import 'package:shades/features/community_mgt/user_profile.dart'; // Import the user profile page
 import 'package:shades/features/module_mgt/module.dart';
 import 'package:shades/features/query_mgt/query.dart';
 import 'package:shades/features/resource_mgt/resource.dart';
@@ -47,7 +48,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
                 );
               },
               child: CircleAvatar(
-                radius: 25,
+                radius: 20,
                 backgroundImage:
                     AssetImage('assets/community/profile images/pp.png'),
               ),
@@ -56,7 +57,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
             Text(
               _tabTitles[_currentIndex],
               style: const TextStyle(
-                fontSize: 30,
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
