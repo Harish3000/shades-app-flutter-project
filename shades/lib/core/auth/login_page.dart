@@ -15,12 +15,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool _isSigning = false;
+  final bool _isSigning = false;
 
   final FirebaseAuthService _auth = FirebaseAuthService();
 
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("Login"),
+        title: const Text("Login"),
       ),
       body: Center(
         child: Padding(
@@ -42,11 +42,11 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "Login",
                 style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               FormContainerWidget(
@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: "Email",
                 isPasswordField: false,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               FormContainerWidget(
@@ -62,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: "Password",
                 isPasswordField: true,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               GestureDetector(
@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Center(
+                  child: const Center(
                       child: Text(
                     "Login",
                     style: TextStyle(
@@ -82,14 +82,14 @@ class _LoginPageState extends State<LoginPage> {
                   )),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don't have an account?"),
-                  SizedBox(
+                  const Text("Don't have an account?"),
+                  const SizedBox(
                     width: 5,
                   ),
                   GestureDetector(
@@ -97,10 +97,10 @@ class _LoginPageState extends State<LoginPage> {
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SignUpPage()),
+                                builder: (context) => const SignUpPage()),
                             (route) => false);
                       },
-                      child: Text(
+                      child: const Text(
                         "Sign Up",
                         style: TextStyle(
                             color: Colors.blue, fontWeight: FontWeight.bold),

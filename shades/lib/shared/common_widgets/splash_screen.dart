@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Text(
           "Welcome to Shades",
           style: TextStyle(
-            color: Colors.blue,
+            // color: Colors.blue,
             fontWeight: FontWeight.bold,
           ),
         ),
