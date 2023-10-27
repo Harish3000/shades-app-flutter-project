@@ -68,12 +68,12 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
                       width: 400, // Adjust the size as needed
                       height: 400,
                     ),
-                    SizedBox(height: 16.0),
+                    SizedBox(height: 8.0),
                     Text(
-                      "Hard work, patience, and just a little bit of luck are all you need to win the day over!",
+                      "Looking forward to studying together and exploring the depths of knowledge like the sea ",
                       style: TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.normal,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(height: 16.0),
