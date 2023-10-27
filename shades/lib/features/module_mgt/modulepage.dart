@@ -45,24 +45,62 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Advertisement"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          child: Stack(
             children: <Widget>[
-              Image.asset('assets/module/ads.jpg'),
-              Text(
-                  "Hard work, patience and just little bit of luck is all you need to win the day over!"),
+              Container(
+                padding: EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Image.asset(
+                      'assets/module/ads.jpg',
+                      width: 400, // Adjust the size as needed
+                      height: 400,
+                    ),
+                    SizedBox(height: 16.0),
+                    Text(
+                      "Hard work, patience, and just a little bit of luck are all you need to win the day over!",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    SizedBox(height: 16.0),
+                  ],
+                ),
+              ),
+              Positioned(
+                right: 0.0,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: CircleAvatar(
+                      radius: 12.0,
+                      backgroundColor: const Color.fromARGB(255, 124, 123, 123),
+                      child: Icon(
+                        Icons.cancel,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
-          actions: <Widget>[
-            TextButton(
-              child: Text("Close"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
         );
       },
     );
@@ -72,6 +110,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
   Widget build(BuildContext context) {
     final double ratingValue = double.tryParse(widget.ratings) ?? 0.0;
     final int filledStars = (ratingValue / 5 * 5).round();
+    // ignore: unused_local_variable
     final int emptyStars = 5 - filledStars;
 
     final TextEditingController reviewController = TextEditingController();
