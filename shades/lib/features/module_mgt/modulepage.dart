@@ -65,7 +65,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
                   children: <Widget>[
                     Image.asset(
                       'assets/module/ads.jpg',
-                      width: 400, // Adjust the size as needed
+                      width: 400,
                       height: 400,
                     ),
                     SizedBox(height: 8.0),
@@ -243,8 +243,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
                     final dislikes = reviewData['dislikes'] ?? 0;
 
                     return ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                          20), // You can adjust the radius as needed
+                      borderRadius: BorderRadius.circular(20),
                       child: Card(
                         elevation: 4,
                         color: Color.fromARGB(255, 238, 237, 237),
