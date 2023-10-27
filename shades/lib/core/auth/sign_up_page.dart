@@ -2,9 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shades/core/auth/firebase_auth_services.dart';
-
 import 'package:shades/core/auth/login_page.dart';
-
 import 'package:shades/core/auth/form_container_widget.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -21,6 +19,8 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
+  bool _isLoading = false;
+
   @override
   void dispose() {
     _usernameController.dispose();
@@ -33,7 +33,8 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("SignUp"),
+        title: Text("Shades"),
+        backgroundColor: Color(0xFF146C94),
       ),
       body: Center(
         child: Padding(
@@ -50,7 +51,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               FormContainerWidget(
                 controller: _usernameController,
-                hintText: "Username",
+                hintText: "Username - (visible to others)",
                 isPasswordField: false,
               ),
               SizedBox(
@@ -58,7 +59,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               FormContainerWidget(
                 controller: _emailController,
-                hintText: "Email",
+                hintText: "Email - (use your university email)",
                 isPasswordField: false,
               ),
               SizedBox(
@@ -78,17 +79,32 @@ class _SignUpPageState extends State<SignUpPage> {
                   width: double.infinity,
                   height: 45,
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: Color(0xFF146C94),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
-                    child: Text(
-                      "Sign Up",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: _isLoading
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(),
+                              SizedBox(width: 10),
+                              Text(
+                                "Creating user..",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          )
+                        : Text(
+                            "Sign Up",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -113,7 +129,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     child: Text(
                       "Login",
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: Color(0xFF146C94),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -132,7 +148,40 @@ class _SignUpPageState extends State<SignUpPage> {
     String email = _emailController.text;
     String password = _passwordController.text;
 
+    if (!_isEmailValid(email) || !_isEmailAndPasswordFilled(email, password)) {
+      _showErrorSnackBar("Invalid email address or empty fields");
+      return;
+    }
+
+    if (!email.endsWith('@my.sliit.lk')) {
+      _showErrorSnackBar("Please use your university Email !");
+      return;
+    }
+
+    if (await _isEmailTaken(email)) {
+      _showErrorSnackBar("Email is already in use");
+      return;
+    }
+
+    if (await _isUsernameTaken(username)) {
+      _showErrorSnackBar("Username is already taken");
+      return;
+    }
+
+    if (!_isPasswordValid(password)) {
+      _showErrorSnackBar("Password must be more than 6 characters");
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
+
+    setState(() {
+      _isLoading = false;
+    });
 
     if (user != null) {
       await _addUserToFirestore(user.uid, username, email);
@@ -144,16 +193,65 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
+  bool _isEmailValid(String email) {
+    return RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$').hasMatch(email);
+  }
+
+  bool _isEmailAndPasswordFilled(String email, String password) {
+    return email.isNotEmpty && password.isNotEmpty;
+  }
+
+  bool _isPasswordValid(String password) {
+    return password.length >= 6;
+  }
+
+  Future<bool> _isEmailTaken(String email) async {
+    try {
+      var result = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+
+      return result.docs.isNotEmpty;
+    } catch (e) {
+      print("Error checking email existence: $e");
+      return false;
+    }
+  }
+
+  Future<bool> _isUsernameTaken(String username) async {
+    try {
+      var result = await FirebaseFirestore.instance
+          .collection('users')
+          .where('username', isEqualTo: username)
+          .get();
+
+      return result.docs.isNotEmpty;
+    } catch (e) {
+      print("Error checking username existence: $e");
+      return false;
+    }
+  }
+
   Future<void> _addUserToFirestore(
       String userId, String username, String email) async {
     try {
       await FirebaseFirestore.instance.collection('users').doc(userId).set({
         'username': username,
         'email': email,
-        // Add any other user details you want to store
+        'role': 'student',
       });
     } catch (e) {
       print("Error adding user to Firestore: $e");
     }
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 3),
+      ),
+    );
   }
 }

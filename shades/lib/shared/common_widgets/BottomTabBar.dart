@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:flutter/material.dart';
 import 'package:shades/features/community_mgt/community.dart';
 import 'package:shades/features/module_mgt/module.dart';
 import 'package:shades/features/query_mgt/query.dart';
 import 'package:shades/features/resource_mgt/resource.dart';
+import 'package:shades/features/community_mgt/user_profile.dart'; // Import the user profile page
 
 class BottomTabBar extends StatefulWidget {
   const BottomTabBar({Key? key}) : super(key: key);
@@ -16,12 +16,12 @@ class BottomTabBar extends StatefulWidget {
 class _BottomTabBarState extends State<BottomTabBar> {
   int _currentIndex = 0;
   final List<Widget> _tabs = [
-    Queryoperations(),
+    QueryOperations(),
     const Moduleoperations(),
-    const Communityoperations(),
     const Resourceoperations(),
+    CommunityOperations(),
   ];
-  List<String> _tabTitles = [
+  final List<String> _tabTitles = [
     'Query',
     'Module',
     'Resource',
@@ -34,19 +34,38 @@ class _BottomTabBarState extends State<BottomTabBar> {
       body: _tabs[_currentIndex],
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(
-          _tabTitles[_currentIndex],
-          style: const TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: const Color.fromARGB(255, 0, 3, 3),
+        backgroundColor: Color(0xFF146C94),
         elevation: 0,
+        title: Row(
+          children: [
+            InkWell(
+              onTap: () {
+                // Navigate to user profile page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserProfilePage()),
+                );
+              },
+              child: CircleAvatar(
+                radius: 25,
+                backgroundImage:
+                    AssetImage('assets/community/profile images/pp.png'),
+              ),
+            ),
+            SizedBox(width: 10), // Add spacing between profile image and title
+            Text(
+              _tabTitles[_currentIndex],
+              style: const TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
-            icon: Icon(Icons.exit_to_app),
+            icon: const Icon(Icons.exit_to_app),
             onPressed: () async {
               // Firebase sign-out code
               await FirebaseAuth.instance.signOut();
@@ -66,26 +85,25 @@ class _BottomTabBarState extends State<BottomTabBar> {
             _currentIndex = index;
           });
         },
-        items: [
+        items: const [
           BottomNavigationBarItem(
-            backgroundColor: Colors.pink,
-            icon: Icon(Icons.question_answer), // Customize the icon for Query
+            backgroundColor: Color(0xFF146C94),
+            icon: Icon(Icons.question_answer),
             label: 'Query',
           ),
           BottomNavigationBarItem(
-            backgroundColor: Colors.teal,
-            icon: Icon(Icons.apps), // Customize the icon for Modules
+            backgroundColor: Color(0xFF146C94),
+            icon: Icon(Icons.apps),
             label: 'Modules',
           ),
           BottomNavigationBarItem(
-            backgroundColor: Colors.blueGrey,
-            icon: Icon(
-                Icons.book_online_sharp), // Customize the icon for Resources
+            backgroundColor: Color(0xFF146C94),
+            icon: Icon(Icons.book_online_sharp),
             label: 'Resources',
           ),
           BottomNavigationBarItem(
-            backgroundColor: Colors.purple,
-            icon: Icon(Icons.group), // Customize the icon for Community
+            backgroundColor: Color(0xFF146C94),
+            icon: Icon(Icons.group),
             label: 'Community',
           ),
         ],
