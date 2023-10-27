@@ -96,23 +96,23 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
             color: Colors.white,
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 2, 4, 10),
+        backgroundColor: Color(0xFF146C94),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Stack(
               children: [
                 Image.asset(
-                  'assets/query/test3.gif',
+                  'assets/query/test55.gif',
                   width: double.infinity,
-                  height: 400,
+                  height: 350,
                   fit: BoxFit.cover,
                 ),
                 Positioned(
-                  top: 200,
+                  top: 120,
                   left: 2,
                   right: 2,
                   child: Card(
@@ -344,26 +344,36 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  _updateLikes(answerId, likes + 1);
+                                  _updateLikes(answerId);
                                 },
                                 child: Image.asset(
-                                  'assets/query/like.png', // Replace with the correct path to your image
-                                  width:
-                                      25, // Set the width according to your design
-                                  height:
-                                      25, // Set the height according to your design
+                                  'assets/query/like.png',
+                                  width: 28,
+                                  height: 28,
                                 ),
                               ),
-                              Text('  $likes      '),
+                              Text(
+                                '  $likes       ',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                    color: Color(0xFF146C94)),
+                              ),
                               IconButton(
                                 icon: Icon(Icons.flag_circle_rounded,
-                                    size: 30,
+                                    size: 32,
                                     color: Color.fromARGB(255, 255, 122, 122)),
                                 onPressed: () {
                                   _reportAnswer(answerId);
                                 },
                               ),
-                              Text('Report'),
+                              Text(
+                                'Report',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                    color: Color(0xFF146C94)),
+                              ),
                             ],
                           ),
                           if (hasIssues)
@@ -478,11 +488,38 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
     });
   }
 
-  void _updateLikes(String answerId, int newLikes) async {
-    await FirebaseFirestore.instance
-        .collection('query_answers')
-        .doc(answerId)
-        .update({'likes': newLikes});
+  void _updateLikes(String answerId) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final currentUserId = currentUser?.uid ?? 'Anonymous';
+
+    final likesSnapshot = await FirebaseFirestore.instance
+        .collection('query_answer_likes')
+        .where('answerId', isEqualTo: answerId)
+        .where('userID', isEqualTo: currentUserId)
+        .get();
+
+    if (likesSnapshot.docs.isNotEmpty) {
+      // Remove the entry from query_answer_likes
+      await likesSnapshot.docs.first.reference.delete();
+
+      // Decrease 'likes' count in query_answers
+      await FirebaseFirestore.instance
+          .collection('query_answers')
+          .doc(answerId)
+          .update({'likes': FieldValue.increment(-1)});
+    } else {
+      // Add entry to query_answer_likes
+      await FirebaseFirestore.instance.collection('query_answer_likes').add({
+        'answerId': answerId,
+        'userID': currentUserId,
+      });
+
+      // Increase 'likes' count in query_answers
+      await FirebaseFirestore.instance
+          .collection('query_answers')
+          .doc(answerId)
+          .update({'likes': FieldValue.increment(1)});
+    }
 
     _getAndSortAnswers();
   }
@@ -501,12 +538,12 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
 
   void _submitAnswer(String answer) async {
     final currentUser = FirebaseAuth.instance.currentUser;
-    final userID = currentUser?.uid ?? 'Anonymous';
+    final userId = currentUser?.uid ?? 'Anonymous';
 
     await FirebaseFirestore.instance.collection('query_answers').add({
       'queryName': widget.queryName,
       'queryCode': widget.queryCode,
-      'userID': userID,
+      'userID': userId,
       'answer': answer,
       'likes': 0,
       'dislikes': 0,

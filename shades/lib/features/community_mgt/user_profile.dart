@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'ContributionPage.dart';
-import 'InvitePage.dart';
+import 'MyQuestions.dart';
 import 'BadgesPage.dart';
 import 'AboutPage.dart';
 
@@ -12,9 +12,9 @@ class UserProfilePage extends StatefulWidget {
 }
 
 class _UserProfilePageState extends State<UserProfilePage> {
-  late String _username;
-  late String _email;
-  late String _profileImageURL;
+  late String _username = '';
+  late String _email = '';
+  late String _profileImageURL = 'assets/community/profile images/pp.png';
   late String _role = ''; // Variable to store user's role
 
   @override
@@ -22,6 +22,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     super.initState();
     _email = ''; // Initialize _email here
     _role = ''; // Initialize _role here
+
     _loadUserData();
   }
 
@@ -30,8 +31,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
     setState(() {
       _username = (userData['username'] ?? '');
       _email = userData['email'] ?? '';
-      _profileImageURL = 'assets/community/profile images/pp.png';
-      _role = userData['role'] ?? ''; // Retrieve user's role from data
+      _profileImageURL = userData['profileImageURL'] ??
+          'assets/community/profile images/pp.png'; // Initialize _profileImageURL here
+      _role = userData['role'] ?? '';
     });
   }
 
@@ -56,7 +58,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       imageName = 'badge.png';
     } else if (title.contains('Contributor')) {
       imageName = 'contribute.png';
-    } else if (title.contains('Invite')) {
+    } else if (title.contains('Questions')) {
       imageName = 'invite.png';
     }
 
@@ -199,13 +201,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           builder: (context) => ContributorPage()),
                     );
                   }),
-                  _buildProfileOption(
-                      'Invite a Friend',
-                      'Share the application among your friends',
-                      Color(0xFFF6F1F1), () {
+                  _buildProfileOption('My Questions',
+                      'Find all your questions here', Color(0xFFF6F1F1), () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => InvitePage()),
+                      MaterialPageRoute(builder: (context) => MyQuestions()),
                     );
                   }),
                   _buildProfileOption('Badges',

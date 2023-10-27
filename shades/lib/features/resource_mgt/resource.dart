@@ -550,6 +550,7 @@ class MywidgetState extends State<Resourceoperations> {
                                             Row(
                                               children: [
                                                 IconButton(
+                                                  color: Colors.blue,
                                                   iconSize: 28,
                                                   icon: const Icon(Icons.edit),
                                                   onPressed: () =>
@@ -617,8 +618,8 @@ class MywidgetState extends State<Resourceoperations> {
         onPressed: () {
           _create();
         },
-        backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
-        child: const Icon(Icons.upload_file),
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+        child: Image.asset('assets/module/cloud.png'),
       ),
     );
   }
