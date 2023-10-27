@@ -33,7 +33,8 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("SignUp"),
+        title: Text("Shades"),
+        backgroundColor: Color(0xFF146C94),
       ),
       body: Center(
         child: Padding(
@@ -78,7 +79,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   width: double.infinity,
                   height: 45,
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: Color(0xFF146C94),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
@@ -128,7 +129,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     child: Text(
                       "Login",
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: Color(0xFF146C94),
                         fontWeight: FontWeight.bold,
                       ),
                     ),

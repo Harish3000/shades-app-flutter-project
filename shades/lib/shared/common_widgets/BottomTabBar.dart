@@ -21,7 +21,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
     const Resourceoperations(),
     CommunityOperations(),
   ];
-  List<String> _tabTitles = [
+  final List<String> _tabTitles = [
     'Query',
     'Module',
     'Resource',
@@ -34,7 +34,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
       body: _tabs[_currentIndex],
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xFF146C94),
+        backgroundColor: Color(0xFF146C94),
         elevation: 0,
         title: Row(
           children: [
@@ -65,7 +65,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.exit_to_app),
+            icon: const Icon(Icons.exit_to_app),
             onPressed: () async {
               // Firebase sign-out code
               await FirebaseAuth.instance.signOut();
@@ -85,19 +85,19 @@ class _BottomTabBarState extends State<BottomTabBar> {
             _currentIndex = index;
           });
         },
-        items: [
+        items: const [
           BottomNavigationBarItem(
-            backgroundColor: Colors.pink,
+            backgroundColor: Color(0xFF146C94),
             icon: Icon(Icons.question_answer),
             label: 'Query',
           ),
           BottomNavigationBarItem(
-            backgroundColor: Color.fromARGB(255, 0, 219, 248),
+            backgroundColor: Color(0xFF146C94),
             icon: Icon(Icons.apps),
             label: 'Modules',
           ),
           BottomNavigationBarItem(
-            backgroundColor: Colors.blueGrey,
+            backgroundColor: Color(0xFF146C94),
             icon: Icon(Icons.book_online_sharp),
             label: 'Resources',
           ),

@@ -158,7 +158,7 @@ class _QueryReportPageState extends State<QueryReportPage> {
                     children: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.blue,
+                          primary: Color(0xFF146C94),
                           onPrimary: Colors.white,
                           minimumSize: const Size(150, 50),
                           shape: RoundedRectangleBorder(

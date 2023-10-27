@@ -112,12 +112,16 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                   fit: BoxFit.cover,
                 ),
                 Positioned(
-                  top: 250,
-                  left: 5,
-                  right: 5,
+                  top: 200,
+                  left: 2,
+                  right: 2,
                   child: Card(
-                    elevation: 4,
+                    elevation: 8,
                     color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.black, width: 2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -127,19 +131,19 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '🎯${widget.queryName}',
+                                '${widget.queryName}',
                                 style: TextStyle(
-                                  fontSize: 25,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               Text(
-                                '             time: ${widget.queryCode}\n',
+                                'posted on: ${widget.queryCode}\n',
                                 style:
                                     TextStyle(fontSize: 10, color: Colors.grey),
                               ),
                               Text(
-                                'Description:\n ${widget.description}',
+                                '${widget.description}\n\n',
                                 style: TextStyle(fontSize: 15),
                               ),
                               Text(
@@ -158,7 +162,6 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                 ),
               ],
             ),
-            SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -176,15 +179,21 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                       style: TextStyle(fontSize: 16),
                     ),
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          const Color.fromARGB(255, 12, 13, 14)),
+                      backgroundColor:
+                          MaterialStateProperty.all(Color(0xFF146C94)),
                       minimumSize: MaterialStateProperty.all(Size(120, 40)),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side: BorderSide(
+                              color: Color(0xFF146C94)), // Border color
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 16),
             Visibility(
               visible: showAddAnswerSection,
               child: FadeTransition(
@@ -199,6 +208,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                       children: <Widget>[
                         TextFormField(
                           controller: answerController,
+                          maxLines: null,
                           decoration: InputDecoration(
                             labelText: 'Answer',
                             prefixIcon: Icon(Icons.comment),
@@ -229,8 +239,8 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                             ),
                           ),
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                const Color.fromARGB(255, 12, 13, 14)),
+                            backgroundColor:
+                                MaterialStateProperty.all(Color(0xFF146C94)),
                           ),
                         ),
                       ],
@@ -284,9 +294,13 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
 
               return Card(
                 key: ValueKey<String>(answerId),
-                elevation: 2,
+                elevation: 4,
                 color: Colors.white,
                 margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.black, width: 0.5),
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 child: Column(
                   children: [
                     ListTile(
@@ -298,27 +312,53 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '@ user_$displayUserID',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.grey,
-                            ),
+                          FutureBuilder(
+                            future: FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(
+                                    userID) // Assuming userID is accessible in this context
+                                .get(),
+                            builder: (context,
+                                AsyncSnapshot<DocumentSnapshot> userSnapshot) {
+                              if (userSnapshot.hasData &&
+                                  userSnapshot.data != null) {
+                                final Map<String, dynamic> userData =
+                                    userSnapshot.data!.data()
+                                        as Map<String, dynamic>;
+                                final String username =
+                                    userData['username'] ?? '';
+                                return Text(
+                                  "@ $username", // Add '@' in front of the username
+                                  style: TextStyle(
+                                    color: Color(0xFF146C94),
+                                    fontSize: 14,
+                                  ),
+                                );
+                              } else {
+                                return Container();
+                              }
+                            },
                           ),
+                          SizedBox(height: 20),
                           Row(
                             children: [
-                              IconButton(
-                                icon: Icon(Icons.favorite,
-                                    color: Color.fromARGB(255, 177, 177, 177)),
-                                onPressed: () {
+                              GestureDetector(
+                                onTap: () {
                                   _updateLikes(answerId, likes + 1);
                                 },
+                                child: Image.asset(
+                                  'assets/query/like.png', // Replace with the correct path to your image
+                                  width:
+                                      25, // Set the width according to your design
+                                  height:
+                                      25, // Set the height according to your design
+                                ),
                               ),
-                              Text('$likes      '),
+                              Text('  $likes      '),
                               IconButton(
                                 icon: Icon(Icons.flag_circle_rounded,
-                                    color: Color.fromARGB(255, 124, 117, 117)),
+                                    size: 30,
+                                    color: Color.fromARGB(255, 255, 122, 122)),
                                 onPressed: () {
                                   _reportAnswer(answerId);
                                 },
@@ -366,7 +406,8 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
 
     return canDelete
         ? IconButton(
-            icon: Icon(Icons.delete_forever_rounded),
+            icon:
+                Icon(Icons.delete_forever_rounded, color: Colors.red, size: 30),
             onPressed: () => _deleteAnswer(answerId),
           )
         : null;

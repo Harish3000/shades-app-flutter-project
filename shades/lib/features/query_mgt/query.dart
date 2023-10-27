@@ -304,18 +304,30 @@ class MyWidgetState extends State<QueryOperations> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchController,
-              onChanged: (value) {
-                setState(() {}); // Trigger a rebuild when the user types
-              },
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: '  Search Query...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Card(
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: ListTile(
+                leading: Image.asset(
+                  'assets/module/logo.png',
+                  width: 30,
+                  height: 30,
+                ),
+                title: Container(
+                  constraints: BoxConstraints(maxWidth: 200),
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: (value) {
+                      setState(() {});
+                    },
+                    decoration: InputDecoration(
+                      hintText: ' Search Query...',
+                      border: InputBorder.none,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -369,64 +381,107 @@ class MyWidgetState extends State<QueryOperations> {
                                 elevation: 5,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15),
+                                  side:
+                                      BorderSide(width: 3, color: Colors.black),
                                 ),
                                 child: ListTile(
                                   contentPadding: EdgeInsets.all(16),
-                                  leading: Icon(Icons.my_library_books_rounded,
-                                      size: 40),
-                                  title: Text(
-                                    documentSnapshot['queryName'].toString(),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                    ),
+                                  leading: Image.asset(
+                                    'assets/query/query2.png',
+                                    width: 60,
+                                    height: 60,
                                   ),
-                                  subtitle: Column(
+                                  title: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "@${_formatDate(documentSnapshot['queryCode'].toString())}",
+                                        documentSnapshot['queryName']
+                                            .toString(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 19,
+                                        ),
+                                      ),
+                                      FutureBuilder(
+                                        future: FirebaseFirestore.instance
+                                            .collection('users')
+                                            .doc(documentSnapshot['userID'])
+                                            .get(),
+                                        builder: (context,
+                                            AsyncSnapshot<DocumentSnapshot>
+                                                userSnapshot) {
+                                          if (userSnapshot.hasData &&
+                                              userSnapshot.data != null) {
+                                            final Map<String, dynamic>
+                                                userData =
+                                                userSnapshot.data!.data()
+                                                    as Map<String, dynamic>;
+                                            final String username =
+                                                userData['username'] ?? '';
+                                            return Text(
+                                              "@ $username", // Add '@' in front of the username
+                                              style: TextStyle(
+                                                color: Color(0xFF146C94),
+                                                fontSize: 14,
+                                              ),
+                                            );
+                                          } else {
+                                            return Container();
+                                          }
+                                        },
+                                      ),
+                                      SizedBox(height: 30),
+                                      Text(
+                                        "${documentSnapshot['tags'].toString()}",
                                         style: TextStyle(
                                           color: Color.fromARGB(
-                                              202, 178, 178, 178),
-                                          fontSize: 10,
+                                              255, 122, 143, 247),
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       Text(
-                                        "${documentSnapshot['userID'].toString().substring(0, 4)}",
+                                        "- posted on : ${_formatDate(documentSnapshot['queryCode'].toString())} -",
                                         style: TextStyle(
                                           color: Color.fromARGB(
-                                              202, 178, 178, 178),
-                                          fontSize: 10,
-                                        ),
-                                      ),
-                                      Text(
-                                        "# ${documentSnapshot['tags'].toString()}",
-                                        style: TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 79, 108, 251),
-                                          fontSize: 12,
+                                              201, 107, 107, 107),
+                                          fontSize: 11,
                                         ),
                                       ),
                                     ],
                                   ),
                                   trailing: canEditDelete
-                                      ? Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            IconButton(
-                                              icon: Icon(
-                                                  Icons.delete_forever_rounded),
-                                              onPressed: () =>
-                                                  _delete(documentSnapshot),
+                                      ? PopupMenuButton<String>(
+                                          icon: Icon(Icons.more_vert,
+                                              size: 30,
+                                              color: Color(0xFF146C94)),
+                                          itemBuilder: (BuildContext context) =>
+                                              <PopupMenuEntry<String>>[
+                                            PopupMenuItem<String>(
+                                              value: 'edit',
+                                              child: ListTile(
+                                                title: Text('Edit',
+                                                    style: TextStyle(
+                                                        fontSize: 20)),
+                                              ),
                                             ),
-                                            IconButton(
-                                              icon: Icon(Icons.edit_square),
-                                              onPressed: () =>
-                                                  _update(documentSnapshot),
+                                            PopupMenuItem<String>(
+                                              value: 'delete',
+                                              child: ListTile(
+                                                title: Text('Delete',
+                                                    style: TextStyle(
+                                                        fontSize: 20)),
+                                              ),
                                             ),
                                           ],
+                                          onSelected: (String value) {
+                                            if (value == 'edit') {
+                                              _update(documentSnapshot);
+                                            } else if (value == 'delete') {
+                                              _delete(documentSnapshot);
+                                            }
+                                          },
                                         )
                                       : null,
                                   onTap: () {
@@ -471,8 +526,8 @@ class MyWidgetState extends State<QueryOperations> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _create(),
-        backgroundColor: const Color.fromARGB(255, 88, 168, 243),
-        child: const Icon(Icons.add),
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+        child: Image.asset('assets/module/plus.png'),
       ),
     );
   }

@@ -9,23 +9,25 @@ import 'shared/common_widgets/BottomTabBar.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Firebase',
-      home: SplashScreen(
+      home: const SplashScreen(
         child: LoginPage(),
       ),
       routes: {
-        '/login': (context) => LoginPage(),
-        '/signUp': (context) => SignUpPage(),
+        '/login': (context) => const LoginPage(),
+        '/signUp': (context) => const SignUpPage(),
         '/home': (context) =>
-            BottomTabBar(), // Use the BottomTabBar widget here
+            const BottomTabBar(), // Use the BottomTabBar widget here
       },
     );
   }
