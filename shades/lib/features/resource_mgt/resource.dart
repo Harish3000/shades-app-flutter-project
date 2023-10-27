@@ -550,16 +550,18 @@ class MywidgetState extends State<Resourceoperations> {
                                             Row(
                                               children: [
                                                 IconButton(
-                                                  color: Colors.blue,
+                                                  color: const Color.fromRGBO(
+                                                      20, 108, 148, 1.000),
                                                   iconSize: 28,
                                                   icon: const Icon(Icons.edit),
                                                   onPressed: () =>
                                                       _update(documentSnapshot),
                                                 ),
                                                 IconButton(
+                                                  color: Colors.red,
                                                   iconSize: 28,
-                                                  icon:
-                                                      const Icon(Icons.delete),
+                                                  icon: const Icon(
+                                                      Icons.delete_forever),
                                                   onPressed: () =>
                                                       _delete(documentSnapshot),
                                                 ),
