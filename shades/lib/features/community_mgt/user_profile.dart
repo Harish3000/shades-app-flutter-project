@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'ContributionPage.dart';
-import 'InvitePage.dart';
+import 'MyQuestions.dart';
 import 'BadgesPage.dart';
 import 'AboutPage.dart';
 
@@ -56,7 +56,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       imageName = 'badge.png';
     } else if (title.contains('Contributor')) {
       imageName = 'contribute.png';
-    } else if (title.contains('Invite')) {
+    } else if (title.contains('Questions')) {
       imageName = 'invite.png';
     }
 
@@ -199,13 +199,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           builder: (context) => ContributorPage()),
                     );
                   }),
-                  _buildProfileOption(
-                      'Invite a Friend',
-                      'Share the application among your friends',
-                      Color(0xFFF6F1F1), () {
+                  _buildProfileOption('My Questions',
+                      'Find all your questions here', Color(0xFFF6F1F1), () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => InvitePage()),
+                      MaterialPageRoute(builder: (context) => MyQuestions()),
                     );
                   }),
                   _buildProfileOption('Badges',
