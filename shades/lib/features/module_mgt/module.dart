@@ -8,7 +8,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'modulepage.dart';
 
 class Moduleoperations extends StatefulWidget {
-  const Moduleoperations({Key? key});
+  const Moduleoperations({super.key});
 
   @override
   State<Moduleoperations> createState() => MywidgetState();
@@ -43,7 +43,7 @@ class MywidgetState extends State<Moduleoperations> {
     }
   }
 
-  Future<void> _create([DocumentSnapshot? documentSnapshot]) async {
+  Future<void> _create() async {
     double selectedRating = 0;
 
     await showModalBottomSheet(
@@ -61,17 +61,17 @@ class MywidgetState extends State<Moduleoperations> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
+              const Center(
                 child: Text(
                   "Insert Module Details",
                   style: TextStyle(
                     fontSize: 21,
                     fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 0, 0, 0),
+                    color: Color.fromARGB(255, 0, 0, 0),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _moduleNameController,
                 decoration: InputDecoration(
@@ -80,10 +80,10 @@ class MywidgetState extends State<Moduleoperations> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   filled: true,
-                  prefixIcon: Icon(Icons.school),
+                  prefixIcon: const Icon(Icons.school),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _subjectCodeController,
                 decoration: InputDecoration(
@@ -92,10 +92,10 @@ class MywidgetState extends State<Moduleoperations> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   filled: true,
-                  prefixIcon: Icon(Icons.code),
+                  prefixIcon: const Icon(Icons.code),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
@@ -104,11 +104,11 @@ class MywidgetState extends State<Moduleoperations> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   filled: true,
-                  prefixIcon: Icon(Icons.description),
+                  prefixIcon: const Icon(Icons.description),
                 ),
               ),
-              SizedBox(height: 16),
-              Text(
+              const SizedBox(height: 16),
+              const Text(
                 "Ratings:",
                 style: TextStyle(
                   fontSize: 18,
@@ -131,7 +131,7 @@ class MywidgetState extends State<Moduleoperations> {
                   selectedRating = rating;
                 },
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () async {
                   final String moduleName = _moduleNameController.text;
@@ -153,13 +153,13 @@ class MywidgetState extends State<Moduleoperations> {
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: const Color.fromARGB(255, 0, 0, 0),
-                  minimumSize: Size(double.infinity, 45),
+                  backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+                  minimumSize: const Size(double.infinity, 45),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(22),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   "Create",
                   style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
@@ -195,7 +195,7 @@ class MywidgetState extends State<Moduleoperations> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
+              const Center(
                 child: Text(
                   "Update Module Details",
                   style: TextStyle(
@@ -204,38 +204,38 @@ class MywidgetState extends State<Moduleoperations> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _moduleNameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Module Name",
                   border: OutlineInputBorder(),
                   filled: true,
                   prefixIcon: Icon(Icons.school),
                 ),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               TextFormField(
                 controller: _subjectCodeController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Subject Code",
                   border: OutlineInputBorder(),
                   filled: true,
                   prefixIcon: Icon(Icons.code),
                 ),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               TextFormField(
                 controller: _descriptionController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Description",
                   border: OutlineInputBorder(),
                   filled: true,
                   prefixIcon: Icon(Icons.description),
                 ),
               ),
-              SizedBox(height: 12),
-              Text("Ratings:"),
+              const SizedBox(height: 12),
+              const Text("Ratings:"),
               RatingBar.builder(
                 initialRating: selectedRating,
                 minRating: 1,
@@ -247,13 +247,13 @@ class MywidgetState extends State<Moduleoperations> {
                   'assets/module/star.png',
                   width: 30.0,
                   height: 30.0,
-                  color: Color.fromARGB(255, 248, 162, 3),
+                  color: const Color.fromARGB(255, 248, 162, 3),
                 ),
                 onRatingUpdate: (rating) {
                   selectedRating = rating;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
                   final String moduleName = _moduleNameController.text;
@@ -286,15 +286,15 @@ class MywidgetState extends State<Moduleoperations> {
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: const Color.fromARGB(255, 0, 0, 0),
-                  minimumSize: Size(double.infinity, 45),
+                  backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+                  minimumSize: const Size(double.infinity, 45),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(22),
                   ),
                 ),
                 child: Text(
                   documentSnapshot != null ? "Update" : "Create",
-                  style: TextStyle(fontSize: 20, color: Colors.white),
+                  style: const TextStyle(fontSize: 20, color: Colors.white),
                 ),
               )
             ],
@@ -309,7 +309,7 @@ class MywidgetState extends State<Moduleoperations> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          contentPadding: EdgeInsets.all(35),
+          contentPadding: const EdgeInsets.all(35),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(28),
           ),
@@ -321,8 +321,8 @@ class MywidgetState extends State<Moduleoperations> {
                 width: 140,
                 height: 140,
               ),
-              SizedBox(height: 10),
-              Text(
+              const SizedBox(height: 10),
+              const Text(
                 'Are you sure you want to delete this module?',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -336,10 +336,10 @@ class MywidgetState extends State<Moduleoperations> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(
+              child: const Text(
                 'Cancel',
                 style: TextStyle(
-                  color: const Color.fromARGB(
+                  color: Color.fromARGB(
                       255, 0, 0, 0), // You can customize the color here
                   fontWeight: FontWeight.bold,
                 ),
@@ -358,7 +358,7 @@ class MywidgetState extends State<Moduleoperations> {
                 await _modules.doc(documentSnapshot!.id).delete();
                 Navigator.of(context).pop();
               },
-              child: Text('Delete'),
+              child: const Text('Delete'),
             ),
           ],
         );
@@ -370,8 +370,8 @@ class MywidgetState extends State<Moduleoperations> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search'),
-        backgroundColor: Color.fromARGB(255, 235, 238, 240),
+        title: const Text('Search'),
+        backgroundColor: const Color.fromARGB(255, 235, 238, 240),
         leading: Image.asset('assets/module/logo.png', width: 15, height: 15),
         actions: [
           Padding(
@@ -384,11 +384,11 @@ class MywidgetState extends State<Moduleoperations> {
               ),
               child: Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
                     child: Icon(
                       Icons.search,
-                      color: const Color.fromARGB(255, 0, 0, 0),
+                      color: Color.fromARGB(255, 0, 0, 0),
                     ),
                   ),
                   Expanded(
@@ -397,16 +397,16 @@ class MywidgetState extends State<Moduleoperations> {
                       onChanged: (value) {
                         setState(() {});
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Search Modules',
                         border: InputBorder.none,
                       ),
                     ),
                   ),
                   IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.clear_all,
-                      color: const Color.fromARGB(255, 0, 0, 0),
+                      color: Color.fromARGB(255, 0, 0, 0),
                     ),
                     onPressed: () {
                       _searchController.clear();
@@ -460,14 +460,14 @@ class MywidgetState extends State<Moduleoperations> {
                         Container(
                           width: double.infinity,
                           height: 120,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(15),
                               topRight: Radius.circular(15),
                             ),
                           ),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(15),
                               topRight: Radius.circular(15),
                             ),
@@ -478,24 +478,24 @@ class MywidgetState extends State<Moduleoperations> {
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(16),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 documentSnapshot['moduleName'].toString(),
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
                                 ),
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Row(
                                 children: [
-                                  Text(
+                                  const Text(
                                     "Ratings : ",
                                     style: TextStyle(
-                                      color: const Color.fromARGB(255, 0, 0, 0),
+                                      color: Color.fromARGB(255, 0, 0, 0),
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -507,8 +507,8 @@ class MywidgetState extends State<Moduleoperations> {
                                     allowHalfRating: true,
                                     itemSize: 15,
                                     itemCount: 5,
-                                    itemPadding:
-                                        EdgeInsets.symmetric(horizontal: 4.0),
+                                    itemPadding: const EdgeInsets.symmetric(
+                                        horizontal: 4.0),
                                     itemBuilder: (context, _) => Image.asset(
                                       'assets/module/star.png',
                                       width: 15,
@@ -518,18 +518,18 @@ class MywidgetState extends State<Moduleoperations> {
                                   )
                                 ],
                               ),
-                              SizedBox(height: 5),
+                              const SizedBox(height: 5),
                               Text(
                                 "Subject Code: ${documentSnapshot['subjectCode'].toString()}",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Color.fromARGB(255, 0, 0, 0),
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(height: 5),
+                              const SizedBox(height: 5),
                               Text(
                                 documentSnapshot['description'],
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.grey,
                                   fontSize: 13,
                                 ),
@@ -550,13 +550,13 @@ class MywidgetState extends State<Moduleoperations> {
                                 children: [
                                   if (userRole == 'leader')
                                     IconButton(
-                                      icon: Icon(Icons.remove_circle),
+                                      icon: const Icon(Icons.remove_circle),
                                       onPressed: () =>
                                           _delete(documentSnapshot),
                                     ),
                                   if (userRole == 'leader')
                                     IconButton(
-                                      icon: Icon(Icons.change_circle),
+                                      icon: const Icon(Icons.change_circle),
                                       onPressed: () =>
                                           _update(documentSnapshot),
                                     ),
@@ -576,7 +576,7 @@ class MywidgetState extends State<Moduleoperations> {
               },
             );
           }
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         },
@@ -590,7 +590,7 @@ class MywidgetState extends State<Moduleoperations> {
             if (userRole == 'leader') {
               return FloatingActionButton(
                 onPressed: () => _create(),
-                backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+                backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
                 child: Image.asset('assets/module/plus.png'),
               );
             }

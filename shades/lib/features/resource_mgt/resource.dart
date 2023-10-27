@@ -129,30 +129,37 @@ class MywidgetState extends State<Resourceoperations> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _resourceNameController,
-                decoration: const InputDecoration(
-                    labelText: "Module Name",
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    prefixIcon: Icon(Icons.book)),
+                decoration: InputDecoration(
+                  labelText: "Module Name",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  filled: true,
+                  prefixIcon: const Icon(Icons.book),
+                ),
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: _subjectCodeController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Subject Code",
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   filled: true,
-                  prefixIcon: Icon(Icons.code),
+                  prefixIcon: const Icon(Icons.code),
                 ),
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: _descriptionController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Description",
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   filled: true,
-                  prefixIcon: Icon(Icons.description),
+                  prefixIcon: const Icon(Icons.description),
                 ),
               ),
               const SizedBox(
@@ -179,13 +186,20 @@ class MywidgetState extends State<Resourceoperations> {
 
                     Navigator.of(context).pop(); // Close the create modal
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
+                    maximumSize: const Size(double.infinity, 45),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(22),
+                    ),
+                  ),
                   child: const Padding(
                     padding: EdgeInsets.all(10.0),
                     child: Center(
                         widthFactor: 2.5,
                         child: Text("Create",
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold))),
+                                fontSize: 20, fontWeight: FontWeight.bold))),
                   ),
                 ),
               )
@@ -227,31 +241,37 @@ class MywidgetState extends State<Resourceoperations> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _resourceNameController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Module Name",
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   filled: true,
-                  prefixIcon: Icon(Icons.schema_outlined),
+                  prefixIcon: const Icon(Icons.schema_outlined),
                 ),
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _subjectCodeController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Subject Code",
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   filled: true,
-                  prefixIcon: Icon(Icons.code),
+                  prefixIcon: const Icon(Icons.code),
                 ),
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _descriptionController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Description",
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   filled: true,
-                  prefixIcon: Icon(Icons.description),
+                  prefixIcon: const Icon(Icons.description),
                 ),
               ),
               const SizedBox(
@@ -280,6 +300,13 @@ class MywidgetState extends State<Resourceoperations> {
 
                     Navigator.of(context).pop();
                   },
+                    style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
+                    maximumSize: const Size(double.infinity, 45),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(22),
+                    ),
+                  ),
                   child: const Padding(
                     padding: EdgeInsets.all(10.0),
                     child: Center(
@@ -620,7 +647,7 @@ class MywidgetState extends State<Resourceoperations> {
         onPressed: () {
           _create();
         },
-        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+        backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
         child: Image.asset('assets/module/cloud.png'),
       ),
     );
