@@ -1,10 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:shades/core/auth/sign_up_page.dart';
-
 import 'package:shades/core/auth/form_container_widget.dart';
-
 import 'package:shades/core/auth/firebase_auth_services.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,10 +12,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final bool _isSigning = false;
-
+  bool _isSigning = false;
   final FirebaseAuthService _auth = FirebaseAuthService();
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -75,9 +70,9 @@ class _LoginPageState extends State<LoginPage> {
                     color: Color(0xFF146C94),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Center(
+                  child: Center(
                       child: Text(
-                    "Login",
+                    _isSigning ? "Logging..." : "Login",
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   )),
@@ -117,16 +112,52 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _signIn() async {
+    if (_emailController.text.isEmpty) {
+      _showSnackbar("Email is required");
+      return;
+    }
+
+    if (!_isEmailValid(_emailController.text)) {
+      _showSnackbar("Enter a valid email");
+      return;
+    }
+
+    if (_passwordController.text.isEmpty) {
+      _showSnackbar("Password is required");
+      return;
+    }
+
+    setState(() {
+      _isSigning = true;
+    });
+
     String email = _emailController.text;
     String password = _passwordController.text;
 
     User? user = await _auth.signInWithEmailAndPassword(email, password);
 
+    setState(() {
+      _isSigning = false;
+    });
+
     if (user != null) {
       print("User is successfully signedIn");
       Navigator.pushNamed(context, "/home");
     } else {
-      print("Some error happend");
+      _showSnackbar("Email or password is wrong - please try  again");
     }
+  }
+
+  void _showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  bool _isEmailValid(String email) {
+    return RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$').hasMatch(email);
   }
 }

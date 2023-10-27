@@ -103,35 +103,43 @@ class MyWidgetState extends State<QueryOperations> {
                 ),
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  final String queryName = _queryNameController.text;
-                  final String description = _descriptionController.text;
-                  final String tags = _tagsController.text;
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      final String queryName = _queryNameController.text;
+                      final String description = _descriptionController.text;
+                      final String tags = _tagsController.text;
 
-                  final DateTime dateTimeNow = DateTime.now();
-                  final String timeStamp =
-                      "${dateTimeNow.year}-${_formatNumber(dateTimeNow.month)}-${_formatNumber(dateTimeNow.day)} ${_formatNumber(dateTimeNow.hour)}:${_formatNumber(dateTimeNow.minute)}:${_formatNumber(dateTimeNow.second)}";
+                      final DateTime dateTimeNow = DateTime.now();
+                      final String timeStamp =
+                          "${dateTimeNow.year}-${_formatNumber(dateTimeNow.month)}-${_formatNumber(dateTimeNow.day)} ${_formatNumber(dateTimeNow.hour)}:${_formatNumber(dateTimeNow.minute)}:${_formatNumber(dateTimeNow.second)}";
 
-                  final User? user = FirebaseAuth.instance.currentUser;
-                  final String userId = user?.uid ?? '';
+                      final User? user = FirebaseAuth.instance.currentUser;
+                      final String userId = user?.uid ?? '';
 
-                  await _queries.add({
-                    'queryName': queryName,
-                    'queryCode': timeStamp,
-                    'description': description,
-                    'tags': tags,
-                    'userID': userId,
-                  });
+                      await _queries.add({
+                        'queryName': queryName,
+                        'queryCode': timeStamp,
+                        'description': description,
+                        'tags': tags,
+                        'userID': userId,
+                      });
 
-                  _queryNameController.clear();
-                  _descriptionController.clear();
-                  _tagsController.clear();
+                      _queryNameController.clear();
+                      _descriptionController.clear();
+                      _tagsController.clear();
 
-                  Navigator.of(context).pop();
-                },
-                child: Text("Create", style: TextStyle(fontSize: 18)),
-              )
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xFF146C94),
+                    ),
+                    child: Text("Create", style: TextStyle(fontSize: 18)),
+                  ),
+                ],
+              ),
             ],
           ),
         );
@@ -201,26 +209,34 @@ class MyWidgetState extends State<QueryOperations> {
                 ),
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  final String queryName = _queryNameController.text;
-                  final String description = _descriptionController.text;
-                  final String tags = _tagsController.text;
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      final String queryName = _queryNameController.text;
+                      final String description = _descriptionController.text;
+                      final String tags = _tagsController.text;
 
-                  await _queries.doc(documentSnapshot!.id).update({
-                    'queryName': queryName,
-                    'description': description,
-                    'tags': tags,
-                  });
+                      await _queries.doc(documentSnapshot!.id).update({
+                        'queryName': queryName,
+                        'description': description,
+                        'tags': tags,
+                      });
 
-                  _queryNameController.clear();
-                  _descriptionController.clear();
-                  _tagsController.clear();
+                      _queryNameController.clear();
+                      _descriptionController.clear();
+                      _tagsController.clear();
 
-                  Navigator.of(context).pop();
-                },
-                child: Text("Update", style: TextStyle(fontSize: 18)),
-              )
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xFF146C94),
+                    ),
+                    child: Text("Update", style: TextStyle(fontSize: 18)),
+                  ),
+                ],
+              ),
             ],
           ),
         );
@@ -420,7 +436,7 @@ class MyWidgetState extends State<QueryOperations> {
                                             final String username =
                                                 userData['username'] ?? '';
                                             return Text(
-                                              "@ $username", // Add '@' in front of the username
+                                              "@ $username",
                                               style: TextStyle(
                                                 color: Color(0xFF146C94),
                                                 fontSize: 14,
@@ -527,7 +543,7 @@ class MyWidgetState extends State<QueryOperations> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _create(),
         backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-        child: Image.asset('assets/module/plus.png'),
+        child: Image.asset('assets/module/quest.png'),
       ),
     );
   }

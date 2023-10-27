@@ -420,14 +420,19 @@ class _CommunityOperationsState extends State<CommunityOperations> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CreatePostPage()),
-          );
-        },
-        child: Icon(Icons.add),
+      floatingActionButton: Container(
+        margin:
+            EdgeInsets.only(bottom: 20), // Adjust the bottom margin as needed
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CreatePostPage()),
+            );
+          },
+          backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+          child: Image.asset('assets/module/pencil.png'),
+        ),
       ),
     );
   }

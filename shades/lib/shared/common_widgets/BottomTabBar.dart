@@ -1,10 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart'; // Add this import
 import 'package:shades/features/community_mgt/community.dart';
+import 'package:shades/features/community_mgt/user_profile.dart'; // Import the user profile page
 import 'package:shades/features/module_mgt/module.dart';
 import 'package:shades/features/query_mgt/query.dart';
 import 'package:shades/features/resource_mgt/resource.dart';
-import 'package:shades/features/community_mgt/user_profile.dart'; // Import the user profile page
+import 'package:shades/features/community_mgt/user_profile.dart';
 
 class BottomTabBar extends StatefulWidget {
   const BottomTabBar({Key? key}) : super(key: key);
@@ -40,23 +42,22 @@ class _BottomTabBarState extends State<BottomTabBar> {
           children: [
             InkWell(
               onTap: () {
-                // Navigate to user profile page
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => UserProfilePage()),
                 );
               },
               child: CircleAvatar(
-                radius: 25,
+                radius: 20,
                 backgroundImage:
                     AssetImage('assets/community/profile images/pp.png'),
               ),
             ),
-            SizedBox(width: 10), // Add spacing between profile image and title
+            SizedBox(width: 10),
             Text(
               _tabTitles[_currentIndex],
               style: const TextStyle(
-                fontSize: 30,
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -67,46 +68,28 @@ class _BottomTabBarState extends State<BottomTabBar> {
           IconButton(
             icon: const Icon(Icons.exit_to_app),
             onPressed: () async {
-              // Firebase sign-out code
               await FirebaseAuth.instance.signOut();
               Navigator.pushNamed(context, "/login");
             },
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.red,
-        type: BottomNavigationBarType.shifting,
-        fixedColor: Colors.black,
-        iconSize: 30,
-        currentIndex: _currentIndex,
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        color: Color(0xFF146C94), // Background color of unselected items
+        buttonBackgroundColor:
+            Color(0xFF146C94), // Background color of selected item
+        items: <Widget>[
+          Icon(Icons.question_answer, size: 30, color: Colors.white),
+          Icon(Icons.apps, size: 30, color: Colors.white),
+          Icon(Icons.library_books, size: 30, color: Colors.white),
+          Icon(Icons.group, size: 30, color: Colors.white),
+        ],
         onTap: (index) {
           setState(() {
             _currentIndex = index;
           });
         },
-        items: const [
-          BottomNavigationBarItem(
-            backgroundColor: Color(0xFF146C94),
-            icon: Icon(Icons.question_answer),
-            label: 'Query',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Color(0xFF146C94),
-            icon: Icon(Icons.apps),
-            label: 'Modules',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Color(0xFF146C94),
-            icon: Icon(Icons.book_online_sharp),
-            label: 'Resources',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Color(0xFF146C94),
-            icon: Icon(Icons.group),
-            label: 'Community',
-          ),
-        ],
       ),
     );
   }
