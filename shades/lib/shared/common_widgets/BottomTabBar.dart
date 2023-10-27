@@ -34,7 +34,7 @@ class _BottomTabBarState extends State<BottomTabBar> {
       body: _tabs[_currentIndex],
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xFF146C94),
+        backgroundColor: Color(0xFF146C94),
         elevation: 0,
         title: Row(
           children: [
@@ -92,12 +92,12 @@ class _BottomTabBarState extends State<BottomTabBar> {
             label: 'Query',
           ),
           BottomNavigationBarItem(
-            backgroundColor: Color.fromARGB(255, 0, 219, 248),
+            backgroundColor: Color(0xFF146C94),
             icon: Icon(Icons.apps),
             label: 'Modules',
           ),
           BottomNavigationBarItem(
-            backgroundColor: Colors.blueGrey,
+            backgroundColor: Color(0xFF146C94),
             icon: Icon(Icons.book_online_sharp),
             label: 'Resources',
           ),
