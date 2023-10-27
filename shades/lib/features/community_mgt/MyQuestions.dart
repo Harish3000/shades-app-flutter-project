@@ -80,7 +80,7 @@ class MyQuestions extends StatelessWidget {
                               "- posted on : ${_formatDate(documentSnapshot['queryCode'].toString())} -",
                               style: TextStyle(
                                 color: Color.fromARGB(201, 107, 107, 107),
-                                fontSize: 11,
+                                fontSize: 15,
                               ),
                             ),
                             SizedBox(height: 10),
@@ -88,7 +88,7 @@ class MyQuestions extends StatelessWidget {
                               "Tags: ${documentSnapshot['tags'].toString()}",
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.grey,
+                                color: Color.fromARGB(255, 46, 126, 255),
                               ),
                             ),
                           ],
