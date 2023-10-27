@@ -19,6 +19,7 @@ class MywidgetState extends State<Resourceoperations> {
   final TextEditingController _resourceNameController = TextEditingController();
   final TextEditingController _subjectCodeController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   final CollectionReference _resources =
       FirebaseFirestore.instance.collection('resources');
@@ -65,18 +66,20 @@ class MywidgetState extends State<Resourceoperations> {
         context: context,
         builder: (BuildContext context) {
           return const AlertDialog(
+            backgroundColor: Color.fromARGB(157, 31, 34, 35),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 CircularProgressIndicator(
                   strokeWidth: 6,
-                  backgroundColor: Colors.grey,
+                  backgroundColor: Color.fromARGB(255, 255, 255, 255),
                 ),
                 SizedBox(height: 16),
                 Text(
                   'Uploading...',
                   style: TextStyle(
                     fontSize: 25,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -300,7 +303,7 @@ class MywidgetState extends State<Resourceoperations> {
 
                     Navigator.of(context).pop();
                   },
-                    style: ElevatedButton.styleFrom(
+                  style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
                     maximumSize: const Size(double.infinity, 45),
                     shape: RoundedRectangleBorder(
@@ -445,18 +448,20 @@ class MywidgetState extends State<Resourceoperations> {
       context: context,
       builder: (BuildContext context) {
         return const AlertDialog(
+          backgroundColor: Color.fromARGB(157, 31, 34, 35),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 Icons.check_circle_outline,
-                color: Colors.green,
+                color: Color.fromARGB(255, 12, 223, 19),
                 size: 60,
               ),
               SizedBox(height: 16),
               Text(
                 'File uploaded',
                 style: TextStyle(
+                  color: Colors.white,
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
                 ),
@@ -466,7 +471,8 @@ class MywidgetState extends State<Resourceoperations> {
         );
       },
     );
-    Future.delayed(const Duration(seconds: 1), () {
+    // Close success popup after 3 seconds
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.of(context).pop();
     });
   }
@@ -474,9 +480,54 @@ class MywidgetState extends State<Resourceoperations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
-      // ),
+      appBar: AppBar(
+        title: const Text('Search'),
+        backgroundColor: const Color.fromARGB(255, 235, 238, 240),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 360,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.search,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: _searchController,
+                      onChanged: (value) {
+                        setState(() {});
+                      },
+                      decoration: const InputDecoration(
+                        hintText: 'Search Resources',
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.clear_all,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                    onPressed: () {
+                      _searchController.clear();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
       body: StreamBuilder(
         stream: _resources.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
@@ -511,7 +562,28 @@ class MywidgetState extends State<Resourceoperations> {
                           itemBuilder: (context, index) {
                             final DocumentSnapshot documentSnapshot =
                                 streamSnapshot.data!.docs[index];
-
+                            // Check if the document matches the search query
+                            final String resourceName =
+                                documentSnapshot['resourceName'].toString();
+                            final String subjectCode =
+                                documentSnapshot['subjectCode'].toString();
+                            final String description =
+                                documentSnapshot['description'].toString();
+                            final String searchQuery =
+                                _searchController.text.toLowerCase();
+                            if (searchQuery.isNotEmpty &&
+                                !resourceName
+                                    .toLowerCase()
+                                    .contains(searchQuery) &&
+                                !subjectCode
+                                    .toLowerCase()
+                                    .contains(searchQuery) &&
+                                !description
+                                    .toLowerCase()
+                                    .contains(searchQuery)) {
+                              // If the search query is not found in the document, skip it
+                              return const SizedBox.shrink();
+                            }
                             return GestureDetector(
                               onTap: () {
                                 Navigator.push(
