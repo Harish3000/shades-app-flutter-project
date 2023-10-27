@@ -96,7 +96,7 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
             color: Colors.white,
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 2, 4, 10),
+        backgroundColor: Color(0xFF146C94),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(12.0),
