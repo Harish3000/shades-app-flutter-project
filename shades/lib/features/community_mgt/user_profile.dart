@@ -12,9 +12,9 @@ class UserProfilePage extends StatefulWidget {
 }
 
 class _UserProfilePageState extends State<UserProfilePage> {
-  late String _username;
-  late String _email;
-  late String _profileImageURL;
+  late String _username = '';
+  late String _email = '';
+  late String _profileImageURL = 'assets/community/profile images/pp.png';
   late String _role = ''; // Variable to store user's role
 
   @override
@@ -22,6 +22,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     super.initState();
     _email = ''; // Initialize _email here
     _role = ''; // Initialize _role here
+
     _loadUserData();
   }
 
@@ -30,8 +31,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
     setState(() {
       _username = (userData['username'] ?? '');
       _email = userData['email'] ?? '';
-      _profileImageURL = 'assets/community/profile images/pp.png';
-      _role = userData['role'] ?? ''; // Retrieve user's role from data
+      _profileImageURL = userData['profileImageURL'] ??
+          'assets/community/profile images/pp.png'; // Initialize _profileImageURL here
+      _role = userData['role'] ?? '';
     });
   }
 
