@@ -176,63 +176,74 @@ class _ModuleDetailPageState extends State<ModuleDetailPage> {
                     final likes = reviewData['likes'] ?? 0;
                     final dislikes = reviewData['dislikes'] ?? 0;
 
-                    return Card(
-                      elevation: 2,
-                      color: Colors.white,
-                      margin: EdgeInsets.symmetric(vertical: 8),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            title: Text('Review by $userName'),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.star, color: Colors.orange),
-                                    Text('Rating: $rating'),
-                                  ],
-                                ),
-                                Text('Reviews: $comment'),
-                                Row(
-                                  children: [
-                                    InkWell(
-                                      child: Image.asset(
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                          20), // You can adjust the radius as needed
+                      child: Card(
+                        elevation: 4,
+                        color: Color.fromARGB(255, 238, 237, 237),
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        child: Column(
+                          children: [
+                            ListTile(
+                              title: Text('Review by $userName'),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        'assets/module/favourite.png',
+                                        width: 15.0,
+                                        height: 15.0,
+                                      ),
+                                      Text(' Rating: $rating'),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text('Reviews: $comment'),
+                                  Row(
+                                    children: [
+                                      InkWell(
+                                        child: Image.asset(
                                           'assets/module/heart.png',
                                           width: 16,
-                                          height: 16),
-                                      onTap: () {
-                                        FirebaseFirestore.instance
-                                            .collection('module_reviews')
-                                            .doc(reviewId)
-                                            .update({
-                                          'likes': likes + 1,
-                                        });
-                                      },
-                                    ),
-                                    Text(' Likes: $likes'),
-                                    IconButton(
-                                      icon: Image.asset(
-                                        'assets/module/broken-heart.png',
-                                        width: 19,
-                                        height: 16,
+                                          height: 16,
+                                        ),
+                                        onTap: () {
+                                          FirebaseFirestore.instance
+                                              .collection('module_reviews')
+                                              .doc(reviewId)
+                                              .update({
+                                            'likes': likes + 1,
+                                          });
+                                        },
                                       ),
-                                      onPressed: () {
-                                        FirebaseFirestore.instance
-                                            .collection('module_reviews')
-                                            .doc(reviewId)
-                                            .update({
-                                          'dislikes': dislikes + 1,
-                                        });
-                                      },
-                                    ),
-                                    Text('Dislikes: $dislikes'),
-                                  ],
-                                ),
-                              ],
+                                      Text(' Likes: $likes'),
+                                      IconButton(
+                                        icon: Image.asset(
+                                          'assets/module/broken-heart.png',
+                                          width: 19,
+                                          height: 16,
+                                        ),
+                                        onPressed: () {
+                                          FirebaseFirestore.instance
+                                              .collection('module_reviews')
+                                              .doc(reviewId)
+                                              .update({
+                                            'dislikes': dislikes + 1,
+                                          });
+                                        },
+                                      ),
+                                      Text('Dislikes: $dislikes'),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   }).toList(),
