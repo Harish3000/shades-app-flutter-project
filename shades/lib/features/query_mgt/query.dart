@@ -543,7 +543,7 @@ class MyWidgetState extends State<QueryOperations> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _create(),
         backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-        child: Image.asset('assets/module/plus.png'),
+        child: Image.asset('assets/module/quest.png'),
       ),
     );
   }
