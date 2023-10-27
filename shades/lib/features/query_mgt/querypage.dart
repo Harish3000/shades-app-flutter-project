@@ -99,20 +99,20 @@ class _ModuleDetailPageState extends State<ModuleDetailPage>
         backgroundColor: Color.fromARGB(255, 2, 4, 10),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Stack(
               children: [
                 Image.asset(
-                  'assets/query/test3.gif',
+                  'assets/query/test55.gif',
                   width: double.infinity,
-                  height: 400,
+                  height: 350,
                   fit: BoxFit.cover,
                 ),
                 Positioned(
-                  top: 200,
+                  top: 120,
                   left: 2,
                   right: 2,
                   child: Card(
