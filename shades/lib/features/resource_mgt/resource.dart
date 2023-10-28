@@ -19,6 +19,7 @@ class MywidgetState extends State<Resourceoperations> {
   final TextEditingController _resourceNameController = TextEditingController();
   final TextEditingController _subjectCodeController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   final CollectionReference _resources =
       FirebaseFirestore.instance.collection('resources');
@@ -65,18 +66,20 @@ class MywidgetState extends State<Resourceoperations> {
         context: context,
         builder: (BuildContext context) {
           return const AlertDialog(
+            backgroundColor: Color.fromARGB(157, 31, 34, 35),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 CircularProgressIndicator(
                   strokeWidth: 6,
-                  backgroundColor: Colors.grey,
+                  backgroundColor: Color.fromARGB(255, 255, 255, 255),
                 ),
                 SizedBox(height: 16),
                 Text(
                   'Uploading...',
                   style: TextStyle(
                     fontSize: 25,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -129,30 +132,37 @@ class MywidgetState extends State<Resourceoperations> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _resourceNameController,
-                decoration: const InputDecoration(
-                    labelText: "Module Name",
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    prefixIcon: Icon(Icons.book)),
+                decoration: InputDecoration(
+                  labelText: "Module Name",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  filled: true,
+                  prefixIcon: const Icon(Icons.book),
+                ),
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: _subjectCodeController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Subject Code",
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   filled: true,
-                  prefixIcon: Icon(Icons.code),
+                  prefixIcon: const Icon(Icons.code),
                 ),
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: _descriptionController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Description",
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   filled: true,
-                  prefixIcon: Icon(Icons.description),
+                  prefixIcon: const Icon(Icons.description),
                 ),
               ),
               const SizedBox(
@@ -179,13 +189,20 @@ class MywidgetState extends State<Resourceoperations> {
 
                     Navigator.of(context).pop(); // Close the create modal
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
+                    maximumSize: const Size(double.infinity, 45),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(22),
+                    ),
+                  ),
                   child: const Padding(
                     padding: EdgeInsets.all(10.0),
                     child: Center(
                         widthFactor: 2.5,
                         child: Text("Create",
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold))),
+                                fontSize: 20, fontWeight: FontWeight.bold))),
                   ),
                 ),
               )
@@ -227,31 +244,37 @@ class MywidgetState extends State<Resourceoperations> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _resourceNameController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Module Name",
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   filled: true,
-                  prefixIcon: Icon(Icons.schema_outlined),
+                  prefixIcon: const Icon(Icons.schema_outlined),
                 ),
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _subjectCodeController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Subject Code",
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   filled: true,
-                  prefixIcon: Icon(Icons.code),
+                  prefixIcon: const Icon(Icons.code),
                 ),
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _descriptionController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Description",
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   filled: true,
-                  prefixIcon: Icon(Icons.description),
+                  prefixIcon: const Icon(Icons.description),
                 ),
               ),
               const SizedBox(
@@ -280,6 +303,13 @@ class MywidgetState extends State<Resourceoperations> {
 
                     Navigator.of(context).pop();
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
+                    maximumSize: const Size(double.infinity, 45),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(22),
+                    ),
+                  ),
                   child: const Padding(
                     padding: EdgeInsets.all(10.0),
                     child: Center(
@@ -418,18 +448,20 @@ class MywidgetState extends State<Resourceoperations> {
       context: context,
       builder: (BuildContext context) {
         return const AlertDialog(
+          backgroundColor: Color.fromARGB(157, 31, 34, 35),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 Icons.check_circle_outline,
-                color: Colors.green,
+                color: Color.fromARGB(255, 12, 223, 19),
                 size: 60,
               ),
               SizedBox(height: 16),
               Text(
                 'File uploaded',
                 style: TextStyle(
+                  color: Colors.white,
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
                 ),
@@ -439,7 +471,8 @@ class MywidgetState extends State<Resourceoperations> {
         );
       },
     );
-    Future.delayed(const Duration(seconds: 1), () {
+    // Close success popup after 3 seconds
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.of(context).pop();
     });
   }
@@ -447,9 +480,54 @@ class MywidgetState extends State<Resourceoperations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: const Color.fromRGBO(20, 108, 148, 1.000),
-      // ),
+      appBar: AppBar(
+        title: const Text('Search'),
+        backgroundColor: const Color.fromARGB(255, 235, 238, 240),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 360,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.search,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: _searchController,
+                      onChanged: (value) {
+                        setState(() {});
+                      },
+                      decoration: const InputDecoration(
+                        hintText: 'Search Resources',
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.clear_all,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                    onPressed: () {
+                      _searchController.clear();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
       body: StreamBuilder(
         stream: _resources.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
@@ -484,7 +562,28 @@ class MywidgetState extends State<Resourceoperations> {
                           itemBuilder: (context, index) {
                             final DocumentSnapshot documentSnapshot =
                                 streamSnapshot.data!.docs[index];
-
+                            // Check if the document matches the search query
+                            final String resourceName =
+                                documentSnapshot['resourceName'].toString();
+                            final String subjectCode =
+                                documentSnapshot['subjectCode'].toString();
+                            final String description =
+                                documentSnapshot['description'].toString();
+                            final String searchQuery =
+                                _searchController.text.toLowerCase();
+                            if (searchQuery.isNotEmpty &&
+                                !resourceName
+                                    .toLowerCase()
+                                    .contains(searchQuery) &&
+                                !subjectCode
+                                    .toLowerCase()
+                                    .contains(searchQuery) &&
+                                !description
+                                    .toLowerCase()
+                                    .contains(searchQuery)) {
+                              // If the search query is not found in the document, skip it
+                              return const SizedBox.shrink();
+                            }
                             return GestureDetector(
                               onTap: () {
                                 Navigator.push(
@@ -550,16 +649,18 @@ class MywidgetState extends State<Resourceoperations> {
                                             Row(
                                               children: [
                                                 IconButton(
-                                                  color: Colors.blue,
+                                                  color: const Color.fromRGBO(
+                                                      20, 108, 148, 1.000),
                                                   iconSize: 28,
                                                   icon: const Icon(Icons.edit),
                                                   onPressed: () =>
                                                       _update(documentSnapshot),
                                                 ),
                                                 IconButton(
+                                                  color: Colors.red,
                                                   iconSize: 28,
-                                                  icon:
-                                                      const Icon(Icons.delete),
+                                                  icon: const Icon(
+                                                      Icons.delete_forever),
                                                   onPressed: () =>
                                                       _delete(documentSnapshot),
                                                 ),
@@ -618,7 +719,7 @@ class MywidgetState extends State<Resourceoperations> {
         onPressed: () {
           _create();
         },
-        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+        backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
         child: Image.asset('assets/module/cloud.png'),
       ),
     );
